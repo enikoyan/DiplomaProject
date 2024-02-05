@@ -1,1 +1,60 @@
-/*IMPORTS*//*# sourceMappingURL=main.css.map */
+/*IMPORTS*/
+.wrapper {
+  margin: 0px 15px;
+}
+
+.login-form-container {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  min-height: 50vh;
+  padding: 45px 5px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  width: 300px;
+}
+.login-form__img {
+  align-self: center;
+  max-width: 120px;
+}
+.login-form__title {
+  align-self: center;
+}
+.login-form__recovery-password {
+  align-self: center;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 25px 0px;
+}
+.footer__img {
+  max-width: 50px;
+}
+.footer__supportLink {
+  text-align: center;
+}
+.footer__copyright {
+  text-align: center;
+}
+
+.wrapper_login {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media (max-device-width: 480px) {
+  .wrapper_login {
+    min-height: calc(100vh - 60px);
+  }
+}/*# sourceMappingURL=main.css.map */

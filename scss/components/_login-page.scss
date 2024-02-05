@@ -1,0 +1,74 @@
+.login-form-container {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  min-height: 50vh;
+  padding: 45px 5px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  width: 300px;
+
+		&__img {
+      align-self: center;
+      max-width: 120px;
+		}
+
+		&__title {
+      align-self: center;
+		}
+
+		&__input {
+
+			&_email {
+			}
+
+			&_password {
+			}
+		}
+
+		&__signIn-btn {
+
+		}
+
+		&__recovery-password {
+      align-self: center;
+		}
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 25px 0px;
+  
+  &__img {
+    max-width: 50px;
+  }
+
+  &__supportLink {
+    text-align: center;
+  }
+
+  &__copyright {
+    text-align: center;
+  }
+}
+
+.wrapper_login {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media (max-device-width:480px) {
+  .wrapper_login {
+    min-height: calc(100vh - 60px);
+  }
+}
