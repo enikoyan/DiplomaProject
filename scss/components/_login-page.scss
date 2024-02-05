@@ -15,7 +15,6 @@
 
 		&__img {
       align-self: center;
-      max-width: 120px;
 		}
 
 		&__title {
@@ -38,27 +37,6 @@
 		&__recovery-password {
       align-self: center;
 		}
-}
-
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 15px;
-  padding: 25px 0px;
-  
-  &__img {
-    max-width: 50px;
-  }
-
-  &__supportLink {
-    text-align: center;
-  }
-
-  &__copyright {
-    text-align: center;
-  }
 }
 
 .wrapper_login {
