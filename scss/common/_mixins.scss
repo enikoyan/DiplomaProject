@@ -1,0 +1,30 @@
+@mixin closed-aside {
+  min-width: 50px;
+  width: 50px;
+
+  .aside__header {
+    justify-content: center;
+  }
+
+  .aside-logo {
+    display: none;
+  }
+
+  .aside-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50px;
+    padding: 5px;
+
+    &__img {
+      transform: scale(-1,1);
+    }
+  }
+
+  .aside-menu__item {
+    span {
+      display: none;
+    }
+  }
+}

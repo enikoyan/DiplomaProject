@@ -1,5 +1,12 @@
 .wrapper {
   margin: 0px 15px;
+  min-height: 100vh;
+}
+
+@media (max-device-width:480px) {
+  .wrapper {
+    min-height: calc(100vh - 60px);
+  }
 }
 
 .title {

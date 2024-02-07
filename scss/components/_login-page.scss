@@ -44,9 +44,3 @@
   flex-direction: column;
   min-height: 100vh;
 }
-
-@media (max-device-width:480px) {
-  .wrapper_login {
-    min-height: calc(100vh - 60px);
-  }
-}

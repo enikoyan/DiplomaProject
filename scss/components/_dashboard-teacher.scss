@@ -1,0 +1,81 @@
+.wrapper_dashboard {
+  display: grid;
+  grid-template-columns: 0.2fr 1fr;
+  margin: 0;
+  background-color: #f5f5f5;
+}
+
+.aside {
+  border-right: 1px solid rgb(233, 233, 233);
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 15px 15px 15px;
+  gap: 30px;
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.aside-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  user-select: none;
+
+  &__img {
+  }
+
+  &__title {
+  }
+}
+
+.aside-menu-toggle {
+  background-color: rgb(226, 226, 226);
+  border-radius: 5px;
+  padding: 5px 5px 2px 5px;
+  cursor: pointer;
+
+  &__img {
+    width: 40px;
+  }
+}
+
+.aside-menu {
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: rgb(226, 226, 226);
+    border-radius: 15px;
+    padding: 10px;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  &__icon {
+    width: 30px;
+  }
+
+  &__label {
+
+  }
+}
+
+.dashboard-content-container {
+
+}
+
+.aside_closed {
+  @include closed-aside;
+}
