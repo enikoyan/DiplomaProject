@@ -1,80 +1,16 @@
 .wrapper_dashboard {
   display: grid;
-  grid-template-columns: 0.2fr 1fr;
+  grid-template-columns: auto 1fr;
   margin: 0;
   background-color: #f5f5f5;
 }
 
-.aside {
-  border-right: 1px solid rgb(233, 233, 233);
-  min-width: 250px;
+.dashboard-content-container {
+  background-color: rgb(216, 225, 236);
+  padding: 40px 30px 30px 30px;
   display: flex;
   flex-direction: column;
-  padding: 40px 15px;
-  gap: 30px;
-  
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-  }
-}
-
-.aside-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  user-select: none;
-
-  &__img {
-  }
-
-  &__title {
-  }
-}
-
-.aside-menu-toggle {
-  background-color: rgb(226, 226, 226);
-  border-radius: 5px;
-  padding: 5px 5px 2px 5px;
-  cursor: pointer;
-
-  &__img {
-    width: 40px;
-  }
-}
-
-.aside-menu {
-
-  &__list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background-color: rgb(226, 226, 226);
-    border-radius: 15px;
-    padding: 10px;
-    user-select: none;
-    cursor: pointer;
-  }
-
-  &__icon {
-    width: 30px;
-  }
-
-  &__label {
-
-  }
-}
-
-.dashboard-content-container {
-
+  gap: 20px;
 }
 
 @media (min-width: 769px) {
@@ -86,7 +22,7 @@
 @media (max-width: 768px) {
   .wrapper_dashboard {
     grid-template-columns: auto;
-    gap: 40px;
+    grid-template-rows: max-content;
   }
   .aside {
     padding: 20px 15px;

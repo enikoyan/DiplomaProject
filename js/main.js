@@ -9,11 +9,15 @@ button.addEventListener('click', () => {
     targetElement.classList.add('aside_closed');
   }
 });
-// toggleBtn.addEventListener('click', toggleAsideMenu);
-// const checkScreenWidth = () => {
-//   if (window.innerWidth < 768) {
-//     targetElement.classList.add('aside_closed');
-//   }
-// }
-// window.addEventListener('resize', checkScreenWidth);
-// checkScreenWidth();
+
+/* Dynamic colSpan for table */
+var tableElement = document.querySelector("#student-count");
+const checkScreenWidth = () => {
+  if (window.innerWidth < 600) {
+    tableElement.colSpan = "1";
+  } else {
+    tableElement.colSpan = "4";
+  }
+}
+window.addEventListener('resize', checkScreenWidth);
+checkScreenWidth();
