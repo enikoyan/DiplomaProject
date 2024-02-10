@@ -1,0 +1,126 @@
+{
+  "Понедельник": [
+    {
+      "lesson_number": 1,
+      "room": "115",
+      "lesson_time": "8:30-10:00"
+    },
+    {
+      "lesson_number": 2,
+      "room": "201",
+      "lesson_time": "10:15-11:45"
+    },
+    {
+      "lesson_number": 3,
+      "room": "303",
+      "lesson_time": "12:00-13:30"
+    }
+  ],
+  "Вторник": [
+    {
+      "lesson_number": 1,
+      "room": "116",
+      "lesson_time": "9:00-10:30"
+    },
+    {
+      "lesson_number": 2,
+      "room": "202",
+      "lesson_time": "10:45-12:15"
+    },
+    {
+      "lesson_number": 3,
+      "room": "304",
+      "lesson_time": "12:30-14:00"
+    }
+  ],
+  "Среда": [
+    {
+      "lesson_number": 1,
+      "room": "117",
+      "lesson_time": "8:30-10:00"
+    },
+    {
+      "lesson_number": 2,
+      "room": "203",
+      "lesson_time": "10:15-11:45"
+    },
+    {
+      "lesson_number": 3,
+      "room": "305",
+      "lesson_time": "12:00-13:30"
+    }
+  ],
+  "Четверг": [
+    {
+      "lesson_number": 1,
+      "room": "118",
+      "lesson_time": "9:00-10:30"
+    },
+    {
+      "lesson_number": 2,
+      "room": "204",
+      "lesson_time": "10:45-12:15"
+    },
+    {
+      "lesson_number": 3,
+      "room": "306",
+      "lesson_time": "12:30-14:00"
+    }
+  ],
+  "Пятница": [
+    {
+      "lesson_number": 1,
+      "room": "119",
+      "lesson_time": "8:30-10:00"
+    },
+    {
+      "lesson_number": 2,
+      "room": "205",
+      "lesson_time": "10:15-11:45"
+    },
+    {
+      "lesson_number": 3,
+      "room": "307",
+      "lesson_time": "12:00-13:30"
+    },
+    {
+      "lesson_number": 4,
+      "room": "307",
+      "lesson_time": "13:40-14:20"
+    }
+  ],
+  "Суббота": [
+    {
+      "lesson_number": 1,
+      "room": "120",
+      "lesson_time": "9:00-10:30"
+    },
+    {
+      "lesson_number": 2,
+      "room": "206",
+      "lesson_time": "10:45-12:15"
+    },
+    {
+      "lesson_number": 3,
+      "room": "308",
+      "lesson_time": "12:30-14:00"
+    }
+  ],
+  "Воскресенье": [
+    {
+      "lesson_number": 1,
+      "room": "120",
+      "lesson_time": "9:00-10:30"
+    },
+    {
+      "lesson_number": 2,
+      "room": "206",
+      "lesson_time": "10:45-12:15"
+    },
+    {
+      "lesson_number": 3,
+      "room": "308",
+      "lesson_time": "12:30-14:00"
+    }
+  ]
+}

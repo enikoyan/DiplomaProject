@@ -157,7 +157,7 @@ img {
 
 .dashboard-content-container {
   background-color: rgb(216, 225, 236);
-  padding: 40px 30px 30px 30px;
+  padding: 40px 20px 30px 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -252,6 +252,27 @@ img {
   }
   .custom-table_student-list th:not(:first-child):not(:last-child) {
     display: none;
+  }
+}
+.schedule {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+.schedule__item {
+  background-color: rgb(255, 247, 241);
+  border-radius: 10px;
+  padding: 40px 15px;
+  display: flex;
+  flex-direction: column;
+}
+.schedule__title {
+  text-align: center;
+}
+
+@media (max-width: 800px) {
+  .schedule {
+    grid-template-columns: 1fr;
   }
 }
 .custom-table {
