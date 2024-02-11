@@ -72,6 +72,15 @@ fetch("../js/json/homework-list.json")
         homeworksItem.appendChild(homeworksTitle);
         homeworksItem.appendChild(homeworksInfo);
         homeworksItem.appendChild(homeworksFiles);
+
+        // Создание кнопки для просмотра прикрепленных ответов
+        const homeworksShowAttachedAnswers = document.createElement("button");
+        homeworksShowAttachedAnswers.textContent = "Просмотреть ответы";
+        homeworksShowAttachedAnswers.classList.add(
+          "custom-btn",
+          "homeworks__show-answers-btn"
+        );
+        homeworksItem.appendChild(homeworksShowAttachedAnswers);
       });
     }
   });
