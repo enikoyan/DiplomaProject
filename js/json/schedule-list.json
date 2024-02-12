@@ -1,126 +1,350 @@
 {
-  "Понедельник": [
+  "schedule": [
     {
-      "lesson_number": 1,
-      "room": "115",
-      "lesson_time": "8:30-10:00"
+      "week": "2024-W07",
+      "days": [
+        {
+          "date": "2022-03-01",
+          "day": "Понедельник",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "115",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "8:30-10:00"
+            },
+            {
+              "lesson_number": 2,
+              "room": "201",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:15-11:45"
+            },
+            {
+              "lesson_number": 3,
+              "room": "303",
+              "group": "ЩПКО-03-20",
+              "lesson_time": "12:00-13:30"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-02",
+          "day": "Вторник",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "116",
+              "group": "ЩПКО-04-20",
+              "lesson_time": "9:00-10:30"
+            },
+            {
+              "lesson_number": 2,
+              "room": "202",
+              "group": "ЩПКО-04-20",
+              "lesson_time": "10:45-12:15"
+            },
+            {
+              "lesson_number": 3,
+              "room": "304",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "12:30-14:00"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-03",
+          "day": "Среда",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "117",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "8:30-10:00"
+            },
+            {
+              "lesson_number": 2,
+              "room": "203",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:15-11:45"
+            },
+            {
+              "lesson_number": 3,
+              "room": "305",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "12:00-13:30"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-04",
+          "day": "Четверг",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "118",
+              "group": "ЩПКО-02-20",
+              "lesson_time": "9:00-10:30"
+            },
+            {
+              "lesson_number": 2,
+              "room": "204",
+              "group": "ЩПКО-04-20",
+              "lesson_time": "10:45-12:15"
+            },
+            {
+              "lesson_number": 3,
+              "room": "306",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "12:30-14:00"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-05",
+          "day": "Пятница",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "119",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "8:30-10:00"
+            },
+            {
+              "lesson_number": 2,
+              "room": "205",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:15-11:45"
+            },
+            {
+              "lesson_number": 3,
+              "group": "ЩПКО-04-20",
+              "room": "307",
+              "lesson_time": "12:00-13:30"
+            },
+            {
+              "lesson_number": 4,
+              "room": "307",
+              "group": "ЩПКО-04-20",
+              "lesson_time": "13:40-14:20"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-06",
+          "day": "Суббота",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "120",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "9:00-10:30"
+            },
+            {
+              "lesson_number": 2,
+              "room": "206",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:45-12:15"
+            },
+            {
+              "lesson_number": 3,
+              "room": "308",
+              "group": "ЩПКО-02-20",
+              "lesson_time": "12:30-14:00"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-06",
+          "day": "Воскресенье",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "120",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "9:00-10:30"
+            },
+            {
+              "lesson_number": 2,
+              "room": "207",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:45-12:15"
+            },
+            {
+              "lesson_number": 3,
+              "room": "212",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "12:30-14:00"
+            }
+          ]
+        }
+      ]
     },
     {
-      "lesson_number": 2,
-      "room": "201",
-      "lesson_time": "10:15-11:45"
-    },
-    {
-      "lesson_number": 3,
-      "room": "303",
-      "lesson_time": "12:00-13:30"
-    }
-  ],
-  "Вторник": [
-    {
-      "lesson_number": 1,
-      "room": "116",
-      "lesson_time": "9:00-10:30"
-    },
-    {
-      "lesson_number": 2,
-      "room": "202",
-      "lesson_time": "10:45-12:15"
-    },
-    {
-      "lesson_number": 3,
-      "room": "304",
-      "lesson_time": "12:30-14:00"
-    }
-  ],
-  "Среда": [
-    {
-      "lesson_number": 1,
-      "room": "117",
-      "lesson_time": "8:30-10:00"
-    },
-    {
-      "lesson_number": 2,
-      "room": "203",
-      "lesson_time": "10:15-11:45"
-    },
-    {
-      "lesson_number": 3,
-      "room": "305",
-      "lesson_time": "12:00-13:30"
-    }
-  ],
-  "Четверг": [
-    {
-      "lesson_number": 1,
-      "room": "118",
-      "lesson_time": "9:00-10:30"
-    },
-    {
-      "lesson_number": 2,
-      "room": "204",
-      "lesson_time": "10:45-12:15"
-    },
-    {
-      "lesson_number": 3,
-      "room": "306",
-      "lesson_time": "12:30-14:00"
-    }
-  ],
-  "Пятница": [
-    {
-      "lesson_number": 1,
-      "room": "119",
-      "lesson_time": "8:30-10:00"
-    },
-    {
-      "lesson_number": 2,
-      "room": "205",
-      "lesson_time": "10:15-11:45"
-    },
-    {
-      "lesson_number": 3,
-      "room": "307",
-      "lesson_time": "12:00-13:30"
-    },
-    {
-      "lesson_number": 4,
-      "room": "307",
-      "lesson_time": "13:40-14:20"
-    }
-  ],
-  "Суббота": [
-    {
-      "lesson_number": 1,
-      "room": "120",
-      "lesson_time": "9:00-10:30"
-    },
-    {
-      "lesson_number": 2,
-      "room": "206",
-      "lesson_time": "10:45-12:15"
-    },
-    {
-      "lesson_number": 3,
-      "room": "308",
-      "lesson_time": "12:30-14:00"
-    }
-  ],
-  "Воскресенье": [
-    {
-      "lesson_number": 1,
-      "room": "120",
-      "lesson_time": "9:00-10:30"
-    },
-    {
-      "lesson_number": 2,
-      "room": "206",
-      "lesson_time": "10:45-12:15"
-    },
-    {
-      "lesson_number": 3,
-      "room": "308",
-      "lesson_time": "12:30-14:00"
+      "week": "2024-W08",
+      "days": [
+        {
+          "date": "2022-03-01",
+          "day": "Понедельник",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "115",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "8:30-10:00"
+            },
+            {
+              "lesson_number": 2,
+              "room": "201",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:15-11:45"
+            },
+            {
+              "lesson_number": 3,
+              "room": "303",
+              "group": "ЩПКО-03-20",
+              "lesson_time": "12:00-13:30"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-02",
+          "day": "Вторник",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "116",
+              "group": "ЩПКО-04-20",
+              "lesson_time": "9:00-10:30"
+            },
+            {
+              "lesson_number": 2,
+              "room": "202",
+              "group": "ЩПКО-04-20",
+              "lesson_time": "10:45-12:15"
+            },
+            {
+              "lesson_number": 3,
+              "room": "304",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "12:30-14:00"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-03",
+          "day": "Среда",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "117",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "8:30-10:00"
+            },
+            {
+              "lesson_number": 2,
+              "room": "203",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:15-11:45"
+            },
+            {
+              "lesson_number": 3,
+              "room": "305",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "12:00-13:30"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-04",
+          "day": "Четверг",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "118",
+              "group": "ЩПКО-02-20",
+              "lesson_time": "9:00-10:30"
+            },
+            {
+              "lesson_number": 2,
+              "room": "204",
+              "group": "ЩПКО-04-20",
+              "lesson_time": "10:45-12:15"
+            },
+            {
+              "lesson_number": 3,
+              "room": "306",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "12:30-14:00"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-05",
+          "day": "Пятница",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "119",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "8:30-10:00"
+            },
+            {
+              "lesson_number": 2,
+              "room": "205",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:15-11:45"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-06",
+          "day": "Суббота",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "120",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "9:00-10:30"
+            },
+            {
+              "lesson_number": 2,
+              "room": "206",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:45-12:15"
+            },
+            {
+              "lesson_number": 3,
+              "room": "308",
+              "group": "ЩПКО-02-20",
+              "lesson_time": "12:30-14:00"
+            }
+          ]
+        },
+        {
+          "date": "2022-03-06",
+          "day": "Воскресенье",
+          "lessons": [
+            {
+              "lesson_number": 1,
+              "room": "120",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "9:00-10:30"
+            },
+            {
+              "lesson_number": 2,
+              "room": "207",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "10:45-12:15"
+            },
+            {
+              "lesson_number": 3,
+              "room": "212",
+              "group": "ЩПКО-01-20",
+              "lesson_time": "12:30-14:00"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

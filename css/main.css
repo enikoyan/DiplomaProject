@@ -244,6 +244,7 @@ img {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  align-items: center;
 }
 @media (max-width: 600px) {
   .custom-table_student-list th:first-child,
