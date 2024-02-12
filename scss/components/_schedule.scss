@@ -17,11 +17,19 @@
 }
 
 .custom-table_lessons-list {
-
 }
 
 @media (max-width: 800px) {
   .schedule {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 500px) {
+  .custom-table_lessons-list {
+    tr th:nth-child(2),
+    tr th:nth-child(3) {
+      display: none;
+    }
   }
 }

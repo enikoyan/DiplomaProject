@@ -56,8 +56,8 @@ document
             const tbHeaderColumns = [
               "Пара",
               "Аудитория",
-              "Группа",
               "Время занятия",
+              "Группа",
             ];
             tbHeaderRow.setAttribute("style", "background-color: transparent");
             tbHeaderColumns.forEach((column) => {
@@ -76,8 +76,8 @@ document
               const tableDataColumns = [
                 lesson.lesson_number,
                 lesson.room,
-                lesson.group,
                 lesson.lesson_time,
+                lesson.group,
               ];
               tableDataColumns.forEach((column) => {
                 const tableDataColumn = document.createElement("th");

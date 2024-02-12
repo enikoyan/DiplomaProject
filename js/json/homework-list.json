@@ -33,6 +33,30 @@
         "../../homeworks/img_example.png",
         "../../homeworks/txt_example.txt"
       ]
+    },
+    {
+      "homework_id": "03",
+      "homework_title": "Написать программу HelloWorld на C++",
+      "homework_text": "Скачать фреймворк с официального сайта и хранить его вместе с проектом локально. В этом случае можно вести разработку в режиме off-line. Подключить фреймворк on-line. Мы воспользуемся первым способом.",
+      "homework_addDate": "2023-02-11",
+      "homework_deadline": "2023-02-14",
+      "homework_files": [
+        "../../homeworks/pdf_example.pdf",
+        "../../homeworks/img_example.png",
+        "../../homeworks/txt_example.txt"
+      ]
+    },
+    {
+      "homework_id": "03",
+      "homework_title": "Написать программу HelloWorld на C++",
+      "homework_text": "Скачать фреймворк с официального сайта и хранить его вместе с проектом локально. В этом случае можно вести разработку в режиме off-line. Подключить фреймворк on-line. Мы воспользуемся первым способом.",
+      "homework_addDate": "2023-02-11",
+      "homework_deadline": "2023-02-14",
+      "homework_files": [
+        "../../homeworks/pdf_example.pdf",
+        "../../homeworks/img_example.png",
+        "../../homeworks/txt_example.txt"
+      ]
     }
   ]
 }
