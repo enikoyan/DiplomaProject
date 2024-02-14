@@ -410,6 +410,85 @@ img {
     grid-template-columns: 1fr;
   }
 }
+.personal-account-info {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 15px;
+}
+.personal-account-info__block {
+  display: flex;
+  flex-direction: column;
+  background-color: ghostwhite;
+  border-radius: 10px;
+  padding: 25px;
+  gap: 15px;
+}
+.personal-account-info__avatar {
+  background-color: rgb(199, 199, 199);
+  border-radius: 50%;
+  padding: 15px;
+  width: -moz-max-content;
+  width: max-content;
+  align-self: center;
+}
+.personal-account-info__avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
+}
+.personal-account-info__item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.personal-account-info__item img {
+  width: 30px;
+}
+
+.social-media-list {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.social-media-list__item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.social-media-list__item img {
+  width: 30px;
+}
+
+.state-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 5px 0px;
+}
+.state-block__item {
+  display: flex;
+  background-color: rgb(221, 221, 221);
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.courses-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.courses-list__item {
+  border: 2px solid rgb(218, 218, 218);
+  border-radius: 10px;
+  padding: 10px 15px;
+}
+
+@media (max-width: 1024px) {
+  .personal-account-info {
+    grid-template-columns: 1fr;
+  }
+}
 .custom-table {
   text-align: left;
   border-collapse: separate;
