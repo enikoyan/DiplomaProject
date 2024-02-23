@@ -1,3 +1,11 @@
+using EdManagementSystem.DataAccess.Data;
+using EdManagementSystem.DataAccess.Interfaces;
+using EdManagementSystem.DataAccess.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
+
 namespace EdManagementSystem.App
 {
     public class Program
@@ -5,17 +13,35 @@ namespace EdManagementSystem.App
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var services = builder.Services;
+            var builderConfig = builder.Configuration;
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            services.AddControllersWithViews();
+
+            #region Authentication
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/auth/login";
+                    options.Cookie.Name = "EdManagementSystemCookie";
+                });
+
+            // Get DB connection and DBContext
+            var connectionString = builderConfig.GetConnectionString("DefaultConnection");
+            services.AddDbContext<User004Context>(dbContextOptions => dbContextOptions
+            .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString) ??
+            throw new InvalidOperationException("Connection string is not found!")),
+            ServiceLifetime.Singleton);
+
+            services.AddScoped<IAuthService, AuthService>();
+
+            #endregion
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -24,7 +50,10 @@ namespace EdManagementSystem.App
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCookiePolicy();
 
             app.MapControllerRoute(
                 name: "default",

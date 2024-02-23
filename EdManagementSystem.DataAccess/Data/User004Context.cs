@@ -8,10 +8,6 @@ namespace EdManagementSystem.DataAccess.Data;
 
 public partial class User004Context : DbContext
 {
-    public User004Context()
-    {
-    }
-
     public User004Context(DbContextOptions<User004Context> options)
         : base(options)
     {
