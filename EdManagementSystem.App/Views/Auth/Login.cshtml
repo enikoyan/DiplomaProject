@@ -5,10 +5,10 @@
 <div class="wrapper wrapper_login">
     @model LoginViewModel
     <div class="login-form-container">
-        <form method="post" class="login-form">
+        <form method="post" class="login-form" asp-action="Login" asp-controller="Auth">
             <img src="~/icons/common-icons/logo.svg" alt="logotypeImg" class="logotype login-form__img">
             <h1 class="title login-form__title">Авторизация</h1>
-            <span>@ViewBag.ErrorEmail</span>
+            <span style="text-align:center; color:red">@ViewBag.ErrorEmail</span>
             <input asp-for="Email" type="email" class="custom-input login-form__input_email" placeholder="Электронная почта" required>
             <input asp-for="Password" type="password" class="custom-input login-form__input_password" placeholder="Пароль" required>
             <button type="submit" class="custom-btn login-form__signIn-btn">Войти</button>

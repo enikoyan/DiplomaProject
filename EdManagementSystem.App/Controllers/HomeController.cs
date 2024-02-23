@@ -12,7 +12,7 @@ namespace EdManagementSystem.App.Controllers
     {
         public IActionResult Index()
         {
-            ViewBag.Role = this.User.FindFirst(ClaimTypes.Role).Value;
+            ViewBag.Role = User.FindFirst(ClaimTypes.Role)!.Value;
             return View();
         }
     }

@@ -1,13 +1,21 @@
 ﻿using EdManagementSystem.DataAccess.Data;
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
+using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Services
 {
-    public class UserService(User004Context context) : IUserService
+    public class UserService : IUserService
     {
-        private readonly User004Context _context = context;
+        private readonly User004Context _context;
+        private readonly IPasswordHasher _passwordHasher;
+
+        public UserService(User004Context context, IPasswordHasher passwordHashed)
+        {
+            _context = context;
+            _passwordHasher = passwordHashed;
+        }
 
         public async Task<User> GetUserByEmail(string userEmail)
         {
@@ -25,6 +33,10 @@ namespace EdManagementSystem.DataAccess.Services
             {
                 throw new ArgumentNullException(nameof(user));
             }
+
+            string hashedPassword = _passwordHasher.Generate(user.UserPassword);
+
+            user.UserPassword = hashedPassword;
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();

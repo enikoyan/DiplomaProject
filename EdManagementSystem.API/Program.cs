@@ -1,4 +1,5 @@
 ﻿using EdManagementSystem.DataAccess.Data;
+using EdManagementSystem.DataAccess.Infrastructure;
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Services;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,7 @@ namespace EdManagementSystem.API
             #endregion
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             var app = builder.Build();
 

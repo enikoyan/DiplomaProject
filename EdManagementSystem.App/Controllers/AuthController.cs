@@ -10,17 +10,6 @@ namespace EdManagementSystem.App.Controllers
 {
     public class AuthController : Controller
     {
-        [HttpGet]
-        [Route("[controller]/login")]
-        public IActionResult Login()
-        {
-            if(User.Identity!.IsAuthenticated == true)
-            {
-                return Redirect("/");
-            }
-            return View();
-        }
-
         private readonly IAuthService _authService;
 
         public AuthController(IAuthService authService)
@@ -28,10 +17,21 @@ namespace EdManagementSystem.App.Controllers
             _authService = authService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        [HttpGet]
+        [Route("[controller]/login")]
+        public IActionResult Login()
         {
-            var user = _authService.Authenticate(email, password);
+            if (User.Identity!.IsAuthenticated == true)
+            {
+                return Redirect("/");
+            }
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            var user = _authService.Authenticate(model.Email, model.Password);
 
             if (user == null)
             {
@@ -49,14 +49,24 @@ namespace EdManagementSystem.App.Controllers
 
             var authProperties = new AuthenticationProperties
             {
-                //
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(2)
             };
 
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
 
             return Redirect("/");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            return Redirect("/auth/login");
         }
 
         [Route("[controller]/recovery-password")]

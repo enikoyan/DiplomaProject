@@ -1,4 +1,5 @@
 using EdManagementSystem.DataAccess.Data;
+using EdManagementSystem.DataAccess.Infrastructure;
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -35,6 +36,7 @@ namespace EdManagementSystem.App
             ServiceLifetime.Singleton);
 
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             #endregion
 
