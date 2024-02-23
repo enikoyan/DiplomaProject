@@ -13,7 +13,11 @@ namespace EdManagementSystem.App.Controllers
         public IActionResult Index()
         {
             ViewBag.Role = User.FindFirst(ClaimTypes.Role)!.Value;
-            return View();
+            if (User.IsInRole("admin"))
+            {
+                return Redirect("/admin-panel");
+            }
+            else return View();
         }
     }
 }

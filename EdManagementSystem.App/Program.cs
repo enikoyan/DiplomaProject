@@ -3,9 +3,11 @@ using EdManagementSystem.DataAccess.Infrastructure;
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System.Diagnostics;
 
 namespace EdManagementSystem.App
 {
@@ -54,7 +56,6 @@ namespace EdManagementSystem.App
 
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseCookiePolicy();
 
             app.MapControllerRoute(

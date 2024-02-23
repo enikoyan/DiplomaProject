@@ -23,7 +23,11 @@ namespace EdManagementSystem.App.Controllers
         {
             if (User.Identity!.IsAuthenticated == true)
             {
-                return Redirect("/");
+                if (User.IsInRole("admin"))
+                {
+                    return Redirect("/admin-panel");
+                }
+                else return Redirect("/");
             }
             return View();
         }
@@ -58,7 +62,11 @@ namespace EdManagementSystem.App.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            return Redirect("/");
+            if(User.IsInRole("admin"))
+            {
+                return Redirect("admin-panel");
+            }
+            else return Redirect("/");
         }
 
         [HttpPost]
