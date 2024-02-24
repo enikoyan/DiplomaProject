@@ -1,27 +1,3 @@
-/* Hide and Show aside menu */
-const button = document.querySelector(".aside-menu-toggle");
-const targetElement = document.querySelector(".aside");
-
-// Check localStorage
-const isAsideMenuOpen = localStorage.getItem("asideMenuOpen") === "true";
-
-if (isAsideMenuOpen) {
-  targetElement.classList.remove("aside_closed");
-} else {
-  targetElement.classList.add("aside_closed");
-}
-
-button.addEventListener("click", () => {
-  if (targetElement.classList.contains("aside_closed")) {
-    targetElement.classList.remove("aside_closed");
-    localStorage.setItem("asideMenuOpen", "true");
-  } else {
-    targetElement.classList.add("aside_closed");
-    localStorage.setItem("asideMenuOpen", "false");
-  }
-});
-
-
 // Active button
 const menuItems = document.querySelectorAll('.aside-menu__item');
 
@@ -33,20 +9,64 @@ menuItems.forEach(item => {
     }
 });
 
-
 // Change content
-//$(".aside-menu__item").click(function () {
-//    var path = $(this).data("path");
-//    if (path) {
-//        $.ajax({
-//            url: "/dashboard/GetPartialView?path=" + path,
-//            type: "GET",
-//            success: function (data) {
-//                $(".dashboard-content-container").html(data);
-//            },
-//            error: function () {
-//                alert("Error loading data");
-//            }
-//        });
-//    }
-//});
+document.addEventListener('DOMContentLoaded', () => {
+
+    /* Hide and Show aside menu */
+    var key = "menuState";
+    const aside = document.querySelector(".aside");
+    const asideMenuToggle = document.querySelector('.aside-menu-toggle');
+
+    // Добавляем обработчик клика для кнопки меню
+    asideMenuToggle.addEventListener('click', () => {
+        if (aside.classList.contains('aside_closed')) {
+            aside.classList.remove('aside_closed');
+            localStorage.setItem(key, 'TRUE');
+        } else {
+            aside.classList.add('aside_closed');
+            localStorage.setItem(key, 'FALSE')
+        }
+    });
+
+    try {
+        var menuOpen = localStorage.getItem(key);
+        if (menuOpen === null || menuOpen === 'FALSE') {
+            closeNav();
+        }
+        else {
+            openNav();
+        }
+    }
+    catch (ex) {
+        console.log("Ошибка: " + ex.message);
+    }
+
+    function openNav() {
+        const targetElement = document.querySelector(".aside");
+        targetElement.style.display = "flex";
+        targetElement.classList.remove("aside_closed");
+
+        localStorage.setItem(key, 'TRUE');
+    }
+
+    function closeNav() {
+        const targetElement = document.querySelector(".aside");
+        targetElement.style.display = "flex";
+        targetElement.classList.add("aside_closed");
+
+        localStorage.setItem(key, 'FALSE');
+    }
+
+    /* Ajax content loading */
+    const contentContainer = document.querySelector('.dashboard-content-container');
+    const navLinks = document.querySelectorAll('.aside-menu__item');
+    const loadingOverlay = document.querySelector('.dashboard-content-container__loader');
+
+    const showLoadingOverlay = () => {
+        loadingOverlay.style.opacity = '1';
+    };
+
+    const hideLoadingOverlay = () => {
+        loadingOverlay.style.opacity = '0';
+    };
+});

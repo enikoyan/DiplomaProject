@@ -3,6 +3,9 @@ using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Net;
+using System.Text;
 
 namespace EdManagementSystem.DataAccess.Services
 {
@@ -23,7 +26,7 @@ namespace EdManagementSystem.DataAccess.Services
 
             if (user == null)
             {
-                return null;
+                return null!;
             }
 
             else
@@ -33,7 +36,7 @@ namespace EdManagementSystem.DataAccess.Services
                     return user;
                 }
 
-                else return null;
+                else return null!;
             }
         }
     }

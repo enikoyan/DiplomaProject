@@ -29,6 +29,7 @@ namespace EdManagementSystem.API
 
             #endregion
 
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 

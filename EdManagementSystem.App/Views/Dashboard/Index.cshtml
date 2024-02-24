@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Домашняя страница";
+}
+
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
@@ -9,7 +13,7 @@
 </head>
 <body>
     <div class="wrapper wrapper_dashboard">
-        <aside class="aside">
+        <aside class="aside" style="display:none">
             <div class="aside__header">
                 <div class="aside-logo">
                     <img style="width: 50px;" src="~/icons/common-icons/logoUntitled.svg" alt="logotype"
@@ -23,49 +27,49 @@
             <nav class="aside-menu">
                 <ul class="aside-menu__list">
                     <li data-path="profile">
-                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="profile">
+                        <a class="aside-menu__item">
                             <img src="~/icons/aside-menu-icons/profile-icon.svg" alt="profile-icon" class="aside-menu__icon">
                             <span class="aside-menu__span">Профиль</span>
                         </a>
                     </li>
                     <li data-path="students">
-                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="students">
+                        <a class="aside-menu__item">
                             <img src="~/icons/aside-menu-icons/student-icon.svg" alt="student-icon" class="aside-menu__icon">
                             <span class="aside-menu__span">Список студентов</span>
                         </a>
                     </li>
                     <li data-path="schedule">
-                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="schedule">
+                        <a class="aside-menu__item">
                             <img src="~/icons/aside-menu-icons/schedule-icon.svg" alt="schedule-icon" class="aside-menu__icon">
                             <span class="aside-menu__span">Расписание</span>
                         </a>
                     </li>
                     <li data-path="homeworks">
-                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="homeworks">
+                        <a class="aside-menu__item">
                             <img src="~/icons/aside-menu-icons/homework-icon.svg" alt="homework-icon" class="aside-menu__icon">
                             <span class="aside-menu__span">Домашние задания</span>
                         </a>
                     </li>
                     <li data-path="materials">
-                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="materials">
+                        <a class="aside-menu__item">
                             <img src="~/icons/aside-menu-icons/materials-icon.svg" alt="materials-icon" class="aside-menu__icon">
                             <span class="aside-menu__span">Материалы</span>
                         </a>
                     </li>
                     <li data-path="attendance">
-                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="attendance">
+                        <a class="aside-menu__item">
                             <img src="~/icons/aside-menu-icons/attendance-icon.svg" alt="attendance-icon" class="aside-menu__icon">
                             <span class="aside-menu__span">Учет посещаемости</span>
                         </a>
                     </li>
                     <li data-path="analytics">
-                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="analytics">
+                        <a class="aside-menu__item">
                             <img src="~/icons/aside-menu-icons/analytics-icon.svg" alt="analytics-icon" class="aside-menu__icon">
                             <span class="aside-menu__span">Аналитика</span>
                         </a>
                     </li>
                     <li data-path="techSupport">
-                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="techSupport">
+                        <a class="aside-menu__item">
                             <img src="~/icons/aside-menu-icons/tech-support-icon.svg" alt="tech-support-icon" class="aside-menu__icon">
                             <span class="aside-menu__span">Техническая поддержка</span>
                         </a>
@@ -79,12 +83,16 @@
         </aside>
 
         <main class="main dashboard-content-container">
-            @RenderBody()
+            <div class="loading-overlay dashboard-content-container__loader">
+                <div class="loading-text">Загрузка...</div>
+            </div>
+            <div class="dashboard-content-container__content">
+
+            </div>
         </main>
     </div>
 
     <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script type="text/javascript" src="~/js/main.js"></script>
-    @RenderSection("JavaScript", required: false)
+    <script defer type="text/javascript" src="~/js/main.js"></script>
 </body>
 </html>
