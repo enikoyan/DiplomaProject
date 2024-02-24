@@ -22,37 +22,53 @@
             </div>
             <nav class="aside-menu">
                 <ul class="aside-menu__list">
-                    <li class="aside-menu__item">
-                        <img src="~/icons/aside-menu-icons/profile-icon.svg" alt="profile-icon" class="aside-menu__icon">
-                        <span class="aside-menu__span">Профиль</span>
+                    <li data-path="profile">
+                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="profile">
+                            <img src="~/icons/aside-menu-icons/profile-icon.svg" alt="profile-icon" class="aside-menu__icon">
+                            <span class="aside-menu__span">Профиль</span>
+                        </a>
                     </li>
-                    <li class="aside-menu__item">
-                        <img src="~/icons/aside-menu-icons/student-icon.svg" alt="student-icon" class="aside-menu__icon">
-                        <span class="aside-menu__span">Список студентов</span>
+                    <li data-path="students">
+                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="students">
+                            <img src="~/icons/aside-menu-icons/student-icon.svg" alt="student-icon" class="aside-menu__icon">
+                            <span class="aside-menu__span">Список студентов</span>
+                        </a>
                     </li>
-                    <li class="aside-menu__item">
-                        <img src="~/icons/aside-menu-icons/schedule-icon.svg" alt="schedule-icon" class="aside-menu__icon">
-                        <span class="aside-menu__span">Расписание</span>
+                    <li data-path="schedule">
+                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="schedule">
+                            <img src="~/icons/aside-menu-icons/schedule-icon.svg" alt="schedule-icon" class="aside-menu__icon">
+                            <span class="aside-menu__span">Расписание</span>
+                        </a>
                     </li>
-                    <li class="aside-menu__item">
-                        <img src="~/icons/aside-menu-icons/homework-icon.svg" alt="homework-icon" class="aside-menu__icon">
-                        <span class="aside-menu__span">Домашние задания</span>
+                    <li data-path="homeworks">
+                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="homeworks">
+                            <img src="~/icons/aside-menu-icons/homework-icon.svg" alt="homework-icon" class="aside-menu__icon">
+                            <span class="aside-menu__span">Домашние задания</span>
+                        </a>
                     </li>
-                    <li class="aside-menu__item">
-                        <img src="~/icons/aside-menu-icons/materials-icon.svg" alt="materials-icon" class="aside-menu__icon">
-                        <span class="aside-menu__span">Материалы</span>
+                    <li data-path="materials">
+                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="materials">
+                            <img src="~/icons/aside-menu-icons/materials-icon.svg" alt="materials-icon" class="aside-menu__icon">
+                            <span class="aside-menu__span">Материалы</span>
+                        </a>
                     </li>
-                    <li class="aside-menu__item">
-                        <img src="~/icons/aside-menu-icons/attendance-icon.svg" alt="attendance-icon" class="aside-menu__icon">
-                        <span class="aside-menu__span">Учет посещаемости</span>
+                    <li data-path="attendance">
+                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="attendance">
+                            <img src="~/icons/aside-menu-icons/attendance-icon.svg" alt="attendance-icon" class="aside-menu__icon">
+                            <span class="aside-menu__span">Учет посещаемости</span>
+                        </a>
                     </li>
-                    <li class="aside-menu__item">
-                        <img src="~/icons/aside-menu-icons/analytics-icon.svg" alt="analytics-icon" class="aside-menu__icon">
-                        <span class="aside-menu__span">Аналитика</span>
+                    <li data-path="analytics">
+                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="analytics">
+                            <img src="~/icons/aside-menu-icons/analytics-icon.svg" alt="analytics-icon" class="aside-menu__icon">
+                            <span class="aside-menu__span">Аналитика</span>
+                        </a>
                     </li>
-                    <li class="aside-menu__item">
-                        <img src="~/icons/aside-menu-icons/tech-support-icon.svg" alt="tech-support-icon" class="aside-menu__icon">
-                        <span class="aside-menu__span">Техническая поддержка</span>
+                    <li data-path="techSupport">
+                        <a class="aside-menu__item" asp-controller="dashboard" asp-action="techSupport">
+                            <img src="~/icons/aside-menu-icons/tech-support-icon.svg" alt="tech-support-icon" class="aside-menu__icon">
+                            <span class="aside-menu__span">Техническая поддержка</span>
+                        </a>
                     </li>
                     <li class="aside-menu__item">
                         <img src="~/icons/aside-menu-icons/exit-icon.svg" alt="exit-icon" class="aside-menu__icon">
@@ -67,6 +83,7 @@
         </main>
     </div>
 
+    <script src="~/lib/jquery/dist/jquery.js"></script>
     <script type="text/javascript" src="~/js/main.js"></script>
     @RenderSection("JavaScript", required: false)
 </body>

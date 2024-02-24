@@ -25,21 +25,28 @@ button.addEventListener("click", () => {
 // Active button
 const menuItems = document.querySelectorAll('.aside-menu__item');
 
-let activeIndex = localStorage.getItem('activeIndex');
-if (!activeIndex) {
-    activeIndex = '0';
-}
+let path = window.location.pathname.split('/')[2];
 
-menuItems.forEach((item, index) => {
-    if (index.toString() === activeIndex) {
+menuItems.forEach(item => {
+    if (item.parentElement.getAttribute('data-path') === path) {
         item.classList.add('aside-menu__item_active');
     }
 });
 
-menuItems.forEach((item, index) => {
-    item.addEventListener('click', () => {
-        menuItems.forEach(item => item.classList.remove('aside-menu__item_active'));
-        item.classList.add('aside-menu__item_active');
-        localStorage.setItem('activeIndex', index.toString());
-    });
-});
+
+// Change content
+//$(".aside-menu__item").click(function () {
+//    var path = $(this).data("path");
+//    if (path) {
+//        $.ajax({
+//            url: "/dashboard/GetPartialView?path=" + path,
+//            type: "GET",
+//            success: function (data) {
+//                $(".dashboard-content-container").html(data);
+//            },
+//            error: function () {
+//                alert("Error loading data");
+//            }
+//        });
+//    }
+//});

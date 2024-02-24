@@ -53,3 +53,10 @@ table {
 * {
 	-webkit-tap-highlight-color: transparent;
 }
+
+a:active, /* активная/посещенная ссылка */
+a:hover, /* при наведении */
+a {
+	text-decoration: none;
+	color: black;
+}
