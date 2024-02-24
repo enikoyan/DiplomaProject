@@ -18,7 +18,7 @@ namespace EdManagementSystem.App.Controllers
         }
 
         [HttpGet]
-        [Route("[controller]/login")]
+        [Route("auth/login")]
         public IActionResult Login()
         {
             if (User.Identity!.IsAuthenticated == true)

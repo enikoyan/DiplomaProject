@@ -139,14 +139,18 @@ img {
   gap: 15px;
   background-color: rgb(226, 226, 226);
   border-radius: 15px;
+  border: 2px solid transparent;
   padding: 10px;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
   cursor: pointer;
 }
+.aside-menu__item_active {
+  border: 2px solid gray;
+}
 .aside-menu__icon {
-  width: 30px;
+  width: 28px;
 }
 .wrapper_dashboard {
   display: grid;

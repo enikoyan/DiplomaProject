@@ -10,7 +10,7 @@ namespace EdManagementSystem.App.Controllers
             {
                 return Redirect("/admin-panel");
             }
-            else return Redirect("/dashboard");
+            else return Redirect("/dashboard/profile");
         }
     }
 }

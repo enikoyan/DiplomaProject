@@ -51,13 +51,18 @@
     gap: 15px;
     background-color: rgb(226, 226, 226);
     border-radius: 15px;
+    border: 2px solid transparent;
     padding: 10px;
     user-select: none;
     cursor: pointer;
+
+    &_active {
+      border: 2px solid gray;
+    }
   }
 
   &__icon {
-    width: 30px;
+    width: 28px;
   }
 
   &__label {
