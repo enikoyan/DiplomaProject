@@ -26,7 +26,10 @@ namespace EdManagementSystem.App
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
+                    options.Cookie.SameSite = SameSiteMode.Lax;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.None;
                     options.LoginPath = "/auth/login";
+                    options.AccessDeniedPath = "/status/access-denied";
                     options.Cookie.Name = "EdManagementSystemCookie";
                 });
 
@@ -58,9 +61,20 @@ namespace EdManagementSystem.App
             app.UseAuthorization();
             app.UseCookiePolicy();
 
+            app.Use(async (context, next) =>
+            {
+                await next();
+
+                if (context.Response.StatusCode == 404 && !context.Response.HasStarted)
+                {
+                    // Обработка 404 ошибки
+                    context.Response.Redirect("/status/not-found");
+                }
+            });
+
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/");
 
             app.Run();
         }

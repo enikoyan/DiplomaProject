@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="wrapper wrapper_dashboard">
-        <aside class="aside aside_closed">
+        <aside class="aside">
             <div class="aside__header">
                 <div class="aside-logo">
                     <img style="width: 50px;" src="~/icons/common-icons/logoUntitled.svg" alt="logotype"
@@ -55,12 +55,8 @@
                         <span class="aside-menu__span">Техническая поддержка</span>
                     </li>
                     <li class="aside-menu__item">
-                        <form asp-controller="Auth" asp-action="Logout" method="post">
-                            <button style="background: none;border: none;padding: 0;margin: 0;font: inherit;color: inherit;cursor:pointer" type="submit">
-                                <img src="~/icons/aside-menu-icons/exit-icon.svg" alt="exit-icon" class="aside-menu__icon">
-                                <span class="aside-menu__span">Выход</span>
-                            </button>
-                        </form>
+                        <img src="~/icons/aside-menu-icons/exit-icon.svg" alt="exit-icon" class="aside-menu__icon">
+                        <span class="aside-menu__span">Выход</span>
                     </li>
                 </ul>
             </nav>
@@ -70,5 +66,8 @@
             @RenderBody()
         </main>
     </div>
+
+    <script type="text/javascript" src="~/js/main.js"></script>
+    @RenderSection("JavaScript", required: false)
 </body>
 </html>
