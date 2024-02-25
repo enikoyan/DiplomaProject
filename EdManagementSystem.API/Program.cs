@@ -35,6 +35,7 @@ namespace EdManagementSystem.API
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<ICourseService, CourseService>();
 
             var app = builder.Build();
 

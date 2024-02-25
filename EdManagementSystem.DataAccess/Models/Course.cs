@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Models;
@@ -18,12 +19,13 @@ public partial class Course
     [StringLength(255)]
     public string CourseName { get; set; } = null!;
 
-    [Column("course_addDate", TypeName = "int(11)")]
-    public int CourseAddDate { get; set; }
+    [Column("course_addDate")]
+    public DateTime CourseAddDate { get; set; }
 
     [Column("course_tutor", TypeName = "int(11)")]
     public int CourseTutor { get; set; }
 
+    [JsonIgnore]
     [InverseProperty("IdCourseNavigation")]
     public virtual ICollection<Squad> Squads { get; set; } = new List<Squad>();
 }
