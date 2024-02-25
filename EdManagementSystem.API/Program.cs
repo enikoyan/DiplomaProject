@@ -36,6 +36,8 @@ namespace EdManagementSystem.API
             services.AddScoped<ITeacherService, TeacherService>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ICourseService, CourseService>();
+            services.AddScoped<ISquadService, SquadService>();
+            services.AddScoped<ISquadStudentService, SquadStudentService>();
 
             var app = builder.Build();
 

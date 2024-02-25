@@ -6,21 +6,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Models;
 
-[Keyless]
 [Table("SquadStudent")]
 [Index("IdSquad", Name = "id_squad")]
 [Index("IdStudent", Name = "id_student")]
 public partial class SquadStudent
 {
-    [Column("id_squad", TypeName = "int(11)")]
-    public int IdSquad { get; set; }
+    [Key]
+    [Column("id", TypeName = "int(11)")]
+    public int Id { get; set; }
 
     [Column("id_student", TypeName = "int(11)")]
     public int IdStudent { get; set; }
 
+    [Column("id_squad", TypeName = "int(11)")]
+    public int IdSquad { get; set; }
+
+    [Column("attachedDate")]
+    public DateTime AttachedDate { get; set; }
+
     [ForeignKey("IdSquad")]
+    [InverseProperty("SquadStudents")]
     public virtual Squad IdSquadNavigation { get; set; } = null!;
 
     [ForeignKey("IdStudent")]
+    [InverseProperty("SquadStudents")]
     public virtual Student IdStudentNavigation { get; set; } = null!;
 }

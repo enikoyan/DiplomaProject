@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Models;
@@ -24,7 +25,12 @@ public partial class Squad
     [Column("id_course", TypeName = "int(11)")]
     public int IdCourse { get; set; }
 
+    [JsonIgnore]
     [ForeignKey("IdCourse")]
     [InverseProperty("Squads")]
-    public virtual Course IdCourseNavigation { get; set; } = null!;
+    public virtual Course? IdCourseNavigation { get; set; }
+
+    [JsonIgnore]
+    [InverseProperty("IdSquadNavigation")]
+    public virtual ICollection<SquadStudent> SquadStudents { get; set; } = new List<SquadStudent>();
 }

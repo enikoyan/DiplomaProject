@@ -22,4 +22,7 @@ public partial class Student
 
     [Column("birthDate")]
     public DateTime BirthDate { get; set; }
+
+    [InverseProperty("IdStudentNavigation")]
+    public virtual ICollection<SquadStudent> SquadStudents { get; set; } = new List<SquadStudent>();
 }

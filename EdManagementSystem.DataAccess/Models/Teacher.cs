@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Models;
@@ -37,7 +38,8 @@ public partial class Teacher
     [Column("regDate")]
     public DateTime RegDate { get; set; }
 
+    [JsonIgnore]
     [ForeignKey("TeacherId")]
     [InverseProperty("Teacher")]
-    public virtual User TeacherNavigation { get; set; } = null!;
+    public virtual User? TeacherNavigation { get; set; }
 }

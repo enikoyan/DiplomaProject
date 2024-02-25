@@ -49,9 +49,11 @@ public partial class User004Context : DbContext
 
         modelBuilder.Entity<SquadStudent>(entity =>
         {
-            entity.HasOne(d => d.IdSquadNavigation).WithMany().HasConstraintName("SquadStudent_ibfk_1");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.HasOne(d => d.IdStudentNavigation).WithMany().HasConstraintName("SquadStudent_ibfk_2");
+            entity.HasOne(d => d.IdSquadNavigation).WithMany(p => p.SquadStudents).HasConstraintName("SquadStudent_ibfk_1");
+
+            entity.HasOne(d => d.IdStudentNavigation).WithMany(p => p.SquadStudents).HasConstraintName("SquadStudent_ibfk_2");
         });
 
         modelBuilder.Entity<Student>(entity =>
