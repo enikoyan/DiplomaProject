@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     $(document).ready(function () {
         // Menu buttons click handler
         $('.aside-menu__item').click(function (e) {
-            //e.preventDefault();
+            e.preventDefault();
             var url = $(this).attr('href');
 
             // Load content without refreshing the page
