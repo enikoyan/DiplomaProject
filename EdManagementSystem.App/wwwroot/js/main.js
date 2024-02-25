@@ -1,72 +1,67 @@
-// Active button
+// Aside menu buttons
 const menuItems = document.querySelectorAll('.aside-menu__item');
 
-let path = window.location.pathname.split('/')[2];
+function refreshActiveBtn() {
+    let path = window.location.pathname.split('/')[2];
 
-menuItems.forEach(item => {
-    if (item.parentElement.getAttribute('data-path') === path) {
-        item.classList.add('aside-menu__item_active');
-    }
-});
+    menuItems.forEach(item => {
+        item.classList.remove('aside-menu__item_active');
+    });
 
-// Change content
+    menuItems.forEach(item => {
+        if (item.parentElement.getAttribute('data-path') === path) {
+            item.classList.add('aside-menu__item_active');
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* Hide and Show aside menu */
-    var key = "menuState";
-    const aside = document.querySelector(".aside");
-    const asideMenuToggle = document.querySelector('.aside-menu-toggle');
+    $(document).ready(function () {
+        // Menu buttons click handler
+        $('.aside-menu__item').click(function (e) {
+            //e.preventDefault();
+            var url = $(this).attr('href');
 
-    // Добавляем обработчик клика для кнопки меню
-    asideMenuToggle.addEventListener('click', () => {
+            // Load content without refreshing the page
+            $('.dashboard-content-container').load(url + " .main > *", function () {
+                history.pushState(null, null, url);
+                refreshActiveBtn();
+            });
+        });
+
+        // URL changing handler
+        window.onpopstate = function () {
+            var url = location.pathname;
+            $('.dashboard-content-container').load(url + " .main > *");
+            refreshActiveBtn();
+        };
+    });
+
+    // Set active btn
+    refreshActiveBtn();
+
+    /* Hide and Show aside menu */
+    const aside = document.querySelector('.aside');
+    const asideToggle = document.querySelector('.aside-menu-toggle');
+
+    var key = 'asideMenuOpened';
+
+    // Проверка значения в localStorage при загрузке страницы
+    if (localStorage.getItem(key) === 'true') {
+        aside.classList.remove('aside_closed');
+    } else {
+        aside.classList.add('aside_closed');
+    }
+
+    asideToggle.addEventListener('click', () => {
         if (aside.classList.contains('aside_closed')) {
             aside.classList.remove('aside_closed');
-            localStorage.setItem(key, 'TRUE');
+            localStorage.setItem(key, 'true');
         } else {
             aside.classList.add('aside_closed');
-            localStorage.setItem(key, 'FALSE')
+            localStorage.setItem(key, 'false');
         }
     });
 
-    try {
-        var menuOpen = localStorage.getItem(key);
-        if (menuOpen === null || menuOpen === 'FALSE') {
-            closeNav();
-        }
-        else {
-            openNav();
-        }
-    }
-    catch (ex) {
-        console.log("Ошибка: " + ex.message);
-    }
-
-    function openNav() {
-        const targetElement = document.querySelector(".aside");
-        targetElement.style.display = "flex";
-        targetElement.classList.remove("aside_closed");
-
-        localStorage.setItem(key, 'TRUE');
-    }
-
-    function closeNav() {
-        const targetElement = document.querySelector(".aside");
-        targetElement.style.display = "flex";
-        targetElement.classList.add("aside_closed");
-
-        localStorage.setItem(key, 'FALSE');
-    }
-
-    /* Ajax content loading */
-    const contentContainer = document.querySelector('.dashboard-content-container');
-    const navLinks = document.querySelectorAll('.aside-menu__item');
-    const loadingOverlay = document.querySelector('.dashboard-content-container__loader');
-
-    const showLoadingOverlay = () => {
-        loadingOverlay.style.opacity = '1';
-    };
-
-    const hideLoadingOverlay = () => {
-        loadingOverlay.style.opacity = '0';
-    };
 });

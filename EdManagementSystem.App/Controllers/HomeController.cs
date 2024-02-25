@@ -8,9 +8,9 @@ namespace EdManagementSystem.App.Controllers
         {
             if (User.IsInRole("admin"))
             {
-                return Redirect("/admin-panel");
+                return Redirect("admin-panel");
             }
-            else return Redirect("dashboard");
+            else return RedirectToAction("Profile", "Dashboard");
         }
     }
 }

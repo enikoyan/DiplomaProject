@@ -166,21 +166,6 @@ img {
   flex-direction: column;
   gap: 20px;
 }
-.dashboard-content-container__loader {
-  height: 100%;
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  display: flex;
-  opacity: 0;
-}
-.dashboard-content-container__loader .loading-text {
-  background-color: cadetblue;
-  padding: 15px 25px;
-  color: white;
-  border-radius: 10px;
-}
 
 @media (min-width: 769px) {
   .aside_closed {
