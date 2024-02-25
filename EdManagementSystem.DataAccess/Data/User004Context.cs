@@ -8,6 +8,10 @@ namespace EdManagementSystem.DataAccess.Data;
 
 public partial class User004Context : DbContext
 {
+    public User004Context()
+    {
+    }
+
     public User004Context(DbContextOptions<User004Context> options)
         : base(options)
     {
@@ -59,9 +63,12 @@ public partial class User004Context : DbContext
 
         modelBuilder.Entity<Teacher>(entity =>
         {
+            entity.HasKey(e => e.TeacherId).HasName("PRIMARY");
+
+            entity.Property(e => e.TeacherId).ValueGeneratedNever();
             entity.Property(e => e.Rate).HasDefaultValueSql("'4'");
 
-            entity.HasOne(d => d.TeacherNavigation).WithMany().HasConstraintName("Teacher_ibfk_1");
+            entity.HasOne(d => d.TeacherNavigation).WithOne(p => p.Teacher).HasConstraintName("Teacher_ibfk_1");
         });
 
         modelBuilder.Entity<User>(entity =>

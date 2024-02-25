@@ -6,11 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Models;
 
-[Keyless]
 [Table("Teacher")]
-[Index("TeacherId", Name = "teacher_id")]
 public partial class Teacher
 {
+    [Key]
     [Column("teacher_id", TypeName = "int(11)")]
     public int TeacherId { get; set; }
 
@@ -39,5 +38,6 @@ public partial class Teacher
     public DateTime RegDate { get; set; }
 
     [ForeignKey("TeacherId")]
+    [InverseProperty("Teacher")]
     public virtual User TeacherNavigation { get; set; } = null!;
 }

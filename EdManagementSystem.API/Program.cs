@@ -22,16 +22,19 @@ namespace EdManagementSystem.API
 
             // Get DB connection and DBContext
             var connectionString = builderConfig.GetConnectionString("DefaultConnection");
-            services.AddDbContext<User004Context>(dbContextOptions => dbContextOptions
-            .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString) ??
-            throw new InvalidOperationException("Connection string is not found!")),
-            ServiceLifetime.Singleton);
+            services.AddDbContext<User004Context>(dbContextOptions =>
+            {
+                dbContextOptions.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+                dbContextOptions.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            }, ServiceLifetime.Singleton);
 
             #endregion
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
+            services.AddScoped<ITeacherService, TeacherService>();
+            services.AddScoped<IStudentService, StudentService>();
 
             var app = builder.Build();
 

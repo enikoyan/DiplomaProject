@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Models;
@@ -23,4 +24,8 @@ public partial class User
 
     [Column("user_role", TypeName = "enum('teacher','admin')")]
     public string UserRole { get; set; } = null!;
+
+    [JsonIgnore]
+    [InverseProperty("TeacherNavigation")]
+    public virtual Teacher? Teacher { get; set; }
 }
