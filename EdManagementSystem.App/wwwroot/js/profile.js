@@ -1,9 +1,9 @@
 ﻿// APIs
 const getTeacherByEmailAPI = "https://localhost:44370/api/Teachers/GetTeacherByEmail/";
-const getSquadsCount = "https://localhost:44370/api/Teachers/GetSquadsCount/";
-const getStudentsCount = "https://localhost:44370/api/Teachers/GetStudentsCount/";
-const getSquads = "https://localhost:44370/api/Teachers/GetSquadsOfTeacher/";
-const getCourses = "https://localhost:44370/api/Teachers/GetCoursesOfTeacher/";
+const getSquadsCount = "https://localhost:44370/api/profile/GetSquadsCount/";
+const getStudentsCount = "https://localhost:44370/api/profile/GetStudentsCount/";
+const getSquads = "https://localhost:44370/api/profile/GetSquadsOfTeacher/";
+const getCourses = "https://localhost:44370/api/profile/GetCoursesOfTeacher/";
 
 $(document).ready(function () {
 

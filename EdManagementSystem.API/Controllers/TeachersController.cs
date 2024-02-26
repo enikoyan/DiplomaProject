@@ -71,49 +71,5 @@ namespace EdManagementSystem.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        [HttpGet("{teacherEmail}")]
-        public async Task<IActionResult> GetSquadsCount(string teacherEmail)
-        {
-            try
-            {
-                int squadsCount = await _teacherService.GetSquadsCount(teacherEmail);
-                return Ok(squadsCount);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("{teacherEmail}")]
-        public async Task<IActionResult> GetStudentsCount(string teacherEmail)
-        {
-            try
-            {
-                int studentsCount = await _teacherService.GetStudentsCount(teacherEmail);
-                return Ok(studentsCount);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet]
-        [Route("{teacherEmail}")]
-        public async Task<IActionResult> GetCoursesOfTeacher(string teacherEmail)
-        {
-            var courses = await _teacherService.GetCoursesOfTeacher(teacherEmail);
-            return Ok(courses);
-        }
-
-        [HttpGet]
-        [Route("{teacherEmail}")]
-        public async Task<IActionResult> GetSquadsOfTeacher(string teacherEmail)
-        {
-            var squads = await _teacherService.GetSquadsOfTeacher(teacherEmail);
-            return Ok(squads);
-        }
     }
 }
