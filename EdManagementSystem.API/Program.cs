@@ -26,7 +26,18 @@ namespace EdManagementSystem.API
             {
                 dbContextOptions.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
                 dbContextOptions.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-            }, ServiceLifetime.Singleton);
+            }, ServiceLifetime.Transient);
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowOrigin",
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:44354")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
 
             #endregion
 
@@ -48,6 +59,7 @@ namespace EdManagementSystem.API
             }
 
             app.UseHttpsRedirection();
+            app.UseCors("AllowOrigin");
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -1,7 +1,9 @@
 ﻿using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EdManagementSystem.API.Controllers
 {
@@ -28,12 +30,12 @@ namespace EdManagementSystem.API.Controllers
             return Ok(teachers);
         }
 
-        [HttpGet("{teacherId}")]
-        public async Task<IActionResult> GetTeacherById(int teacherId)
+        [HttpGet("{teacherEmail}")]
+        public async Task<IActionResult> GetTeacherByEmail(string teacherEmail)
         {
             try
             {
-                var teacher = await _teacherService.GetTeacherById(teacherId);
+                var teacher = await _teacherService.GetTeacherByEmail(teacherEmail);
                 return Ok(teacher);
             }
             catch (Exception ex)
@@ -68,6 +70,50 @@ namespace EdManagementSystem.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("{teacherEmail}")]
+        public async Task<IActionResult> GetSquadsCount(string teacherEmail)
+        {
+            try
+            {
+                int squadsCount = await _teacherService.GetSquadsCount(teacherEmail);
+                return Ok(squadsCount);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{teacherEmail}")]
+        public async Task<IActionResult> GetStudentsCount(string teacherEmail)
+        {
+            try
+            {
+                int studentsCount = await _teacherService.GetStudentsCount(teacherEmail);
+                return Ok(studentsCount);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("{teacherEmail}")]
+        public async Task<IActionResult> GetCoursesOfTeacher(string teacherEmail)
+        {
+            var courses = await _teacherService.GetCoursesOfTeacher(teacherEmail);
+            return Ok(courses);
+        }
+
+        [HttpGet]
+        [Route("{teacherEmail}")]
+        public async Task<IActionResult> GetSquadsOfTeacher(string teacherEmail)
+        {
+            var squads = await _teacherService.GetSquadsOfTeacher(teacherEmail);
+            return Ok(squads);
         }
     }
 }

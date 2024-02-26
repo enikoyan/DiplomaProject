@@ -68,6 +68,7 @@ public partial class User004Context : DbContext
             entity.HasKey(e => e.TeacherId).HasName("PRIMARY");
 
             entity.Property(e => e.TeacherId).ValueGeneratedNever();
+            entity.Property(e => e.PhoneNumber).IsFixedLength();
             entity.Property(e => e.Rate).HasDefaultValueSql("'4'");
 
             entity.HasOne(d => d.TeacherNavigation).WithOne(p => p.Teacher).HasConstraintName("Teacher_ibfk_1");

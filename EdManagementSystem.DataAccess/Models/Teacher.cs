@@ -32,6 +32,10 @@ public partial class Teacher
     [Column("rate")]
     public double Rate { get; set; }
 
+    [Column("phone_number")]
+    [StringLength(11)]
+    public string? PhoneNumber { get; set; }
+
     [Column("experience", TypeName = "int(11)")]
     public int? Experience { get; set; }
 

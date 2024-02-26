@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EdManagementSystem.App.Controllers
 {
@@ -10,6 +11,8 @@ namespace EdManagementSystem.App.Controllers
         [ActionName("profile")]
         public IActionResult Profile()
         {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            ViewBag.UserId = userId;
             return PartialView();
         }
 
