@@ -6,7 +6,15 @@ const getSquads = "https://localhost:44370/api/Teachers/GetSquadsOfTeacher/";
 const getCourses = "https://localhost:44370/api/Teachers/GetCoursesOfTeacher/";
 
 $(document).ready(function () {
+
     var userId = $('#userId').val();
+
+    if (userId != $('#userId').val()) {
+        localStorage.clear();
+        var userId = $('#userId').val();
+        localStorage.setItem('userId', userId);
+    }
+
 
     // Получение данных из localStorage
     var teacherInfo = JSON.parse(localStorage.getItem('teacherInfo'));
