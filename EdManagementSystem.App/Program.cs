@@ -5,8 +5,10 @@ using EdManagementSystem.DataAccess.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.Net.Http.Headers;
 using System.Diagnostics;
 
 namespace EdManagementSystem.App
@@ -20,13 +22,15 @@ namespace EdManagementSystem.App
             var builderConfig = builder.Configuration;
 
             services.AddControllersWithViews();
+            services.AddResponseCaching();
+            services.AddSession();
 
             #region Authentication
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.Cookie.SameSite = SameSiteMode.Lax;
+                    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.None;
                     options.LoginPath = "/auth/login";
                     options.AccessDeniedPath = "/status/access-denied";
@@ -52,6 +56,7 @@ namespace EdManagementSystem.App
                 app.UseHsts();
             }
 
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -59,6 +64,7 @@ namespace EdManagementSystem.App
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseResponseCaching();
             app.UseCookiePolicy();
 
             app.Use(async (context, next) =>

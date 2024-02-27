@@ -2,6 +2,7 @@
     ViewData["Title"] = "Домашняя страница";
     Layout = "_DashboardLayout";
 }
+@model ProfileViewModel;
 
 <h1 class="title">Профиль</h1>
 <div class="personal-account-info">
@@ -9,22 +10,22 @@
         <div class="personal-account-info__avatar">
             <img id="avatar_icon" src="~/icons/common-icons/avatar-icon.svg" alt="avatar">
         </div>
-        <h3 style="text-align: center;" id="personal-account-info__name"></h3>
-        <span style="text-align: center;" id="personal-account-info__post"></span>
-        <span style="text-align: center;" id="personal-account-info__rate"></span>
+        <h3 style="text-align: center;" id="personal-account-info__name">@Model.Fio</h3>
+        <span style="text-align: center;" id="personal-account-info__post">@Model.Post</span>
+        <span style="text-align: center;" id="personal-account-info__rate">Рейтинг: @Model.Rate</span>
         <input type="hidden" id="userId" value="@ViewBag.UserId" />
         <hr width="100%" size="1" color="#c3c3c3" />
         <div class="personal-account-info__item">
             <img src="~/icons/common-icons/place-icon.svg" alt="place">
-            <span id="personal-account-info__place"></span>
+            <span id="personal-account-info__place">@Model.Place</span>
         </div>
         <div class="personal-account-info__item">
             <img src="~/icons/common-icons/phone-icon.svg" alt="phone-number">
-            <span id="personal-account-info__phone-number"></span>
+            <span id="personal-account-info__phone-number">@Model.PhoneNumber</span>
         </div>
         <div class="personal-account-info__item">
             <img src="../icons/common-icons/email-icon.svg" alt="email">
-            <span id="personal-account-info__email">@ViewBag.UserId</span>
+            <span id="personal-account-info__email">@Model.Email</span>
         </div>
         <hr width="100%" size="1" color="#c3c3c3"/>
         <ul class="social-media-list">
@@ -51,32 +52,37 @@
 
         <div class="state-block">
             <div class="state-block__item">
-                <span>Опыт работы (лет): <span id="experience"></span></span>
+                <span>Опыт работы (лет): <span id="experience">@Model.Experience</span></span>
             </div>
             <div class="state-block__item">
-                <span>На данной платформе с: <span id="regDate"></span></span>
+                <span>На данной платформе с: <span id="regDate">@Model.RegDate</span></span>
             </div>
             <div class="state-block__item">
-                <span>Количество студентов: <span id="studentsCount"></span></span>
+                <span>Количество студентов: <span id="studentsCount">@Model.StudentsCount</span></span>
             </div>
             <div class="state-block__item">
-                <span>Количество групп: <span id="squadsCount"></span></span>
+                <span>Количество групп: <span id="squadsCount">@Model.SquadsCount</span></span>
             </div>
         </div>
 
         <div class="state-block">
             <span>Прикрепленные курсы:</span>
             <ul class="courses-list" id="coursesList">
+                @foreach (var course in @Model.Courses)
+                {
+                    <li class="courses-list__item">@course</li>
+                }
             </ul>
         </div>
 
         <div class="state-block">
             <span>Прикрепленные группы:</span>
             <ul class="courses-list" id="squadsList">
+                @foreach (var squad in Model.Squads)
+                {
+                    <li class="courses-list__item">@squad</li>
+                }
             </ul>
         </div>
     </div>
 </div>
-
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/js/profile.js"></script>
