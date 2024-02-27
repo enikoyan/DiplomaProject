@@ -16,5 +16,6 @@ namespace EdManagementSystem.App.Models
         public int SquadsCount { get; set; }
         public List<string> Squads { get; set; }
         public List<string> Courses { get; set; }
+        public List<List<string>> SocialMediaList { get; set; }
     }
 }

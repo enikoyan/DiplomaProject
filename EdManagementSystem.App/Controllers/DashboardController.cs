@@ -32,7 +32,7 @@ namespace EdManagementSystem.App.Controllers
         {
             ProfileViewModel profileData;
 
-            // Попытка получить данные из кеша
+            // Try to get data from cache
             if (!_memoryCache.TryGetValue(cacheKey, out profileData!))
             {
                 /* GET DATA FROM API if there is no cache */
@@ -48,6 +48,7 @@ namespace EdManagementSystem.App.Controllers
                 DateTime registrationDate = mainInfo!.RegDate;
                 string formattedDate = registrationDate.ToShortDateString();
 
+
                 profileData = new ProfileViewModel
                 {
                     Fio = mainInfo.Fio,
@@ -61,8 +62,9 @@ namespace EdManagementSystem.App.Controllers
                     SquadsCount = additionalInfo[0],
                     StudentsCount = additionalInfo[1],
                     Courses = await GetCourses(userId),
-                    Squads = await GetSquads(userId)
-                };
+                    Squads = await GetSquads(userId),
+                    SocialMediaList = await GetSocialMedia(userId)
+            };
 
                 // Saving data in cache
                 _memoryCache.Set(cacheKey, profileData);
@@ -76,6 +78,30 @@ namespace EdManagementSystem.App.Controllers
             }
 
             return PartialView(profileData);
+        }
+
+        private async Task<List<List<string>>> GetSocialMedia(string userId)
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync(_baseAddress + $"/SocialMedia/GetSocialMedia/{userId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+                var socialMediaList = JsonConvert.DeserializeObject<List<SocialMedium>>(content);
+
+                List<List<string>> result = new List<List<string>>();
+
+                foreach (var sm in socialMediaList)
+                {
+                    result.Add(new List<string> { sm.SocialMediaName, sm.SocialMediaUrl });
+                }
+
+                return result;
+            }
+            else
+            {
+                throw new Exception("Не удалось получить информацию!");
+            }
         }
 
         private async Task<Teacher?> GetMainProfileInfo(string userId)

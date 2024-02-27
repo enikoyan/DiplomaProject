@@ -46,4 +46,7 @@ public partial class Teacher
     [ForeignKey("TeacherId")]
     [InverseProperty("Teacher")]
     public virtual User? TeacherNavigation { get; set; }
+
+    [InverseProperty("IdTeacherNavigation")]
+    public virtual ICollection<SocialMedium> SocialMedia { get; set; } = new List<SocialMedium>();
 }

@@ -29,21 +29,14 @@
         </div>
         <hr width="100%" size="1" color="#c3c3c3"/>
         <ul class="social-media-list">
-            <li class="social-media-list__item">
-                <a href="https://vk.ru" target="_blank">
-                    <img src="~/icons/social-media-icons/vk-icon.svg" alt="vk-icon">
-                </a>
-            </li>
-            <li class="social-media-list__item">
-                <a href="https://whatsapp.ru" target="_blank">
-                    <img src="~/icons/social-media-icons/whatsApp-icon.svg" alt="whatsApp-icon">
-                </a>
-            </li>
-            <li class="social-media-list__item">
-                <a href="https://web.telegram.org" target="_blank">
-                    <img src="~/icons/social-media-icons/telegram-icon.svg" alt="telegram-icon">
-                </a>
-            </li>
+            @foreach (var socialMediaItem in @Model.SocialMediaList)
+            {
+                <li class="social-media-list__item">
+                    <a href="@socialMediaItem[1]" target="_blank">
+                        <img src="~/icons/social-media-icons/@socialMediaItem[0]-icon.svg" alt="@socialMediaItem[0]-icon">
+                    </a>
+                </li>
+            }
         </ul>
     </div>
 

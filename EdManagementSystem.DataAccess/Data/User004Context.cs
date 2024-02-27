@@ -21,6 +21,8 @@ public partial class User004Context : DbContext
 
     public virtual DbSet<Squad> Squads { get; set; }
 
+    public virtual DbSet<SocialMedium> SocialMedia { get; set; }
+
     public virtual DbSet<SquadStudent> SquadStudents { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
@@ -45,6 +47,13 @@ public partial class User004Context : DbContext
             entity.HasKey(e => e.SquadId).HasName("PRIMARY");
 
             entity.HasOne(d => d.IdCourseNavigation).WithMany(p => p.Squads).HasConstraintName("Squad_ibfk_1");
+        });
+
+        modelBuilder.Entity<SocialMedium>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.HasOne(d => d.IdTeacherNavigation).WithMany(p => p.SocialMedia).HasConstraintName("SocialMedia_ibfk_1");
         });
 
         modelBuilder.Entity<SquadStudent>(entity =>
