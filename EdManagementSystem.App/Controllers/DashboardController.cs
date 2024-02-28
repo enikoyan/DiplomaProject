@@ -16,7 +16,8 @@ namespace EdManagementSystem.App.Controllers
         private readonly HttpClient _httpClient;
         private readonly Uri _baseAddress = new Uri("https://localhost:44370/api");
         private readonly IMemoryCache _memoryCache;
-        private readonly string cacheKey = "profileData";
+        private readonly string cacheKeyProfile = "profileData";
+        private readonly string cacheKeyTechSupport = "techSupportData";
 
         public DashboardController(IMemoryCache memoryCache)
         {
@@ -34,7 +35,7 @@ namespace EdManagementSystem.App.Controllers
             ProfileViewModel profileData;
 
             // Try to get data from cache
-            if (!_memoryCache.TryGetValue(cacheKey, out profileData!))
+            if (!_memoryCache.TryGetValue(cacheKeyProfile, out profileData!))
             {
                 /* GET DATA FROM API if there is no cache */
 
@@ -67,7 +68,7 @@ namespace EdManagementSystem.App.Controllers
                 };
 
                 // Saving data in cache
-                _memoryCache.Set(cacheKey, profileData);
+                _memoryCache.Set(cacheKeyProfile, profileData);
             }
 
             return PartialView(profileData);
@@ -143,9 +144,9 @@ namespace EdManagementSystem.App.Controllers
             if (response.IsSuccessStatusCode)
             {
                 var content = response.Content.ReadAsStringAsync().Result;
-                List<string> courses = JsonConvert.DeserializeObject<List<string>>(content);
+                List<string> courses = JsonConvert.DeserializeObject<List<string>>(content)!;
 
-                return courses;
+                return courses!;
             }
             else
             {
@@ -172,6 +173,31 @@ namespace EdManagementSystem.App.Controllers
 
         #endregion
 
+        #region TechSupport
+        [ResponseCache(Duration = 48000, Location = ResponseCacheLocation.Any)]
+        [ActionName("techSupport")]
+        public IActionResult TechSupport()
+        {
+            GetCurrentUserId();
+            
+            string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "answers-list.json");
+            string json = System.IO.File.ReadAllText(jsonFilePath);
+
+            List<TechSupportViewModel> questions = JsonConvert.DeserializeObject<List<TechSupportViewModel>>(json);
+
+            return PartialView(questions);
+        }
+
+        [HttpGet]
+        [ActionName("getCurrentUserId")]
+        public IActionResult GetCurrentUserId()
+        {
+            string userId = HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
+            return Ok(userId);
+        }
+
+        #endregion
+
         #region GetPages
         [ActionName("students")]
         public IActionResult Students()
@@ -183,18 +209,6 @@ namespace EdManagementSystem.App.Controllers
         public IActionResult Schedule()
         {
             return PartialView();
-        }
-
-        [ResponseCache(Duration = 48000, Location = ResponseCacheLocation.Any)]
-        [ActionName("techSupport")]
-        public IActionResult TechSupport()
-        {
-            string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "answers-list.json");
-            string json = System.IO.File.ReadAllText(jsonFilePath);
-
-            List<TechSupportViewModel> questions = JsonConvert.DeserializeObject<List<TechSupportViewModel>>(json);
-
-            return PartialView(questions);
         }
 
         [ActionName("attendance")]

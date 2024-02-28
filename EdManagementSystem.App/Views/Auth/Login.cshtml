@@ -5,7 +5,7 @@
 <div class="wrapper wrapper_login">
     @model LoginViewModel
     <div class="login-form-container">
-        <form method="post" class="login-form" asp-action="Login" asp-controller="Auth">
+        <form method="post" class="login-form" asp-action="Login" asp-controller="Auth" asp-antiforgery="false">
             <img src="~/icons/common-icons/logo.svg" alt="logotypeImg" class="logotype login-form__img">
             <h1 class="title login-form__title">Авторизация</h1>
             <span style="text-align:center; color:red">@ViewBag.ErrorEmail</span>
