@@ -2,6 +2,7 @@
 using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System.Security.Claims;
@@ -25,7 +26,7 @@ namespace EdManagementSystem.App.Controllers
         }
 
         #region ProfileInfo
-        [ResponseCache(Duration = 48000, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 48000, Location = ResponseCacheLocation.Any, NoStore = false)]
         [ActionName("profile")]
         [HttpGet]
         public async Task<IActionResult> Profile()
@@ -47,7 +48,6 @@ namespace EdManagementSystem.App.Controllers
                 // Formate data
                 DateTime registrationDate = mainInfo!.RegDate;
                 string formattedDate = registrationDate.ToShortDateString();
-
 
                 profileData = new ProfileViewModel
                 {

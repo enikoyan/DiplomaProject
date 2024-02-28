@@ -28,22 +28,4 @@
     </form>
 </div>
 
-<script async>
-    document.addEventListener("DOMContentLoaded", () => {
-        const questionsItemToggleBtns = document.querySelectorAll(".questions-item__toggle-btn");
-        const questionsItemAnswers = document.querySelectorAll(".questions-item__answer");
-
-        questionsItemToggleBtns.forEach((btn, index) => {
-            btn.addEventListener("click", () => {
-                const answer = questionsItemAnswers[index];
-                if (btn.textContent === "+") {
-                    btn.textContent = "-";
-                    answer.style.maxHeight = answer.scrollHeight + "px";
-                } else {
-                    btn.textContent = "+";
-                    answer.style.maxHeight = "0";
-                }
-            });
-        });
-    });
-</script>
+<script async asp-append-version="true" src="~/js/techSupport.js"></script>

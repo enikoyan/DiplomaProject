@@ -31,6 +31,8 @@ public partial class User004Context : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<TechSupport> TechSupports { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -89,6 +91,17 @@ public partial class User004Context : DbContext
 
             entity.Property(e => e.UserPassword).IsFixedLength();
             entity.Property(e => e.UserRole).HasDefaultValueSql("'teacher'");
+        });
+
+        modelBuilder.Entity<TechSupport>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.Property(e => e.Status).HasDefaultValueSql("'в обработке'");
+
+            entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.TechSupports)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("TechSupport_ibfk_1");
         });
 
         OnModelCreatingPartial(modelBuilder);

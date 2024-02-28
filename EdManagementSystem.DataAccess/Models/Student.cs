@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Models;
@@ -23,6 +24,7 @@ public partial class Student
     [Column("birthDate")]
     public DateTime BirthDate { get; set; }
 
+    [JsonIgnore]
     [InverseProperty("IdStudentNavigation")]
     public virtual ICollection<SquadStudent> SquadStudents { get; set; } = new List<SquadStudent>();
 }

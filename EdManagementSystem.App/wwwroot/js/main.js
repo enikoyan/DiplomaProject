@@ -1,4 +1,4 @@
-// Aside menu buttons
+п»ї// Aside menu buttons
 const menuItems = document.querySelectorAll('.aside-menu__item');
 
 function refreshActiveBtn() {
@@ -21,7 +21,6 @@ const asideToggle = document.querySelector('.aside-menu-toggle');
 
 var key = 'asideMenuOpened';
 
-// Проверка значения в localStorage при загрузке страницы
 if (localStorage.getItem(key) === 'true') {
     aside.classList.remove('aside_closed');
 } else {
@@ -39,23 +38,26 @@ asideToggle.addEventListener('click', () => {
 });
 
 $(document).ready(function () {
-    // Menu buttons click handler
-    $('.aside-menu__item').click(function (e) {
-        e.preventDefault();
-        var url = $(this).attr('href');
 
-        // Load content without refreshing the page
-        $('.dashboard-content-container').load(url + " .main > *", function () {
-            history.pushState(null, null, url);
-            refreshActiveBtn();
-        });
-    });
+    //// Menu buttons click handler
+    //$('.aside-menu__item').click(function (e) {
+    //    e.preventDefault();
+    //    var url = $(this).attr('href');
+
+    //    // Load content without refreshing the page
+    //    $('.dashboard-content-container').load(url + " .main > *", function () {
+    //        history.pushState(null, null, url);
+    //        refreshActiveBtn();
+    //    });
+    //});
 
     // URL changing handler
     window.onpopstate = function () {
-        var url = location.pathname;
-        $('.dashboard-content-container').load(url + " .main > *");
-        const script = document.createElement("script"),
-            text = document.createTextNode("console.log('foo')");
+        //var url = location.pathname;
+        //$('.dashboard-content-container').load(url + " .main > *");
+        refreshActiveBtn();
     };
 });
+
+// Set active btn
+refreshActiveBtn();

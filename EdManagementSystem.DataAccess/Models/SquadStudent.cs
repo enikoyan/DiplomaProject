@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Models;
@@ -24,11 +25,13 @@ public partial class SquadStudent
     [Column("attachedDate")]
     public DateTime AttachedDate { get; set; }
 
+    [JsonIgnore]
     [ForeignKey("IdSquad")]
     [InverseProperty("SquadStudents")]
-    public virtual Squad IdSquadNavigation { get; set; } = null!;
+    public virtual Squad? IdSquadNavigation { get; set; }
 
+    [JsonIgnore]
     [ForeignKey("IdStudent")]
     [InverseProperty("SquadStudents")]
-    public virtual Student IdStudentNavigation { get; set; } = null!;
+    public virtual Student? IdStudentNavigation { get; set; }
 }

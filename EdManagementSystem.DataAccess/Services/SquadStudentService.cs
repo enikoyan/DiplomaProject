@@ -52,6 +52,5 @@ namespace EdManagementSystem.DataAccess.Services
             return true;
         }
 
-
     }
 }
