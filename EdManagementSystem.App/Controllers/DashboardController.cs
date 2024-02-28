@@ -25,7 +25,7 @@ namespace EdManagementSystem.App.Controllers
         }
 
         #region ProfileInfo
-        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 48000, Location = ResponseCacheLocation.Any)]
         [ActionName("profile")]
         [HttpGet]
         public async Task<IActionResult> Profile()
@@ -64,17 +64,10 @@ namespace EdManagementSystem.App.Controllers
                     Courses = await GetCourses(userId),
                     Squads = await GetSquads(userId),
                     SocialMediaList = await GetSocialMedia(userId)
-            };
+                };
 
                 // Saving data in cache
                 _memoryCache.Set(cacheKey, profileData);
-
-                // Using Responde cache
-                Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
-                {
-                    Private = true,
-                    MaxAge = TimeSpan.FromSeconds(3600),
-                };
             }
 
             return PartialView(profileData);
@@ -192,10 +185,16 @@ namespace EdManagementSystem.App.Controllers
             return PartialView();
         }
 
+        [ResponseCache(Duration = 48000, Location = ResponseCacheLocation.Any)]
         [ActionName("techSupport")]
         public IActionResult TechSupport()
         {
-            return PartialView();
+            string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "answers-list.json");
+            string json = System.IO.File.ReadAllText(jsonFilePath);
+
+            List<TechSupportViewModel> questions = JsonConvert.DeserializeObject<List<TechSupportViewModel>>(json);
+
+            return PartialView(questions);
         }
 
         [ActionName("attendance")]

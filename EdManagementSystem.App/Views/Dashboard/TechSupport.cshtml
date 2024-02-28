@@ -2,5 +2,48 @@
     ViewData["Title"] = "Домашняя страница";
     Layout = "_DashboardLayout";
 }
+@model List<TechSupportViewModel>
 
-<h1>Техническая поддержка</h1>
+<h1 class="title">Техническая поддержка</h1>
+<h3>Часто задаваемые вопросы</h3>
+<div class="questions">
+    @foreach (var question in Model)
+    {
+        <div class="questions-item">
+            <div class="questions-item__header">
+                <h4 class="questions-item__title">@question.Question</h4>
+                <button class="questions-item__toggle-btn">+</button>
+            </div>
+            <p class="questions-item__answer">@question.Answer</p>
+        </div>
+    }
+</div>
+<hr width="100%" size="1" color="#c3c3c3" />
+<div class="question-form">
+    <h3>Не нашли ответа на свой вопрос?</h3>
+    <p>Опишите проблему в поле ниже и с вами обязательно свяжутся по электронной почте, указанной в профиле!</p>
+    <form method="post" class="question-form__container">
+        <textarea id="question-form__text" name="question" rows="10"></textarea>
+        <button type="submit" class="custom-btn question-form__btn">Отправить</button>
+    </form>
+</div>
+
+<script async>
+    document.addEventListener("DOMContentLoaded", () => {
+        const questionsItemToggleBtns = document.querySelectorAll(".questions-item__toggle-btn");
+        const questionsItemAnswers = document.querySelectorAll(".questions-item__answer");
+
+        questionsItemToggleBtns.forEach((btn, index) => {
+            btn.addEventListener("click", () => {
+                const answer = questionsItemAnswers[index];
+                if (btn.textContent === "+") {
+                    btn.textContent = "-";
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                } else {
+                    btn.textContent = "+";
+                    answer.style.maxHeight = "0";
+                }
+            });
+        });
+    });
+</script>

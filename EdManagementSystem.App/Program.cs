@@ -23,7 +23,6 @@ namespace EdManagementSystem.App
 
             services.AddControllersWithViews();
             services.AddResponseCaching();
-            services.AddSession();
 
             #region Authentication
 
@@ -42,7 +41,7 @@ namespace EdManagementSystem.App
             services.AddDbContext<User004Context>(dbContextOptions => dbContextOptions
             .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString) ??
             throw new InvalidOperationException("Connection string is not found!")),
-            ServiceLifetime.Singleton);
+            ServiceLifetime.Transient);
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
@@ -56,7 +55,6 @@ namespace EdManagementSystem.App
                 app.UseHsts();
             }
 
-            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -64,8 +62,8 @@ namespace EdManagementSystem.App
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseResponseCaching();
             app.UseCookiePolicy();
+            app.UseResponseCaching();
 
             app.Use(async (context, next) =>
             {

@@ -55,9 +55,7 @@ $(document).ready(function () {
     window.onpopstate = function () {
         var url = location.pathname;
         $('.dashboard-content-container').load(url + " .main > *");
-        refreshActiveBtn();
+        const script = document.createElement("script"),
+            text = document.createTextNode("console.log('foo')");
     };
 });
-
-// Set active btn
-refreshActiveBtn();
