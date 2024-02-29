@@ -123,6 +123,23 @@ namespace EdManagementSystem.API.Controllers
     public class TechSupportRequestModel
     {
         public required string UserEmail { get; set; }
-        public required string RequestDescription { get; set; }
+        private string _requestDescription = null!;
+        public string RequestDescription
+        {
+            get { return _requestDescription; }
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Запрос не может быть пустым!");
+                }
+                if (value.Trim().Length < 250)
+                {
+                    throw new ArgumentException("Запрос не может быть меньше 250 символов!");
+                }
+
+                _requestDescription = value;
+            }
+        }
     }
 }
