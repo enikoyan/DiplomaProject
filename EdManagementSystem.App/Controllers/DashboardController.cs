@@ -16,8 +16,6 @@ namespace EdManagementSystem.App.Controllers
         private readonly HttpClient _httpClient;
         private readonly Uri _baseAddress = new Uri("https://localhost:7269/api");
         private readonly IMemoryCache _memoryCache;
-        private string cacheKey_profile { get; set; } = null!;
-        private string cacheKey_students { get; set; } = null!;
 
         public DashboardController(IMemoryCache memoryCache)
         {
@@ -32,30 +30,30 @@ namespace EdManagementSystem.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            // Check is there any cache for this query
-            cacheKey_profile = $"profile_{User.Identity.Name}";
+            // Get userID (email)
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            var cacheKey_profile = $"profile_{userId}";
 
-            // If there is not cache then we create new one
-            var data = await _memoryCache.GetOrCreateAsync(cacheKey_profile, async entry => {
+            // Check if there is already a cache for this query
+            if (!_memoryCache.TryGetValue(cacheKey_profile, out ProfileViewModel data))
+            {
+                // If cache does not exist, create a new one
 
-                // Cache live time
-                entry.SetAbsoluteExpiration(TimeSpan.FromDays(7));
-                
-                ProfileViewModel profileData;
+                // Create cache entry options
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromDays(7)); // Cache lifetime
 
                 /* GET DATA FROM API if there is no cache */
-                // Get userID (email)
-                var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-
                 // Get mainInfo from API
-                var mainInfo = await GetMainProfileInfo(userId!);
-                var additionalInfo = await GetAdditionalInfo(userId!);
+                var mainInfo = await GetMainProfileInfo(userId);
+                var additionalInfo = await GetAdditionalInfo(userId);
 
-                // Formate data
+                // Format data
                 DateTime registrationDate = mainInfo!.RegDate;
                 string formattedDate = registrationDate.ToShortDateString();
 
-                profileData = new ProfileViewModel
+                // Create view model with data
+                var profileData = new ProfileViewModel
                 {
                     Fio = mainInfo.Fio,
                     Post = mainInfo.Post,
@@ -72,8 +70,12 @@ namespace EdManagementSystem.App.Controllers
                     SocialMediaList = await GetSocialMedia(userId)
                 };
 
-                return profileData;
-            });
+                // Store the view model in cache
+                _memoryCache.Set(cacheKey_profile, profileData, cacheEntryOptions);
+
+                // Use the data as the response
+                data = profileData;
+            }
 
             return PartialView(data);
         }
