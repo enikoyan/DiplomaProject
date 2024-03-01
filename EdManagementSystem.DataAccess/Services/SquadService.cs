@@ -80,7 +80,13 @@ namespace EdManagementSystem.DataAccess.Services
                 throw new Exception("Курс не найден!");
             }
 
-            // Помечаем сущность как добавляемую в контекст
+            var existingSquad = await _context.Squads.FirstOrDefaultAsync(s => s.SquadName == squad.SquadName);
+
+            if (existingSquad != null)
+            {
+                throw new Exception("Группа с таким именем уже существует!");
+            }
+
             _context.Entry(squad).State = EntityState.Added;
 
             await _context.SaveChangesAsync();

@@ -19,6 +19,10 @@ public partial class Squad
     [StringLength(255)]
     public string SquadName { get; set; } = null!;
 
+    [Column("option_value")]
+    [StringLength(255)]
+    public string OptionValue { get; set; } = null!;
+
     [Column("addDate")]
     public DateTime AddDate { get; set; }
 

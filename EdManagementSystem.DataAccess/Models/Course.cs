@@ -19,6 +19,10 @@ public partial class Course
     [StringLength(255)]
     public string CourseName { get; set; } = null!;
 
+    [Column("option_value")]
+    [StringLength(255)]
+    public string OptionValue { get; set; } = null!;
+
     [Column("course_addDate")]
     public DateTime CourseAddDate { get; set; }
 

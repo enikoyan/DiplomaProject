@@ -1,0 +1,29 @@
+.custom-table {
+  text-align: left;
+  border-collapse: separate;
+  border-spacing: 0 1em;
+
+  tr {
+    background-color: rgb(211, 211, 211);
+    text-align: center;
+    border-radius: 15px;
+    cursor: pointer;
+  }
+
+  thead tr {
+    cursor: default;
+  }
+
+  tr th {
+    padding: 15px;
+    vertical-align: middle;
+
+    &:first-child {
+      border-radius: 10px 0 0 10px;
+    }
+
+    &:last-child {
+      border-radius: 0 10px 10px 0;
+    }
+  }
+}

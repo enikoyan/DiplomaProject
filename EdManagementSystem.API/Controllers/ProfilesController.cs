@@ -45,6 +45,22 @@ namespace EdManagementSystem.API.Controllers
 
         [HttpGet]
         [Route("{teacherEmail}")]
+        public async Task<IActionResult> GetCoursesNamesOfTeacher(string teacherEmail)
+        {
+            var courses = await _profileService.GetCoursesNamesOfTeacher(teacherEmail);
+            return Ok(courses);
+        }
+
+        [HttpGet]
+        [Route("{teacherEmail}")]
+        public async Task<IActionResult> GetSquadsNamesOfTeacher(string teacherEmail)
+        {
+            var squads = await _profileService.GetSquadsNamesOfTeacher(teacherEmail);
+            return Ok(squads);
+        }
+
+        [HttpGet]
+        [Route("{teacherEmail}")]
         public async Task<IActionResult> GetCoursesOfTeacher(string teacherEmail)
         {
             var courses = await _profileService.GetCoursesOfTeacher(teacherEmail);

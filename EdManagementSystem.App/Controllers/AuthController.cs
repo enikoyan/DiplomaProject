@@ -1,25 +1,21 @@
 ﻿using EdManagementSystem.App.Models;
 using EdManagementSystem.DataAccess.Interfaces;
-using EdManagementSystem.DataAccess.Models;
+using EdManagementSystem.DataAccess.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
-using System.Text.Json;
 
-namespace EdManagementSystem.App.Controllers
+namespace EdManagementSystem.App.Controllers    
 {
+    [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client, NoStore = false)]
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        private readonly IMemoryCache _memoryCache;
 
-        public AuthController(IAuthService authService, IMemoryCache memoryCache)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _memoryCache = memoryCache;
         }
 
         [HttpGet]
@@ -48,14 +44,6 @@ namespace EdManagementSystem.App.Controllers
                 return View();
             }
 
-            var userEmail = _memoryCache.Get<string>("UserEmail");
-
-            if (userEmail != user.UserEmail)
-            {
-                _memoryCache.Remove("UserEmail");
-                _memoryCache.Remove("profileData");
-            }
-
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.UserEmail),
@@ -79,18 +67,12 @@ namespace EdManagementSystem.App.Controllers
             {
                 return Redirect("admin-panel");
             }
-            else
-            {
-                _memoryCache.Set("UserEmail", user.UserEmail);
-                return Redirect("/");
-            }
+            else return Redirect("/");
         }
 
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            //_memoryCache.Remove("profileData");
-
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return Redirect("/auth/login");

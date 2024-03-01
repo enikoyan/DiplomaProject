@@ -1,5 +1,6 @@
 ﻿using EdManagementSystem.DataAccess.Data;
 using EdManagementSystem.DataAccess.Interfaces;
+using EdManagementSystem.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Services
@@ -66,7 +67,7 @@ namespace EdManagementSystem.DataAccess.Services
             return squadIds.Count;
         }
 
-        public async Task<List<string>> GetCoursesOfTeacher(string teacherEmail)
+        public async Task<List<string>> GetCoursesNamesOfTeacher(string teacherEmail)
         {
             // Get teacherId
             var user = await _context.Users.FirstOrDefaultAsync(s => s.UserEmail == teacherEmail);
@@ -78,10 +79,10 @@ namespace EdManagementSystem.DataAccess.Services
             }
 
             // Get courses of this teacher
-            return FindCoursesByTutorId(teacher!.TeacherId);
+            return FindCoursesNamesByTutorId(teacher!.TeacherId);
         }
 
-        public async Task<List<string>> GetSquadsOfTeacher(string teacherEmail)
+        public async Task<List<string>> GetSquadsNamesOfTeacher(string teacherEmail)
         {
             // Get teacherId
             var user = await _context.Users.FirstOrDefaultAsync(s => s.UserEmail == teacherEmail);
@@ -99,7 +100,47 @@ namespace EdManagementSystem.DataAccess.Services
             List<string> squads = new List<string>();
             foreach (var courseId in coursesIds)
             {
-                List<string> squadList = FindSquadsByCourseId(courseId);
+                List<string> squadList = FindSquadsNamesByCourseId(courseId);
+                squads.AddRange(squadList);
+            };
+
+            return squads;
+        }
+
+        public async Task<List<Course>> GetCoursesOfTeacher(string teacherEmail)
+        {
+            // Get teacherId
+            var user = await _context.Users.FirstOrDefaultAsync(s => s.UserEmail == teacherEmail);
+            var teacher = _context.Teachers.FirstOrDefault(t => t.TeacherId == user!.UserId);
+
+            if (teacher == null || user == null)
+            {
+                throw new Exception("Такого преподавателя нет!");
+            }
+
+            // Get courses of this teacher
+            return FindCoursesByTutorId(teacher!.TeacherId);
+        }
+
+        public async Task<List<Squad>> GetSquadsOfTeacher(string teacherEmail)
+        {
+            // Get teacherId
+            var user = await _context.Users.FirstOrDefaultAsync(s => s.UserEmail == teacherEmail);
+            var teacher = _context.Teachers.FirstOrDefault(t => t.TeacherId == user.UserId);
+
+            if (teacher == null || user == null)
+            {
+                throw new Exception("Такого преподавателя нет!");
+            }
+
+            // Get courses of this teacher
+            List<int> coursesIds = FindCoursesIdsByTutorId(teacher!.TeacherId);
+
+            // Get squads of found courses
+            List<Squad> squads = new List<Squad>();
+            foreach (var courseId in coursesIds)
+            {
+                List<Squad> squadList = FindSquadsByCourseId(courseId);
                 squads.AddRange(squadList);
             };
 
@@ -134,7 +175,7 @@ namespace EdManagementSystem.DataAccess.Services
             return _context.SquadStudents.Where(ss => squadIds.Contains(ss.IdSquad)).Select(ss => ss.IdStudent).Distinct().Count();
         }
 
-        private List<string> FindCoursesByTutorId(int tutorId)
+        private List<string> FindCoursesNamesByTutorId(int tutorId)
         {
             List<string> courses = _context.Courses
                 .Where(c => c.CourseTutor == tutorId)
@@ -144,7 +185,7 @@ namespace EdManagementSystem.DataAccess.Services
             return courses;
         }
 
-        private List<string> FindSquadsByCourseId(int courseId)
+        private List<string> FindSquadsNamesByCourseId(int courseId)
         {
             List<string> squads = _context.Squads
             .Where(s => s.IdCourse == courseId)
@@ -152,6 +193,16 @@ namespace EdManagementSystem.DataAccess.Services
             .ToList();
 
             return squads;
+        }
+
+        private List<Course> FindCoursesByTutorId(int tutorId)
+        {
+            return _context.Courses.Where(s => s.CourseTutor == tutorId).ToList();
+        }
+
+        private List<Squad> FindSquadsByCourseId(int courseId)
+        {
+            return _context.Squads.Where(s => s.IdCourse == courseId).ToList();
         }
         #endregion
     }

@@ -14,10 +14,10 @@ namespace EdManagementSystem.App.Controllers
     public class DashboardController : Controller
     {
         private readonly HttpClient _httpClient;
-        private readonly Uri _baseAddress = new Uri("https://localhost:44370/api");
+        private readonly Uri _baseAddress = new Uri("https://localhost:7269/api");
         private readonly IMemoryCache _memoryCache;
-        private readonly string cacheKeyProfile = "profileData";
-        private readonly string cacheKeyTechSupport = "techSupportData";
+        private string cacheKey_profile { get; set; } = null!;
+        private string cacheKey_students { get; set; } = null!;
 
         public DashboardController(IMemoryCache memoryCache)
         {
@@ -27,18 +27,23 @@ namespace EdManagementSystem.App.Controllers
         }
 
         #region ProfileInfo
-        [ResponseCache(Duration = 48000, Location = ResponseCacheLocation.Any, NoStore = false)]
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client, VaryByHeader = "User-Agent")]
         [ActionName("profile")]
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            ProfileViewModel profileData;
+            // Check is there any cache for this query
+            cacheKey_profile = $"profile_{User.Identity.Name}";
 
-            // Try to get data from cache
-            if (!_memoryCache.TryGetValue(cacheKeyProfile, out profileData!))
-            {
+            // If there is not cache then we create new one
+            var data = await _memoryCache.GetOrCreateAsync(cacheKey_profile, async entry => {
+
+                // Cache live time
+                entry.SetAbsoluteExpiration(TimeSpan.FromDays(7));
+                
+                ProfileViewModel profileData;
+
                 /* GET DATA FROM API if there is no cache */
-
                 // Get userID (email)
                 var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
@@ -62,16 +67,15 @@ namespace EdManagementSystem.App.Controllers
                     RegDate = formattedDate,
                     SquadsCount = additionalInfo[0],
                     StudentsCount = additionalInfo[1],
-                    Courses = await GetCourses(userId),
-                    Squads = await GetSquads(userId),
+                    Courses = await GetCoursesNames(userId),
+                    Squads = await GetSquadsNames(userId),
                     SocialMediaList = await GetSocialMedia(userId)
                 };
 
-                // Saving data in cache
-                _memoryCache.Set(cacheKeyProfile, profileData);
-            }
+                return profileData;
+            });
 
-            return PartialView(profileData);
+            return PartialView(data);
         }
 
         private async Task<List<List<string>>> GetSocialMedia(string userId)
@@ -137,9 +141,9 @@ namespace EdManagementSystem.App.Controllers
             }
         }
 
-        private async Task<List<string>> GetCourses(string userId)
+        private async Task<List<string>> GetCoursesNames(string userId)
         {
-            HttpResponseMessage response = await _httpClient.GetAsync(_baseAddress + $"/profile/GetCoursesOfTeacher/{userId}");
+            HttpResponseMessage response = await _httpClient.GetAsync(_baseAddress + $"/profile/GetCoursesNamesOfTeacher/{userId}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -154,9 +158,9 @@ namespace EdManagementSystem.App.Controllers
             }
         }
 
-        private async Task<List<string>> GetSquads(string userId)
+        private async Task<List<string>> GetSquadsNames(string userId)
         {
-            HttpResponseMessage response = await _httpClient.GetAsync(_baseAddress + $"/profile/GetSquadsOfTeacher/{userId}");
+            HttpResponseMessage response = await _httpClient.GetAsync(_baseAddress + $"/profile/GetSquadsNamesOfTeacher/{userId}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -179,7 +183,7 @@ namespace EdManagementSystem.App.Controllers
         public IActionResult TechSupport()
         {
             GetCurrentUserId();
-            
+
             string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "answers-list.json");
             string json = System.IO.File.ReadAllText(jsonFilePath);
 
@@ -198,12 +202,84 @@ namespace EdManagementSystem.App.Controllers
 
         #endregion
 
-        #region GetPages
+        #region StudentsPage
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.None, VaryByHeader = "User-Agent")]
         [ActionName("students")]
-        public IActionResult Students()
+        [HttpGet]
+        public async Task<IActionResult> Students()
         {
-            return PartialView();
+            // Get userID (email)
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            var cacheKey_students = $"studentsOf_{userId}";
+
+            // Check if there is already a cache for this query
+            if (!_memoryCache.TryGetValue(cacheKey_students, out StudentsPageViewModel data))
+            {
+                // If cache does not exist, create a new one
+
+                // Create cache entry options
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    // Cache lifetime
+                    .SetAbsoluteExpiration(TimeSpan.FromDays(7));
+
+                // Get courses and squads based on user ID
+                var coursesList = await GetCourses(userId);
+                var squadsList = await GetSquads(userId);
+
+                // Create view model with data
+                var studentsVM = new StudentsPageViewModel
+                {
+                    coursesList = coursesList,
+                    squadsList = squadsList
+                };
+
+                // Store the view model in cache
+                _memoryCache.Set(cacheKey_students, studentsVM, cacheEntryOptions);
+
+                // Use the data as the response
+                data = studentsVM;
+            }
+
+            return PartialView(data);
         }
+
+        private async Task<List<Course>> GetCourses(string userId)
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync(_baseAddress + $"/profile/GetCoursesOfTeacher/{userId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = response.Content.ReadAsStringAsync().Result;
+                List<Course> courses = JsonConvert.DeserializeObject<List<Course>>(content)!;
+
+                return courses!;
+            }
+            else
+            {
+                throw new Exception("Не удалось получить информацию!");
+            }
+        }
+
+        private async Task<List<Squad>> GetSquads(string userId)
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync(_baseAddress + $"/profile/GetSquadsOfTeacher/{userId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = response.Content.ReadAsStringAsync().Result;
+                List<Squad> squads = JsonConvert.DeserializeObject<List<Squad>>(content)!;
+
+                return squads;
+            }
+            else
+            {
+                throw new Exception("Не удалось получить информацию!");
+            }
+        }
+
+        #endregion
+
+        #region GetPages
 
         [ActionName("schedule")]
         public IActionResult Schedule()

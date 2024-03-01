@@ -1,0 +1,36 @@
+.search-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+
+  &__filter {
+    &_courses {
+    }
+
+    &_student-groups {
+    }
+  }
+
+  &__btn {
+  }
+}
+
+@media (max-width: 600px) {
+  .custom-table_student-list {
+    th:first-child,
+    th:last-child {
+      display: table-cell;
+    }
+
+    th:not(:first-child):not(:last-child) {
+      display: none;
+    }
+  }
+}
+
+.search-input {
+}
+
+.custom-table_student-list {
+}
