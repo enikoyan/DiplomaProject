@@ -1,4 +1,5 @@
 ﻿using EdManagementSystem.App.Models;
+using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +16,19 @@ namespace EdManagementSystem.App.Controllers
     {
         private readonly HttpClient _httpClient;
         private readonly Uri _baseAddress = new Uri("https://localhost:7269/api");
-        private readonly IMemoryCache _memoryCache;
+        private readonly ICacheService _cacheService;
+        private string userId { get; set; } = null!;
 
-        public DashboardController(IMemoryCache memoryCache)
+        // CacheKeys
+        private string cacheKey_profile { get; set; } = null!;
+        private string cacheKey_students { get; set; } = null!;
+        private string cacheKey_techSupport { get; set; } = null!;
+
+        public DashboardController(ICacheService cacheService)
         {
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = _baseAddress;
-            _memoryCache = memoryCache;
+            _cacheService = cacheService;
         }
 
         #region ProfileInfo
@@ -30,30 +37,18 @@ namespace EdManagementSystem.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            // Get userID (email)
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-            var cacheKey_profile = $"profile_{userId}";
+            userId = HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
+            cacheKey_profile = $"profile_{userId}";
 
-            // Check if there is already a cache for this query
-            if (!_memoryCache.TryGetValue(cacheKey_profile, out ProfileViewModel data))
+            var profileData = await _cacheService.GetOrSetAsync(cacheKey_profile, async () =>
             {
-                // If cache does not exist, create a new one
-
-                // Create cache entry options
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromDays(7)); // Cache lifetime
-
-                /* GET DATA FROM API if there is no cache */
-                // Get mainInfo from API
                 var mainInfo = await GetMainProfileInfo(userId);
                 var additionalInfo = await GetAdditionalInfo(userId);
 
-                // Format data
                 DateTime registrationDate = mainInfo!.RegDate;
                 string formattedDate = registrationDate.ToShortDateString();
 
-                // Create view model with data
-                var profileData = new ProfileViewModel
+                var data = new ProfileViewModel
                 {
                     Fio = mainInfo.Fio,
                     Post = mainInfo.Post,
@@ -70,14 +65,10 @@ namespace EdManagementSystem.App.Controllers
                     SocialMediaList = await GetSocialMedia(userId)
                 };
 
-                // Store the view model in cache
-                _memoryCache.Set(cacheKey_profile, profileData, cacheEntryOptions);
+                return data;
+            }, TimeSpan.FromDays(7));
 
-                // Use the data as the response
-                data = profileData;
-            }
-
-            return PartialView(data);
+            return PartialView(profileData);
         }
 
         private async Task<List<List<string>>> GetSocialMedia(string userId)
@@ -180,26 +171,23 @@ namespace EdManagementSystem.App.Controllers
         #endregion
 
         #region TechSupport
-        [ResponseCache(Duration = 48000, Location = ResponseCacheLocation.Any)]
+        [ResponseCache(Duration = 48000, Location = ResponseCacheLocation.Client)]
         [ActionName("techSupport")]
-        public IActionResult TechSupport()
+        public async Task<IActionResult> TechSupport()
         {
-            GetCurrentUserId();
+            cacheKey_techSupport = $"techSupport";
 
-            string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "answers-list.json");
-            string json = System.IO.File.ReadAllText(jsonFilePath);
+            var techSupportData = await _cacheService.GetOrSetAsync(cacheKey_techSupport, async () =>
+            {
+                string jsonFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "answers-list.json");
+                string json = System.IO.File.ReadAllText(jsonFilePath);
 
-            List<TechSupportViewModel> questions = JsonConvert.DeserializeObject<List<TechSupportViewModel>>(json);
+                List<TechSupportViewModel> questions = JsonConvert.DeserializeObject<List<TechSupportViewModel>>(json)!;
+                return questions;
 
-            return PartialView(questions);
-        }
+            }, TimeSpan.FromDays(365));
 
-        [HttpGet]
-        [ActionName("getCurrentUserId")]
-        public IActionResult GetCurrentUserId()
-        {
-            string userId = HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
-            return Ok(userId);
+            return PartialView(techSupportData);
         }
 
         #endregion
@@ -210,39 +198,25 @@ namespace EdManagementSystem.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Students()
         {
-            // Get userID (email)
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-            var cacheKey_students = $"studentsOf_{userId}";
+            userId ??= HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
 
-            // Check if there is already a cache for this query
-            if (!_memoryCache.TryGetValue(cacheKey_students, out StudentsPageViewModel data))
+            cacheKey_students = $"studentsOf_{userId}";
+
+            var studentsData = await _cacheService.GetOrSetAsync(cacheKey_students, async () =>
             {
-                // If cache does not exist, create a new one
-
-                // Create cache entry options
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    // Cache lifetime
-                    .SetAbsoluteExpiration(TimeSpan.FromDays(7));
-
-                // Get courses and squads based on user ID
                 var coursesList = await GetCourses(userId);
                 var squadsList = await GetSquads(userId);
 
-                // Create view model with data
                 var studentsVM = new StudentsPageViewModel
                 {
                     coursesList = coursesList,
                     squadsList = squadsList
                 };
 
-                // Store the view model in cache
-                _memoryCache.Set(cacheKey_students, studentsVM, cacheEntryOptions);
+                return studentsVM;
+            }, TimeSpan.FromDays(7));
 
-                // Use the data as the response
-                data = studentsVM;
-            }
-
-            return PartialView(data);
+            return PartialView(studentsData);
         }
 
         private async Task<List<Course>> GetCourses(string userId)

@@ -23,6 +23,7 @@ namespace EdManagementSystem.App
 
             services.AddControllersWithViews();
             services.AddResponseCaching();
+            services.AddMemoryCache();
 
             #region Authentication
 
@@ -47,6 +48,9 @@ namespace EdManagementSystem.App
             services.AddScoped<IPasswordHasher, PasswordHasher>();
 
             #endregion
+
+
+            services.AddScoped<ICacheService, CacheService>();
 
             var app = builder.Build();
 
