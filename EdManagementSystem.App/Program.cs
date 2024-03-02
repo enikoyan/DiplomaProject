@@ -49,7 +49,6 @@ namespace EdManagementSystem.App
 
             #endregion
 
-
             services.AddScoped<ICacheService, CacheService>();
 
             var app = builder.Build();

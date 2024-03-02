@@ -15,7 +15,7 @@ namespace EdManagementSystem.App.Controllers
     public class DashboardController : Controller
     {
         private readonly HttpClient _httpClient;
-        private readonly Uri _baseAddress = new Uri("https://localhost:7269/api");
+        private readonly Uri _baseAddress = new Uri("https://localhost:44370/api");
         private readonly ICacheService _cacheService;
         private string userId { get; set; } = null!;
 
