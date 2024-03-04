@@ -11,5 +11,6 @@ namespace EdManagementSystem.DataAccess.Interfaces
         Task<Squad> GetSquadById(int squadId);
         Task<Squad> GetSquadByName(string squadName);
         Task<List<Squad>> GetSquadsByCourse(int courseId);
+        Task<List<int>> GetSquadsIdsByCourse(int courseId);
     }
 }

@@ -113,5 +113,19 @@ namespace EdManagementSystem.API.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("{courseId}")]
+        public async Task<IActionResult> GetSquadsIdsByCourse(int courseId)
+        {
+            var squadIds = await _squadService.GetSquadsIdsByCourse(courseId);
+
+            if (squadIds == null || squadIds.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(squadIds);
+        }
     }
 }

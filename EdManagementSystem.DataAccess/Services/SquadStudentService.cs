@@ -52,5 +52,24 @@ namespace EdManagementSystem.DataAccess.Services
             return true;
         }
 
+        public async Task<List<int>> GetStudentsIdsBySquads(List<int> squadsIds)
+        {
+            var studentIds = await _context.SquadStudents
+                   .Where(s => squadsIds.Contains(s.IdSquad))
+                   .Select(s => s.IdStudent)
+                   .ToListAsync();
+
+            return studentIds;
+        }
+
+        public async Task<List<int>> GetStudentsIdsBySquad(int squadId)
+        {
+            var studentIds = await _context.SquadStudents
+                   .Where(s => s.IdSquad == squadId)
+                   .Select(s => s.IdStudent)
+                   .ToListAsync();
+
+            return studentIds;
+        }
     }
 }

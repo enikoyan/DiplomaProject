@@ -44,6 +44,20 @@ namespace EdManagementSystem.DataAccess.Services
             return course;
         }
 
+        public async Task<int> GetCourseIdByName(string courseName)
+        {
+            var courseId = await _context.Courses
+                    .Where(u => u.CourseName == courseName)
+                    .Select(u => u.CourseId)
+                    .FirstOrDefaultAsync();
+
+            if (courseId == 0)
+            {
+                throw new Exception("Курс не найден!");
+            }
+            return courseId;
+        }
+
         public async Task DeleteCourse(int courseId)
         {
             var course = await _context.Courses.FindAsync(courseId);

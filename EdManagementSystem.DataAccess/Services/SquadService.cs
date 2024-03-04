@@ -34,6 +34,16 @@ namespace EdManagementSystem.DataAccess.Services
             return squads;
         }
 
+        public async Task<List<int>> GetSquadsIdsByCourse(int courseId)
+        {
+            var squadIds = await _context.Squads
+                .Where(s => s.IdCourse == courseId)
+                .Select(s => s.SquadId)
+                .ToListAsync();
+
+            return squadIds;
+        }
+
         public async Task<Squad> GetSquadByName(string squadName)
         {
             var squad = await _context.Squads.FirstOrDefaultAsync(u => u.SquadName == squadName);

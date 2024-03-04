@@ -92,5 +92,21 @@ namespace EdManagementSystem.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpGet]
+        [Route("{courseName}")]
+        public async Task<IActionResult> GetCourseIdByName(string courseName)
+        {
+            try
+            {
+                var courseId = await _courseService.GetCourseIdByName(courseName);
+                return Ok(courseId);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

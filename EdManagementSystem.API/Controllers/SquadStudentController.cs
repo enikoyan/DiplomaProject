@@ -32,5 +32,44 @@ namespace EdManagementSystem.API.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<int>>> GetStudentsIdsBySquads([FromQuery]List<int> squadsIds)
+        {
+            try
+            {
+                var studentIds = await _squadStudentService.GetStudentsIdsBySquads(squadsIds);
+
+                if (studentIds == null || studentIds.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(studentIds);
+            }
+            catch
+            {
+                return StatusCode(500, "Произошла ошибка при попытке получить id студентов");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<int>>> GetStudentsIdsBySquad(int squadsId)
+        {
+            try
+            {
+                var studentIds = await _squadStudentService.GetStudentsIdsBySquad(squadsId);
+
+                if (studentIds == null || studentIds.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                return Ok(studentIds);
+            }
+            catch
+            {
+                return StatusCode(500, "Произошла ошибка при попытке получить id студентов");
+            }
+        }
     }
 }

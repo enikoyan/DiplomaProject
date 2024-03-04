@@ -10,6 +10,7 @@ namespace EdManagementSystem.DataAccess.Interfaces
         Task<List<Course>> GetAllCourses();
         Task<Course> GetCourseById(int courseId);
         Task<Course> GetCourseByName(string courseName);
+        Task<int> GetCourseIdByName(string courseName);
         Task<List<Course>> GetCoursesByTutor(int tutorId);
     }
 }

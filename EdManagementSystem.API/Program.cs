@@ -17,6 +17,7 @@ namespace EdManagementSystem.API
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            services.AddOutputCache();
 
             #region Authentication
 
@@ -66,6 +67,7 @@ namespace EdManagementSystem.API
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseOutputCache();
 
             app.MapControllers();
 
