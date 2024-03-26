@@ -4,8 +4,21 @@ const groupSelector = document.querySelector('.search-row__filter_student-groups
 const searchBtn = document.querySelector('.search-row__btn');
 const saveAsPdfBtn = document.getElementById('downloadPdfTable');
 const saveAsExcelBtn = document.getElementById('downloadExcelTable');
+const tableElement = document.getElementById('studentsTable');
 let selectedAPI = "GetAllStudents";
 let selectedFilter = 0;
+
+/* Dynamic colSpan for table */
+var colSpanElement = document.getElementById("students-col-span");
+const checkScreenWidth = () => {
+    if (window.innerWidth < 600) {
+        colSpanElement.colSpan = "1";
+    } else {
+        colSpanElement.colSpan = "4";
+    }
+};
+window.addEventListener("resize", checkScreenWidth);
+checkScreenWidth();
 
 // Handler of changing filter event
 filterSelector.addEventListener('change', function () {
@@ -127,20 +140,7 @@ document.getElementById('downloadExcelTable').addEventListener('click', () => {
 
 // Download as Pdf
 saveAsPdfBtn.addEventListener('click', () => {
-    generate_pdf();
-});
-
-// Генерация PDF
-function generate_pdf() {
-    var tableElement = document.getElementById('studentsTable');
     var html = tableElement.outerHTML;
-
     var val = htmlToPdfmake(html);
-    var dd = {
-        content: val,
-        defaultStyle: {
-            font: 'Roboto' // Замените на нужный вам шрифт
-        }
-    };
-    pdfMake.createPdf(dd).download('Список студентов');
-}
+    pdfMake.createPdf(val).download('Список студентов');
+});
