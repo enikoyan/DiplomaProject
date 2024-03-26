@@ -26,8 +26,10 @@
         }
     </select>
     <button class="custom-btn search-row__btn">Найти</button>
+    <button class="custom-btn" id="downloadExcelTable">Сохранить в формате Excel</button>
+    <button class="custom-btn" id="downloadPdfTable">Сохранить в формате PDF</button>
 </div>
-<table class="custom-table custom-table_student-list">
+<table class="custom-table custom-table_student-list" id="studentsTable">
     <thead>
         <tr style="background-color: transparent">
             <th scope="col">Номер</th>
@@ -37,6 +39,15 @@
             <th scope="col">Подробнее</th>
         </tr>
     </thead>
+    <tbody id="tableContentContainer">
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <th scope="row" colspan="4">Количество студентов</th>
+            <th id="students-count">0</th>
+        </tr>
+    </tfoot>
 </table>
-<button class="custom-btn">Сохранить в формате PDF</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
 <script src="~/js/students.js"></script>

@@ -2,6 +2,7 @@
 const courseSelector = document.querySelector('.search-row__filter_courses');
 const groupSelector = document.querySelector('.search-row__filter_student-groups');
 const searchBtn = document.querySelector('.search-row__btn');
+const saveAsPdfBtn = document.getElementById('downloadPdfTable');
 let selectedAPI = "GetAllStudents";
 let selectedFilter = 0;
 
@@ -68,11 +69,12 @@ searchBtn.addEventListener('click', () => {
             // Get table from Html
             const studentsTable = document.querySelector('.custom-table_student-list');
 
-            // Clear table before adding new elements
-            studentsTable.innerHTML = '';
-
             // Create body of table
-            const tBody = document.createElement("tbody");
+            const tBody = document.getElementById("tableContentContainer");
+
+            // Clear table before adding new elements
+            tBody.innerHTML = '';
+
             data.forEach(item => {
                 const tRow = document.createElement("tr");
                 for (let key in item) {
@@ -92,26 +94,40 @@ searchBtn.addEventListener('click', () => {
                 tBody.appendChild(tRow);
             });
 
-            // Create footer of table
-            const studentCount = data.length;
-            const tFoot = document.createElement('tfoot');
-            const tr = document.createElement('tr');
-            const th = document.createElement('th');
-            th.setAttribute('id', 'student-count');
-            th.setAttribute('scope', 'row');
-            th.setAttribute('colspan', '4');
-            th.textContent = 'Количество студентов';
-            const countTh = document.createElement('th');
-            countTh.textContent = studentCount;
+            // Set count of students
+            document.getElementById('students-count').textContent = data.length;
 
-            tr.appendChild(th);
-            tr.appendChild(countTh);
-            tFoot.appendChild(tr);
-
-            studentsTable.appendChild(tBody);
-            studentsTable.appendChild(tFoot);
+            // Insert tbody before tfoot
+            const tFoot = studentsTable.querySelector('tfoot');
+            studentsTable.insertBefore(tBody, tFoot);
         })
         .catch(error => {
             alert(error.message);
         });
 });
+
+// Download as Excel
+document.getElementById('downloadExcelTable').addEventListener('click', () => {
+    const wb = XLSX.utils.table_to_book(document.getElementById('studentsTable'));
+
+    wb.SheetNames.forEach(sheetName => {
+        const ws = wb.Sheets[sheetName];
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        range.e.r += 2;
+        ws['!ref'] = XLSX.utils.encode_range(range);
+    });
+
+    wb.sheetName = "PIU";
+
+    XLSX.writeFile(wb, 'Список студентов.xlsx');
+});
+
+// Download as Pdf
+saveAsPdfBtn.addEventListener('click', () => {
+    generate_pdf();
+});
+
+// Generate PDF
+function generate_pdf() {
+    // generating pdf code
+}
