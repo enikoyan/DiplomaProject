@@ -7,7 +7,7 @@
 
 <h1 class="title">Список студентов</h1>
 <div class="search-row">
-    <input type="search" class="custom-input search-input" placeholder="Поиск студентов">
+@*     <input type="search" class="custom-input search-input" placeholder="Поиск студентов"> *@
     <select name="filterSelector">
         <option value="searchAllStudents">Все студенты</option>
         <option value="searchBySquads">По группам</option>
@@ -26,12 +26,12 @@
         }
     </select>
     <button class="custom-btn search-row__btn">Найти</button>
-    <button class="custom-btn" id="downloadExcelTable">Сохранить в формате Excel</button>
-    <button class="custom-btn" id="downloadPdfTable">Сохранить в формате PDF</button>
+    <button class="custom-btn" id="downloadExcelTable" disabled="true">Сохранить в формате Excel</button>
+    <button class="custom-btn" id="downloadPdfTable" disabled="true">Сохранить в формате PDF</button>
 </div>
 <table class="custom-table custom-table_student-list" id="studentsTable">
     <thead>
-        <tr style="background-color: transparent">
+        <tr>
             <th scope="col">Номер</th>
             <th scope="col">ФИО</th>
             <th scope="col">Средняя оценка</th>
@@ -50,4 +50,9 @@
     </tfoot>
 </table>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<!-- pdfmake files: -->
+<script src='https://cdn.jsdelivr.net/npm/pdfmake@latest/build/pdfmake.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/pdfmake@latest/build/vfs_fonts.min.js'></script>
+<!-- html-to-pdfmake file: -->
+<script src="https://cdn.jsdelivr.net/npm/html-to-pdfmake/browser.js"></script>
 <script src="~/js/students.js"></script>

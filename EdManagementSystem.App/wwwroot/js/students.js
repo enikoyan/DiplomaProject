@@ -3,6 +3,7 @@ const courseSelector = document.querySelector('.search-row__filter_courses');
 const groupSelector = document.querySelector('.search-row__filter_student-groups');
 const searchBtn = document.querySelector('.search-row__btn');
 const saveAsPdfBtn = document.getElementById('downloadPdfTable');
+const saveAsExcelBtn = document.getElementById('downloadExcelTable');
 let selectedAPI = "GetAllStudents";
 let selectedFilter = 0;
 
@@ -38,6 +39,8 @@ filterSelector.addEventListener('change', function () {
 
 // API calling
 searchBtn.addEventListener('click', () => {
+    saveAsExcelBtn.disabled = false;
+    saveAsPdfBtn.disabled = false;
     let selectedAPI = "";
     let apiUrl = "";
 
@@ -103,7 +106,7 @@ searchBtn.addEventListener('click', () => {
         })
         .catch(error => {
             alert(error.message);
-        });
+        })
 });
 
 // Download as Excel
@@ -127,7 +130,17 @@ saveAsPdfBtn.addEventListener('click', () => {
     generate_pdf();
 });
 
-// Generate PDF
+// Генерация PDF
 function generate_pdf() {
-    // generating pdf code
+    var tableElement = document.getElementById('studentsTable');
+    var html = tableElement.outerHTML;
+
+    var val = htmlToPdfmake(html);
+    var dd = {
+        content: val,
+        defaultStyle: {
+            font: 'Roboto' // Замените на нужный вам шрифт
+        }
+    };
+    pdfMake.createPdf(dd).download('Список студентов');
 }
