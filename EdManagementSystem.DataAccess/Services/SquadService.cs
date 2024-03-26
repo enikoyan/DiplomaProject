@@ -46,7 +46,7 @@ namespace EdManagementSystem.DataAccess.Services
 
         public async Task<Squad> GetSquadByName(string squadName)
         {
-            var squad = await _context.Squads.FirstOrDefaultAsync(u => u.SquadName == squadName);
+            var squad = await _context.Squads.FirstOrDefaultAsync(u => u.OptionValue == squadName);
             if (squad == null)
             {
                 throw new Exception("Группа не найдена!");

@@ -9,18 +9,17 @@
 <div class="search-row">
     <input type="search" class="custom-input search-input" placeholder="Поиск студентов">
     <select name="filterSelector">
+        <option value="searchAllStudents">Все студенты</option>
         <option value="searchBySquads">По группам</option>
         <option value="searchByCourses">По курсам</option>
     </select>
     <select name="courseSelector" class="search-row__filter search-row__filter_courses" style="display:none">
-        <option value="allStudents">Все курсы</option>
         @foreach (var item in Model.coursesList)
         {
             <option value="@item.OptionValue">@item.CourseName</option>
         }
     </select>
-    <select name="groupSelector" class="search-row__filter search-row__filter_student-groups">
-        <option value="allGroups">Все группы</option>
+    <select name="groupSelector" class="search-row__filter search-row__filter_student-groups" style="display:none">
         @foreach (var item in Model.squadsList)
         {
             <option value="@item.OptionValue">@item.SquadName</option>
@@ -38,22 +37,6 @@
             <th scope="col">Подробнее</th>
         </tr>
     </thead>
-    <tbody>
-        <tr>
-            <th>#101</th>
-            <th>Сидоров А.В.</th>
-            <th>4.2</th>
-            <th>04.11.2004</th>
-            <th><button class="custom-btn">Узнать</button></th>
-        </tr>
-    </tbody>
-    <tfoot>
-        <tr>
-            <th id="student-count" scope="row" colspan="4">Количество студентов</th>
-            <!-- Put here count of students after search -->
-            <th>24</th>
-        </tr>
-    </tfoot>
 </table>
 <button class="custom-btn">Сохранить в формате PDF</button>
 <script src="~/js/students.js"></script>

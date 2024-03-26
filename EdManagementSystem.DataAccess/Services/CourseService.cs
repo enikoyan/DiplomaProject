@@ -36,7 +36,7 @@ namespace EdManagementSystem.DataAccess.Services
 
         public async Task<Course> GetCourseByName(string courseName)
         {
-            var course = await _context.Courses.FirstOrDefaultAsync(u => u.CourseName == courseName);
+            var course = await _context.Courses.FirstOrDefaultAsync(u => u.OptionValue == courseName);
             if (course == null)
             {
                 throw new Exception("Курс не найден!");
@@ -47,7 +47,7 @@ namespace EdManagementSystem.DataAccess.Services
         public async Task<int> GetCourseIdByName(string courseName)
         {
             var courseId = await _context.Courses
-                    .Where(u => u.CourseName == courseName)
+                    .Where(u => u.OptionValue == courseName)
                     .Select(u => u.CourseId)
                     .FirstOrDefaultAsync();
 
