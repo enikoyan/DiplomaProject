@@ -29,7 +29,14 @@ public partial class Course
     [Column("course_tutor", TypeName = "int(11)")]
     public int CourseTutor { get; set; }
 
+    [InverseProperty("IdCourseNavigation")]
+    public virtual ICollection<Material> Materials { get; set; } = new List<Material>();
+
     [JsonIgnore]
     [InverseProperty("IdCourseNavigation")]
     public virtual ICollection<Squad> Squads { get; set; } = new List<Squad>();
+
+    [ForeignKey("CourseTutor")]
+    [InverseProperty("Courses")]
+    public virtual Teacher CourseTutorNavigation { get; set; } = null!;
 }

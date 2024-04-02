@@ -33,6 +33,8 @@ public partial class User004Context : DbContext
 
     public virtual DbSet<TechSupport> TechSupports { get; set; }
 
+    public virtual DbSet<Material> Materials { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -49,6 +51,17 @@ public partial class User004Context : DbContext
             entity.HasKey(e => e.SquadId).HasName("PRIMARY");
 
             entity.HasOne(d => d.IdCourseNavigation).WithMany(p => p.Squads).HasConstraintName("Squad_ibfk_1");
+        });
+
+        modelBuilder.Entity<Material>(entity =>
+        {
+            entity.HasKey(e => e.MaterialId).HasName("PRIMARY");
+
+            entity.HasOne(d => d.IdCourseNavigation).WithMany(p => p.Materials).HasConstraintName("Material_ibfk_1");
+
+            entity.HasOne(d => d.IdSquadNavigation).WithMany(p => p.Materials)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("Material_ibfk_2");
         });
 
         modelBuilder.Entity<SocialMedium>(entity =>
