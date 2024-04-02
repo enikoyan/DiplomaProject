@@ -44,18 +44,13 @@ public partial class User004Context : DbContext
         modelBuilder.Entity<Course>(entity =>
         {
             entity.HasKey(e => e.CourseId).HasName("PRIMARY");
-        });
 
-        modelBuilder.Entity<Squad>(entity =>
-        {
-            entity.HasKey(e => e.SquadId).HasName("PRIMARY");
-
-            entity.HasOne(d => d.IdCourseNavigation).WithMany(p => p.Squads).HasConstraintName("Squad_ibfk_1");
+            entity.HasOne(d => d.CourseTutorNavigation).WithMany(p => p.Courses).HasConstraintName("Course_ibfk_1");
         });
 
         modelBuilder.Entity<Material>(entity =>
         {
-            entity.HasKey(e => e.MaterialId).HasName("PRIMARY");
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.HasOne(d => d.IdCourseNavigation).WithMany(p => p.Materials).HasConstraintName("Material_ibfk_1");
 
@@ -69,6 +64,13 @@ public partial class User004Context : DbContext
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.HasOne(d => d.IdTeacherNavigation).WithMany(p => p.SocialMedia).HasConstraintName("SocialMedia_ibfk_1");
+        });
+
+        modelBuilder.Entity<Squad>(entity =>
+        {
+            entity.HasKey(e => e.SquadId).HasName("PRIMARY");
+
+            entity.HasOne(d => d.IdCourseNavigation).WithMany(p => p.Squads).HasConstraintName("Squad_ibfk_1");
         });
 
         modelBuilder.Entity<SquadStudent>(entity =>
@@ -98,14 +100,6 @@ public partial class User004Context : DbContext
             entity.HasOne(d => d.TeacherNavigation).WithOne(p => p.Teacher).HasConstraintName("Teacher_ibfk_1");
         });
 
-        modelBuilder.Entity<User>(entity =>
-        {
-            entity.HasKey(e => e.UserId).HasName("PRIMARY");
-
-            entity.Property(e => e.UserPassword).IsFixedLength();
-            entity.Property(e => e.UserRole).HasDefaultValueSql("'teacher'");
-        });
-
         modelBuilder.Entity<TechSupport>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -115,6 +109,14 @@ public partial class User004Context : DbContext
             entity.HasOne(d => d.IdUserNavigation).WithMany(p => p.TechSupports)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("TechSupport_ibfk_1");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.UserId).HasName("PRIMARY");
+
+            entity.Property(e => e.UserPassword).IsFixedLength();
+            entity.Property(e => e.UserRole).HasDefaultValueSql("'teacher'");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -50,4 +50,8 @@ public partial class Teacher
     [JsonIgnore]
     [InverseProperty("IdTeacherNavigation")]
     public virtual ICollection<SocialMedium> SocialMedia { get; set; } = new List<SocialMedium>();
+
+    [JsonIgnore]
+    [InverseProperty("CourseTutorNavigation")]
+    public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
 }

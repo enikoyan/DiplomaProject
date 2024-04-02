@@ -53,6 +53,7 @@ namespace EdManagementSystem.API
             services.AddScoped<IProfileInfoService, ProfileInfoService>();
             services.AddScoped<ISocialMediaService, SocialMediaService>();
             services.AddScoped<ITechSupportService, TechSupportService>();
+            services.AddScoped<IMaterialService, MaterialService>();
 
             var app = builder.Build();
 
