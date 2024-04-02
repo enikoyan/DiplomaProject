@@ -54,6 +54,20 @@ namespace EdManagementSystem.DataAccess.Services
             return squad;
         }
 
+        public async Task<int> GetSquadIdByName(string squadName)
+        {
+            var squadId = await _context.Squads
+                    .Where(u => u.OptionValue == squadName)
+                    .Select(u => u.SquadId)
+                    .FirstOrDefaultAsync();
+
+            if (squadId == 0)
+            {
+                throw new Exception("Курс не найден!");
+            }
+            return squadId;
+        }
+
         public async Task DeleteSquad(int squadId)
         {
             var squad = await _context.Squads.FindAsync(squadId);

@@ -75,5 +75,33 @@ namespace EdManagementSystem.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("{squadName}")]
+        public async Task<ActionResult<List<Material>>> GetMaterialsBySquad(string squadName)
+        {
+            try
+            {
+                var materials = await _materialService.GetMaterialsBySquad(squadName);
+                return Ok(materials);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("{courseName}")]
+        public async Task<ActionResult<List<Material>>> GetMaterialsByCourse(string courseName)
+        {
+            try
+            {
+                var materials = await _materialService.GetMaterialsByCourse(courseName);
+                return Ok(materials);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

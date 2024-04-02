@@ -9,5 +9,7 @@ namespace EdManagementSystem.DataAccess.Interfaces
         Task<Material> GetMaterialById(Guid materialId);
         Task<Material> GetMaterialByTitle(string materialTitle);
         Task<List<Material>> GetMaterialsByType(string fileType);
+        Task<List<Material>> GetMaterialsBySquad(string squadName);
+        Task<List<Material>> GetMaterialsByCourse(string courseName);
     }
 }
