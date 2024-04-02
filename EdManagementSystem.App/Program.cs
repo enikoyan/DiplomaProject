@@ -3,13 +3,8 @@ using EdManagementSystem.DataAccess.Infrastructure;
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.Net.Http.Headers;
-using System.Diagnostics;
 
 namespace EdManagementSystem.App
 {
@@ -30,7 +25,7 @@ namespace EdManagementSystem.App
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Lax;
+                    options.Cookie.SameSite = SameSiteMode.Lax;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.None;
                     options.LoginPath = "/auth/login";
                     options.AccessDeniedPath = "/status/access-denied";

@@ -51,25 +51,32 @@ namespace EdManagementSystem.DataAccess.Services
 
         public async Task<bool> CreateRequest(string userEmail, string requestDescription)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == userEmail);
-
-            if (user == null)
+            if (String.IsNullOrEmpty(userEmail) || String.IsNullOrEmpty(requestDescription))
             {
-                throw new Exception("Пользователь не найден!");
+                throw new Exception("Заполните все поля!");
             }
-
-            var newRequest = new TechSupport
+            else
             {
-                IdUser = user.UserId,
-                Description = requestDescription,
-                DateCreation = DateTime.UtcNow,
-                Status = "в обработке"
-            };
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.UserEmail == userEmail);
 
-            _context.TechSupports.Add(newRequest);
-            await _context.SaveChangesAsync();
+                if (user == null)
+                {
+                    throw new Exception("Пользователь не найден!");
+                }
 
-            return true;
+                var newRequest = new TechSupport
+                {
+                    IdUser = user.UserId,
+                    Description = requestDescription,
+                    DateCreation = DateTime.UtcNow,
+                    Status = "в обработке"
+                };
+
+                _context.TechSupports.Add(newRequest);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
         }
 
         public async Task<bool> ChangeRequestStatus(int requestId, string newStatus)

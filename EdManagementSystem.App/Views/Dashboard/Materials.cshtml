@@ -3,4 +3,30 @@
     Layout = "_DashboardLayout";
 }
 
-<h1>Материалы</h1>
+@model MaterialsPageViewModel
+
+<h1 class="title">Материалы</h1>
+<div class="search-row">
+    <select name="filterSelector">
+        <option value="searchBySquads">По группам</option>
+        <option value="searchByCourses">По курсам</option>
+    </select>
+    <select name="courseSelector" class="search-row__filter search-row__filter_courses" style="display:none">
+        @foreach (var item in Model.coursesList)
+        {
+            <option value="@item.OptionValue">@item.CourseName</option>
+        }
+    </select>
+    <select name="groupSelector" class="search-row__filter search-row__filter_student-groups">
+        @foreach (var item in Model.squadsList)
+        {
+            <option value="@item.OptionValue">@item.SquadName</option>
+        }
+    </select>
+    <button class="custom-btn search-row__btn search-row__btn_search">Найти</button>
+</div>
+<input type="file" class="custom-input add-file-input">
+<div class="found-materials">
+    <!-- Material items will be create here using materials.js -->
+</div>
+<script src="~/js/materials.js"></script>

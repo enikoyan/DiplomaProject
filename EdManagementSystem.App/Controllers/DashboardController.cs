@@ -3,8 +3,6 @@ using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OutputCaching;
-using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System.Security.Claims;
 
@@ -23,6 +21,7 @@ namespace EdManagementSystem.App.Controllers
         private string cacheKey_profile { get; set; } = null!;
         private string cacheKey_students { get; set; } = null!;
         private string cacheKey_techSupport { get; set; } = null!;
+        private string cacheKey_materials { get; set; } = null!;
 
         public DashboardController(ICacheService cacheService)
         {
@@ -80,6 +79,11 @@ namespace EdManagementSystem.App.Controllers
                 var content = await response.Content.ReadAsStringAsync();
                 var socialMediaList = JsonConvert.DeserializeObject<List<SocialMedium>>(content);
 
+                if (socialMediaList!.Count == 0 || socialMediaList == null)
+                {
+                    return new List<List<string>>();
+                }
+
                 List<List<string>> result = new List<List<string>>();
 
                 foreach (var sm in socialMediaList)
@@ -103,7 +107,6 @@ namespace EdManagementSystem.App.Controllers
             {
                 var content = response.Content.ReadAsStringAsync().Result;
                 var teacher = JsonConvert.DeserializeObject<Teacher>(content);
-
                 return teacher;
             }
             else
@@ -122,9 +125,7 @@ namespace EdManagementSystem.App.Controllers
                 var content = response.Content.ReadAsStringAsync().Result;
                 var content2 = response2.Content.ReadAsStringAsync().Result;
 
-                List<int> result = new List<int>();
-                result.Add(Convert.ToInt32(content));
-                result.Add(Convert.ToInt32(content2));
+                List<int> result = [Convert.ToInt32(content), Convert.ToInt32(content2)];
 
                 return result;
             }
@@ -219,6 +220,64 @@ namespace EdManagementSystem.App.Controllers
             return PartialView(studentsData);
         }
 
+        #endregion
+
+        #region MaterialsPage
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.None, VaryByHeader = "User-Agent")]
+        [ActionName("materials")]
+        [HttpGet]
+        public async Task<IActionResult> Materials()
+        {
+            userId ??= HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
+
+            cacheKey_materials = $"materialsOf_{userId}";
+
+            var materialsData = await _cacheService.GetOrSetAsync(cacheKey_materials, async () =>
+            {
+                var coursesList = await GetCourses(userId);
+                var squadsList = await GetSquads(userId);
+
+                var materialsVM = new MaterialsPageViewModel
+                {
+                    coursesList = coursesList,
+                    squadsList = squadsList
+                };
+
+                return materialsVM;
+            }, TimeSpan.FromDays(7));
+
+            return PartialView(materialsData);
+        }
+        #endregion
+
+        #region GetPages
+
+        [ActionName("schedule")]
+        public IActionResult Schedule()
+        {
+            return PartialView();
+        }
+
+        [ActionName("attendance")]
+        public IActionResult Attendance()
+        {
+            return PartialView();
+        }
+
+        [ActionName("analytics")]
+        public IActionResult Analytics()
+        {
+            return PartialView();
+        }
+
+        [ActionName("homeworks")]
+        public IActionResult Homeworks()
+        {
+            return PartialView();
+        }
+        #endregion
+
+        #region PrivateMethods
         private async Task<List<Course>> GetCourses(string userId)
         {
             HttpResponseMessage response = await _httpClient.GetAsync(_baseAddress + $"/profile/GetCoursesOfTeacher/{userId}");
@@ -251,40 +310,6 @@ namespace EdManagementSystem.App.Controllers
             {
                 throw new Exception("Не удалось получить информацию!");
             }
-        }
-
-        #endregion
-
-        #region GetPages
-
-        [ActionName("schedule")]
-        public IActionResult Schedule()
-        {
-            return PartialView();
-        }
-
-        [ActionName("attendance")]
-        public IActionResult Attendance()
-        {
-            return PartialView();
-        }
-
-        [ActionName("analytics")]
-        public IActionResult Analytics()
-        {
-            return PartialView();
-        }
-
-        [ActionName("homeworks")]
-        public IActionResult Homeworks()
-        {
-            return PartialView();
-        }
-
-        [ActionName("materials")]
-        public IActionResult Materials()
-        {
-            return PartialView();
         }
         #endregion
     }

@@ -140,7 +140,12 @@ document.getElementById('downloadExcelTable').addEventListener('click', () => {
 
 // Download as Pdf
 saveAsPdfBtn.addEventListener('click', () => {
-    var html = tableElement.outerHTML;
+    var table = document.getElementById('studentsTable');
+    var html = table.outerHTML;
+
     var val = htmlToPdfmake(html);
-    pdfMake.createPdf(val).download('Список студентов');
+    var dd = {
+        content: val,
+    };
+    pdfMake.createPdf(dd).download('Список студентов');
 });

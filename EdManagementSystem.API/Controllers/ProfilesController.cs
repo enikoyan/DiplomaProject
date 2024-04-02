@@ -1,5 +1,4 @@
 ﻿using EdManagementSystem.DataAccess.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EdManagementSystem.API.Controllers
