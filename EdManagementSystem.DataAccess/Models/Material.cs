@@ -25,9 +25,8 @@ public partial class Material
     [StringLength(255)]
     public string Title { get; set; } = null!;
 
-    [JsonIgnore]
     [Column("date_added")]
-    public DateTime DateAdded { get; set; }
+    public DateTime DateAdded { get; set; } = DateTime.UtcNow;
 
     [Column("type")]
     [StringLength(10)]

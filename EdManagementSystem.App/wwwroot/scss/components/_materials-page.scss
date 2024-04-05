@@ -1,0 +1,79 @@
+.search-row__btn_add-material {
+}
+
+.add-file-input {
+}
+
+.found-materials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border: 2px solid rgb(138, 138, 138);
+    border-radius: 10px;
+    padding: 15px;
+    gap: 20px;
+  }
+
+  &__icon {
+  }
+
+  &__title {
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    &_text {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+  }
+
+  &__btns {
+    display: flex;
+    gap: 10px;
+  }
+
+  &__btn {
+    img {
+      cursor: pointer;
+    }
+
+    &_get-info {
+    }
+
+    &_delete {
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .found-materials {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .found-materials {
+    &__btns {
+      justify-content: space-between;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    &__info {
+      flex-direction: column;
+      text-align: left;
+      align-items: flex-start;
+    }
+  }
+}

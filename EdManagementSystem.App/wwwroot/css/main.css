@@ -380,6 +380,55 @@ img {
     display: none;
   }
 }
+.found-materials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+.found-materials__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border: 2px solid rgb(138, 138, 138);
+  border-radius: 10px;
+  padding: 15px;
+  gap: 20px;
+}
+.found-materials__info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.found-materials__info_text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.found-materials__btns {
+  display: flex;
+  gap: 10px;
+}
+.found-materials__btn img {
+  cursor: pointer;
+}
+@media (max-width: 900px) {
+  .found-materials {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 400px) {
+  .found-materials__btns {
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100%;
+  }
+  .found-materials__info {
+    flex-direction: column;
+    text-align: left;
+    align-items: flex-start;
+  }
+}
 .custom-table {
   text-align: left;
   border-collapse: separate;
