@@ -62,20 +62,6 @@ namespace EdManagementSystem.API.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Material>> CreateMaterial(Material material)
-        {
-            try
-            {
-                var createdMaterial = await _materialService.CreateMaterial(material);
-                return CreatedAtAction(nameof(GetMaterialById), new { materialId = createdMaterial.MaterialId }, createdMaterial);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
         [HttpGet("{squadName}")]
         public async Task<ActionResult<List<Material>>> GetMaterialsBySquad(string squadName)
         {
@@ -101,6 +87,27 @@ namespace EdManagementSystem.API.Controllers
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMaterial([FromForm] List<IFormFile> files, [FromForm] string groupBy, [FromForm] List<string> foreignKeys)
+        {
+            try
+            {
+                bool result = await _materialService.CreateMaterial(files, groupBy, foreignKeys);
+                if (result)
+                {
+                    return Ok("Материал(-ы) успешно добавлен(-ы)!");
+                }
+                else
+                {
+                    return BadRequest("Не удалось загрузить материал(-ы)!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Произошла ошибка: {ex.Message}");
             }
         }
     }

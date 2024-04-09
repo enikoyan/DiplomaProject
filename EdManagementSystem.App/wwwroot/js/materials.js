@@ -1,12 +1,45 @@
-﻿const filterSelector = document.querySelector('[name="filterSelector"]');
+﻿// Variables
+const filterSelector = document.querySelector('[name="filterSelector"]');
+const filterSelectorMaterial = document.querySelector('[name="filterSelectorMaterial"]');
 const courseSelector = document.querySelector('.search-row__filter_courses');
 const groupSelector = document.querySelector('.search-row__filter_student-groups');
 const searchBtn = document.querySelector('.search-row__btn_search');
 const materialsContainer = document.querySelector('.found-materials');
+const optionsContainerCourses = document.getElementById('options-container-courses');
+const optionsContainerSquads = document.getElementById('options-container-squads');
 let selectedFilter = 0;
 
+document.addEventListener('DOMContentLoaded', function () {
+    filterSelector.value = localStorage.getItem('selectedFilter');
+    changeFilter();
+    switch (filterSelector.value) {
+        case "searchBySquads": {
+            groupSelector.value = localStorage.getItem('groupSelectorValue');
+        }
+        case "searchByCourses": {
+            courseSelector.value = localStorage.getItem('courseSelectorValue');
+        }
+    };
+
+    const materialsData = JSON.parse(localStorage.getItem('materialsData'));
+
+    if (materialsData) {
+        // Clean container
+        materialsContainer.innerHTML = '';
+
+        materialsData.forEach(item => {
+            createElements(item);
+        });
+    }
+});
+
 // Handler of changing filter event
-filterSelector.addEventListener('change', function () {
+filterSelector.addEventListener('change', function () { changeFilter() });
+
+// Handler of changing filter event in materials modal screen
+filterSelectorMaterial.addEventListener('change', function () { changeMaterialItems() });
+
+function changeFilter() {
     if (filterSelector.value === "searchBySquads") {
         courseSelector.disabled = true;
         courseSelector.style.display = "none";
@@ -23,20 +56,19 @@ filterSelector.addEventListener('change', function () {
 
         selectedFilter = 1;
     }
-});
+    localStorage.setItem('selectedFilter', filterSelector.value);
+}
 
-document.addEventListener('DOMContentLoaded', function () {
-    const materialsData = JSON.parse(localStorage.getItem('materialsData'));
-
-    if (materialsData) {
-        // Clean container
-        materialsContainer.innerHTML = '';
-
-        materialsData.forEach(item => {
-            createElements(item);
-        });
+function changeMaterialItems() {
+    if (filterSelectorMaterial.value === "searchBySquads") {
+        optionsContainerSquads.style.display = "flex";
+        optionsContainerCourses.style.display = "none";
     }
-});
+    else if (filterSelectorMaterial.value === "searchByCourses") {
+        optionsContainerCourses.style.display = "flex";
+        optionsContainerSquads.style.display = "none";
+    }
+}
 
 // Creating elements in the container
 function createElements(item) {
@@ -71,6 +103,7 @@ function createElements(item) {
     // Download material button
     const materislItem_downloadBtn = document.createElement("button");
     materislItem_downloadBtn.textContent = "Скачать";
+    materislItem_downloadBtn.setAttribute("data-fileId", `${item.materialId}`);
 
     materialsItem.appendChild(materialsItem_info);
     materialsItem.appendChild(materislItem_downloadBtn);
@@ -113,8 +146,31 @@ searchBtn.addEventListener('click', () => {
 
             // Сохранение данных в локальное хранилище
             localStorage.setItem('materialsData', JSON.stringify(data));
+            localStorage.setItem('groupSelectorValue', groupSelector.value);
+            localStorage.setItem('courseSelectorValue', courseSelector.value);
         })
         .catch(error => {
             alert(error.message);
         })
+});
+
+const addMaterialModalScreen = document.getElementById("modal-addMaterial");
+const shadowBg = document.querySelector(".overlay");
+
+function displayModal() {
+    shadowBg.style.display = "block";
+    addMaterialModalScreen.style.display = "flex";
+}
+
+var addMaterialBtn = document.getElementById("add-material-btn");
+
+addMaterialBtn.addEventListener("click", function () {
+    displayModal();
+});
+
+const btnClose = document.getElementById("btn-close");
+
+btnClose.addEventListener("click", () => {
+    shadowBg.style.display = "none";
+    addMaterialModalScreen.style.display = "none";
 });

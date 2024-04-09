@@ -1,6 +1,7 @@
 ﻿using EdManagementSystem.DataAccess.Data;
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Services
@@ -10,15 +11,84 @@ namespace EdManagementSystem.DataAccess.Services
         private readonly User004Context _context;
         private readonly ISquadService _squadService;
         private readonly ICourseService _courseService;
+        private readonly IFileLoadService _fileLoadService;
 
-        public MaterialService(User004Context context, ISquadService squadService, ICourseService courseService)
+        public MaterialService(User004Context context, ISquadService squadService, ICourseService courseService, IFileLoadService fileLoadService)
         {
             _context = context;
             _squadService = squadService;
             _courseService = courseService;
+            _fileLoadService = fileLoadService;
         }
 
         private Guid GenerateGuid() => Guid.NewGuid();
+
+        public async Task<bool> CreateMaterial(List<IFormFile> files, string groupBy, List<string> foreignKeys)
+        {
+            foreach (var file in files)
+            {
+                var newId = GenerateGuid();
+
+                switch (groupBy)
+                {
+                    case "searchByCourses":
+                        {
+                            List<int> coursesIds = await _courseService.GetCoursesIdsByNames(foreignKeys);
+
+                            foreach (var coursesId in coursesIds)
+                            {
+                                // Create materialItem row in DB
+                                Material materialItem = new Material();
+                                materialItem.MaterialId = newId;
+                                materialItem.Title = Path.GetFileNameWithoutExtension(file.FileName);
+                                materialItem.IdCourse = coursesId;
+                                materialItem.Type = Path.GetExtension(file.FileName);
+                                materialItem.DateAdded = DateTime.UtcNow;
+                                _context.Materials.Add(materialItem);
+                            }
+                            break;
+                        }
+                    case "searchBySquads":
+                        {
+                            // Get squads Ids
+                            List<int> squadsIds = await _squadService.GetSquadsIdsByNames(foreignKeys);
+
+                            // Get courses Ids
+                            List<int> coursesIds = await _squadService.GetCoursesIdsByNames(squadsIds);
+
+                            for (int i = 0; i < foreignKeys.Count; i++)
+                            {
+                                // Create materialItem row in DB
+                                Material materialItem = new Material();
+                                materialItem.MaterialId = newId;
+                                materialItem.Title = Path.GetFileNameWithoutExtension(file.FileName);
+                                materialItem.IdCourse = coursesIds[i];
+                                materialItem.IdSquad = squadsIds[i];
+                                materialItem.Type = Path.GetExtension(file.FileName);
+                                materialItem.DateAdded = DateTime.UtcNow;
+                                _context.Materials.Add(materialItem);
+                            }
+                            break;
+                        }
+                }
+
+                await _context.SaveChangesAsync();
+
+                // Upload file to the server
+                try
+                {
+                    string fileName = newId.ToString();
+                    var newFile = new FormFile(file.OpenReadStream(), 0, file.Length, file.Name, $"{fileName}.{Path.GetExtension(file.FileName)}");
+                    await _fileLoadService.UploadFileAsync(newFile);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
+            }
+
+            return true;
+        }
 
         public async Task<List<Material>> GetAllMaterials()
         {
@@ -52,18 +122,6 @@ namespace EdManagementSystem.DataAccess.Services
             }
 
             else return material;
-        }
-
-        public async Task<Material> CreateMaterial(Material material)
-        {
-            // Create new Guid for materialId
-            material.MaterialId = GenerateGuid();
-            material.DateAdded = DateTime.UtcNow;
-            _context.Materials.Add(material);
-
-            await _context.SaveChangesAsync();
-
-            return material;
         }
 
         public async Task<List<Material>> GetMaterialsBySquad(string squadName)

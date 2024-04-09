@@ -39,6 +39,12 @@ asideToggle.addEventListener('click', () => {
 
 $(document).ready(function () {
 
+    const logOutBtn = document.getElementById('logOutBtn');
+    logOutBtn.addEventListener('click', () => {
+        console.log("piu");
+        localStorage.clear();
+    });
+
     //// Menu buttons click handler
     //$('.aside-menu__item').click(function (e) {
     //    e.preventDefault();

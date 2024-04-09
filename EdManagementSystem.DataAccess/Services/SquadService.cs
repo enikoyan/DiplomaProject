@@ -1,6 +1,7 @@
 ﻿using EdManagementSystem.DataAccess.Data;
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Services
@@ -63,7 +64,7 @@ namespace EdManagementSystem.DataAccess.Services
 
             if (squadId == 0)
             {
-                throw new Exception("Курс не найден!");
+                throw new Exception("Группа не найдена!");
             }
             return squadId;
         }
@@ -116,6 +117,41 @@ namespace EdManagementSystem.DataAccess.Services
             await _context.SaveChangesAsync();
 
             return squad;
+        }
+
+        public async Task<List<int>> GetCoursesIdsByNames(List<int> squadIds)
+        {
+            List<int> result = new List<int>();
+
+            foreach (var squadId in squadIds)
+            {
+                var foundItem = await GetCourseIdBySquadId(squadId);
+                result.Add(foundItem);
+            }
+
+            return result;
+        }
+
+        public async Task<List<int>> GetSquadsIdsByNames(List<string> squadNames)
+        {
+            List<int> result = new List<int>();
+
+            foreach (var squadName in squadNames)
+            {
+                var foundItem = await GetSquadIdByName(squadName);
+
+                result.Add(foundItem);
+            }
+
+            return result;
+        }
+
+        private async Task<int> GetCourseIdBySquadId(int squadId)
+        {
+            return await _context.Squads
+                    .Where(s => s.SquadId == squadId)
+                    .Select(s => s.IdCourse)
+                    .FirstOrDefaultAsync();
         }
     }
 }

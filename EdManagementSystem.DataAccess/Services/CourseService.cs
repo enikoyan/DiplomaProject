@@ -101,5 +101,18 @@ namespace EdManagementSystem.DataAccess.Services
 
             return course;
         }
+
+        public async Task<List<int>> GetCoursesIdsByNames(List<string> courses)
+        {
+            List<int> coursesIds = new List<int>();
+
+            foreach (var course in courses)
+            {
+                var courseId = await GetCourseIdByName(course);
+                coursesIds.Add(courseId);
+            }
+
+            return coursesIds;
+        }
     }
 }

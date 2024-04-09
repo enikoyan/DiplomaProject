@@ -24,9 +24,42 @@
         }
     </select>
     <button class="custom-btn search-row__btn search-row__btn_search">Найти</button>
+    <button class="custom-btn" id="add-material-btn">Добавить материал</button>
 </div>
-<input type="file" class="custom-input add-file-input">
 <div class="found-materials">
     <!-- Material items will be create here using materials.js -->
 </div>
+<div id="modal-addMaterial">
+    <div style="display: flex; height: auto; justify-content: space-between; align-items: center;">
+        <h3>Добавить материалы</h3>
+        <button type="button" id="btn-close" aria-label="Close">ㅤ</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 40px;">
+        <select name="filterSelectorMaterial">
+            <option value="searchBySquads">Выбрать группы</option>
+            <option value="searchByCourses">Выбрать курсы</option>
+        </select>
+        <div id="options-container-courses" style="display: none; flex-wrap: wrap; gap: 15px; ">
+            @foreach (var item in Model.coursesList)
+            {
+                <div>
+                    <input type="checkbox" id="@item.OptionValue" value="@item.OptionValue" />
+                    <label for="@item.OptionValue">@item.CourseName</label>
+                </div>
+            }
+        </div>
+        <div id="options-container-squads" style="display: none; flex-wrap: wrap; gap: 15px; ">
+            @foreach (var item in Model.squadsList)
+            {
+                <div>
+                    <input type="checkbox" id="@item.OptionValue" value="@item.OptionValue" />
+                    <label for="@item.OptionValue">@item.SquadName</label>
+                </div>
+            }
+        </div>
+        <input type="file" multiple class="custom-input add-file-input">
+        <button class="custom-btn" id="send-materials-btn">Сохранить</button>
+    </div>
+</div>
+<div class="overlay"></div>
 <script src="~/js/materials.js"></script>

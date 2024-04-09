@@ -17,7 +17,6 @@ public partial class Material
     [Column("id", TypeName = "int(11)")]
     public int Id { get; set; }
 
-    [JsonIgnore]
     [Column("material_id")]
     public Guid MaterialId { get; set; }
 

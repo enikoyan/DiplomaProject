@@ -77,3 +77,24 @@
     }
   }
 }
+
+// Modal screen of material adding
+#modal-addMaterial {
+  display: none;
+  flex-direction: column;
+  padding: 50px;
+  gap: 30px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  background-color: #f0f0f0;
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  border-radius: 10px;
+  z-index: 999;
+}
+
+label {
+  user-select: none;
+}

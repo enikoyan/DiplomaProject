@@ -108,5 +108,19 @@ namespace EdManagementSystem.API.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult<List<int>>> GetCourseIds(List<string> courseNames)
+        {
+            try
+            {
+                var courseIds = await _courseService.GetCoursesIdsByNames(courseNames);
+                return Ok(courseIds);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
     }
 }
