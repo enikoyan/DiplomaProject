@@ -70,6 +70,7 @@ namespace EdManagementSystem.DataAccess.Services
                             }
                             break;
                         }
+                    default: return false;
                 }
 
                 await _context.SaveChangesAsync();

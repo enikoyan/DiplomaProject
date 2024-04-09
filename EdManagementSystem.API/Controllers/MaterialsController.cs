@@ -95,14 +95,18 @@ namespace EdManagementSystem.API.Controllers
         {
             try
             {
-                bool result = await _materialService.CreateMaterial(files, groupBy, foreignKeys);
-                if (result)
-                {
-                    return Ok("Материал(-ы) успешно добавлен(-ы)!");
-                }
+                if (files.Count == 0 || string.IsNullOrEmpty(groupBy) || foreignKeys.Count == 0) return BadRequest("Заполните все поля!");
                 else
                 {
-                    return BadRequest("Не удалось загрузить материал(-ы)!");
+                    bool result = await _materialService.CreateMaterial(files, groupBy, foreignKeys);
+                    if (result)
+                    {
+                        return Ok("Материал(-ы) успешно добавлен(-ы)!");
+                    }
+                    else
+                    {
+                        return BadRequest("Не удалось загрузить материал(-ы)!");
+                    }
                 }
             }
             catch (Exception ex)
