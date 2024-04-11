@@ -2,6 +2,7 @@
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Services
@@ -11,14 +12,14 @@ namespace EdManagementSystem.DataAccess.Services
         private readonly User004Context _context;
         private readonly ISquadService _squadService;
         private readonly ICourseService _courseService;
-        private readonly IFileLoadService _fileLoadService;
+        private readonly IFileManagementService _fileManagementService;
 
-        public MaterialService(User004Context context, ISquadService squadService, ICourseService courseService, IFileLoadService fileLoadService)
+        public MaterialService(User004Context context, ISquadService squadService, ICourseService courseService, IFileManagementService fileManagementService)
         {
             _context = context;
             _squadService = squadService;
             _courseService = courseService;
-            _fileLoadService = fileLoadService;
+            _fileManagementService = fileManagementService;
         }
 
         private Guid GenerateGuid() => Guid.NewGuid();
@@ -79,8 +80,8 @@ namespace EdManagementSystem.DataAccess.Services
                 try
                 {
                     string fileName = newId.ToString();
-                    var newFile = new FormFile(file.OpenReadStream(), 0, file.Length, file.Name, $"{fileName}.{Path.GetExtension(file.FileName)}");
-                    await _fileLoadService.UploadFileAsync(newFile);
+                    var newFile = new FormFile(file.OpenReadStream(), 0, file.Length, file.Name, $"{fileName}{Path.GetExtension(file.FileName)}");
+                    await _fileManagementService.UploadFileAsync(newFile, "Materials");
                 }
                 catch (Exception ex)
                 {
@@ -91,10 +92,9 @@ namespace EdManagementSystem.DataAccess.Services
             return true;
         }
 
-        public async Task<List<Material>> GetAllMaterials()
-        {
-            return await _context.Materials.ToListAsync();
-        }
+        public async Task<List<Material>> GetAllMaterials() => await _context.Materials.ToListAsync();
+
+        public async Task<List<Material>> GetMaterialsByType(string fileType) => await _context.Materials.Where(u => u.Type == fileType).ToListAsync();
 
         public async Task<Material> GetMaterialById(Guid materialId)
         {
@@ -106,11 +106,6 @@ namespace EdManagementSystem.DataAccess.Services
             }
 
             else return material;
-        }
-
-        public async Task<List<Material>> GetMaterialsByType(string fileType)
-        {
-            return await _context.Materials.Where(u => u.Type == fileType).ToListAsync();
         }
 
         public async Task<Material> GetMaterialByTitle(string materialTitle)
@@ -130,14 +125,20 @@ namespace EdManagementSystem.DataAccess.Services
             // Get squadId by squadName
             var squadId = await _squadService.GetSquadIdByName(squadName);
 
-            List<Material> materials = await _context.Materials.Where(m => m.IdSquad == squadId).ToListAsync();
+            List<Material> materials = await _context.Materials
+                .Where(m => m.IdSquad == squadId)
+                .ToListAsync();
+
+            var distinctMaterials = materials.GroupBy(m => m.MaterialId)
+                                                 .Select(g => g.First())
+                                                 .ToList();
 
             if (materials == null || materials.Count == 0)
             {
                 throw new Exception($"Материалов для группы {squadName} не найдено!");
             }
 
-            return materials;
+            return distinctMaterials;
         }
 
         public async Task<List<Material>> GetMaterialsByCourse(string courseName)
@@ -145,14 +146,29 @@ namespace EdManagementSystem.DataAccess.Services
             // Get courseId by courseName
             var courseId = await _courseService.GetCourseIdByName(courseName);
 
-            List<Material> materials = await _context.Materials.Where(m => m.IdCourse == courseId).ToListAsync();
+            List<Material> materials = await _context.Materials
+                .Where(m => m.IdCourse == courseId)
+                .ToListAsync();
+
+            var distinctMaterials = materials.GroupBy(m => m.MaterialId)
+                                                 .Select(g => g.First())
+                                                 .ToList();
 
             if (materials == null || materials.Count == 0)
             {
                 throw new Exception($"Материалов для курса {courseName} не найдено!");
             }
 
-            return materials;
+            return distinctMaterials;
         }
+
+        public async Task<IActionResult> DownloadMaterial(Guid materialId)
+        {
+            var material = await GetMaterialById(materialId);
+
+            return await _fileManagementService.DownloadFileAsync(materialId.ToString(), "Materials", material.Title);
+        }
+
+        public async Task<bool> DeleteMaterial(Guid materialId) => await _fileManagementService.DeleteFileAsync(materialId.ToString(), "Materials");
     }
 }

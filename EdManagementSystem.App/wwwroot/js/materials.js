@@ -11,6 +11,7 @@ const sendMaterialsBtn = document.getElementById('send-materials-btn');
 let selectedFilter = 0;
 let checkedOptions = "squads";
 const createMaterialAPI = "https://localhost:44370/api/Materials/CreateMaterial/";
+const downloadMaterialAPI = "https://localhost:44370/api/FileLoad/DownloadFile/";
 
 document.addEventListener('DOMContentLoaded', function () {
     filterSelector.value = localStorage.getItem('selectedFilter');
@@ -109,19 +110,41 @@ function createElements(item) {
     materialsItem_info.appendChild(materialsItem_img);
     materialsItem_info.appendChild(materialsItem_info_text);
 
+    /* BUTTONS */
+    const materialsItem_btnContainer = document.createElement("div");
+    materialsItem_btnContainer.style = "display: flex; gap: 10px";
+
     // Download material button
     const materislItem_downloadBtn = document.createElement("button");
     materislItem_downloadBtn.textContent = "Скачать";
     materislItem_downloadBtn.setAttribute("data-fileId", `${item.materialId}`);
+    materislItem_downloadBtn.addEventListener('click', () => {
+        console.log("Download");
+    });
+
+    // Delete material button
+    const materialsItem_deleteBtn = document.createElement("button");
+    materialsItem_deleteBtn.textContent = "Удалить";
+    materialsItem_deleteBtn.setAttribute("data-fileId", `${item.materialId}`);
+    materialsItem_deleteBtn.addEventListener('click', () => {
+        console.log("Delete");
+    });
+
+    materialsItem_btnContainer.appendChild(materislItem_downloadBtn);
+    materialsItem_btnContainer.appendChild(materialsItem_deleteBtn);
 
     materialsItem.appendChild(materialsItem_info);
-    materialsItem.appendChild(materislItem_downloadBtn);
+    materialsItem.appendChild(materialsItem_btnContainer);
 
     materialsContainer.appendChild(materialsItem);
 }
 
 // Calling API
 searchBtn.addEventListener('click', () => {
+    getMaterials();
+});
+
+function getMaterials() {
     let selectedAPI = "";
     let apiUrl = "";
 
@@ -161,7 +184,7 @@ searchBtn.addEventListener('click', () => {
         .catch(error => {
             alert(error.message);
         })
-});
+}
 
 /* ModalScreen */
 const addMaterialModalScreen = document.getElementById("modal-addMaterial");

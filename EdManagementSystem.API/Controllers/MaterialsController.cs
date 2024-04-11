@@ -114,5 +114,33 @@ namespace EdManagementSystem.API.Controllers
                 return StatusCode(500, $"Произошла ошибка: {ex.Message}");
             }
         }
+
+        [HttpGet("{materialId}")]
+        public async Task<IActionResult> DownloadMaterial(Guid materialId)
+        {
+            try
+            {
+                return await _materialService.DownloadMaterial(materialId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpDelete("{materialId}")]
+        public async Task<IActionResult> DeleteMaterial(Guid materialId)
+        {
+            try
+            {
+                var result = await _materialService.DeleteMaterial(materialId);
+                if (result) return Ok("Файл успешно удален!");
+                else return BadRequest("Файл не был удален!");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

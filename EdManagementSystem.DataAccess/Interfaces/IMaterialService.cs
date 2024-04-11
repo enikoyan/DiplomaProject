@@ -1,5 +1,6 @@
 ﻿using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EdManagementSystem.DataAccess.Interfaces
 {
@@ -12,5 +13,7 @@ namespace EdManagementSystem.DataAccess.Interfaces
         Task<List<Material>> GetMaterialsBySquad(string squadName);
         Task<List<Material>> GetMaterialsByCourse(string courseName);
         Task<bool> CreateMaterial(List<IFormFile> files, string groupBy, List<string> foreignKeys);
+        Task<IActionResult> DownloadMaterial(Guid materialId);
+        Task<bool> DeleteMaterial(Guid materialId);
     }
 }

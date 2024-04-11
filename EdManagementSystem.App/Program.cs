@@ -37,7 +37,7 @@ namespace EdManagementSystem.App
             services.AddDbContext<User004Context>(dbContextOptions => dbContextOptions
             .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString) ??
             throw new InvalidOperationException("Connection string is not found!")),
-            ServiceLifetime.Transient);
+            ServiceLifetime.Singleton);
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
