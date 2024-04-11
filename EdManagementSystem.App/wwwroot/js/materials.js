@@ -11,18 +11,21 @@ const sendMaterialsBtn = document.getElementById('send-materials-btn');
 let selectedFilter = 0;
 let checkedOptions = "squads";
 const createMaterialAPI = "https://localhost:44370/api/Materials/CreateMaterial/";
-const downloadMaterialAPI = "https://localhost:44370/api/FileLoad/DownloadFile/";
+const downloadMaterialAPI = "https://localhost:44370/api/Materials/DownloadMaterial";
 
+// Document loading handler
 document.addEventListener('DOMContentLoaded', function () {
-    filterSelector.value = localStorage.getItem('selectedFilter');
+    if (localStorage.getItem('selectedFilter')) filterSelector.value = localStorage.getItem('selectedFilter');
+
     changeFilter();
+
     switch (filterSelector.value) {
         case "searchBySquads": {
-            groupSelector.value = localStorage.getItem('groupSelectorValue');
+            if (localStorage.getItem('groupSelectorValue')) groupSelector.value = localStorage.getItem('groupSelectorValue');
             break;
         }
         case "searchByCourses": {
-            courseSelector.value = localStorage.getItem('courseSelectorValue');
+            if (localStorage.getItem('courseSelectorValue')) courseSelector.value = localStorage.getItem('courseSelectorValue');
             break;
         }
     };
@@ -45,6 +48,7 @@ filterSelector.addEventListener('change', function () { changeFilter() });
 // Handler of changing filter event in materials modal screen
 filterSelectorMaterial.addEventListener('change', function () { changeMaterialItems() });
 
+// Search filter change handler
 function changeFilter() {
     if (filterSelector.value === "searchBySquads") {
         courseSelector.disabled = true;
@@ -119,7 +123,8 @@ function createElements(item) {
     materislItem_downloadBtn.textContent = "Скачать";
     materislItem_downloadBtn.setAttribute("data-fileId", `${item.materialId}`);
     materislItem_downloadBtn.addEventListener('click', () => {
-        console.log("Download");
+        const materialId = materislItem_downloadBtn.getAttribute("data-fileId");
+        downloadMaterial(materialId);
     });
 
     // Delete material button
@@ -127,7 +132,11 @@ function createElements(item) {
     materialsItem_deleteBtn.textContent = "Удалить";
     materialsItem_deleteBtn.setAttribute("data-fileId", `${item.materialId}`);
     materialsItem_deleteBtn.addEventListener('click', () => {
-        console.log("Delete");
+        var answer = window.confirm("Вы уверены, что хотите удалить данный материал?");
+        if (answer) {
+            const materialId = materialsItem_deleteBtn.getAttribute("data-fileId");
+            deleteMaterial(materialId);
+        }
     });
 
     materialsItem_btnContainer.appendChild(materislItem_downloadBtn);
@@ -137,6 +146,67 @@ function createElements(item) {
     materialsItem.appendChild(materialsItem_btnContainer);
 
     materialsContainer.appendChild(materialsItem);
+}
+
+async function deleteMaterial(materialId) {
+    try {
+        let deleteMaterialAPI = "https://localhost:44370/api/Materials";
+
+        switch (selectedFilter) {
+            case 0: {
+                deleteMaterialAPI = `/DeleteSquadMaterial/${groupSelector.value}`;
+                break;
+            }
+            case 1: {
+                deleteMaterialAPI += `/DeleteCourseMaterial/${materialId}/${courseSelector.value}`;
+                break;
+            }
+        }
+
+        const response = await fetch(`${deleteMaterialAPI}`, {
+            method: 'DELETE',
+        })
+
+        if (response.ok) {
+            alert("Материал успешно удален!");
+            await getMaterials();
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function downloadMaterial(materialId) {
+    try {
+        const response = await fetch(`${downloadMaterialAPI}/${materialId}`, {
+            method: 'GET',
+        })
+
+        if (response.ok) {
+            // Find name of file
+            const contentDisposition = response.headers.get('Content-Disposition');
+            const encodedFilename = contentDisposition.match(/filename\*?=UTF-8'['']?([^;"]+)['']?/i);
+            const encodedFilenameText = encodedFilename[1];
+            // Decoding name
+            const filename = decodeURIComponent(encodedFilenameText);
+            if (filename) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename || "Файл";
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            } else {
+                throw new Error('Название файла не найдено!');
+            }
+        } else {
+            alert('Не удалось скачать файл!');
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 // Calling API
@@ -164,6 +234,8 @@ function getMaterials() {
     fetch(apiUrl)
         .then(response => {
             if (!response.ok) {
+                materialsContainer.innerHTML = '';
+                localStorage.removeItem('materialsData');
                 throw new Error('Данных не найдено');
             }
             return response.json();

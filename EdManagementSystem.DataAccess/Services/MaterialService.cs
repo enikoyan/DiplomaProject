@@ -169,6 +169,42 @@ namespace EdManagementSystem.DataAccess.Services
             return await _fileManagementService.DownloadFileAsync(materialId.ToString(), "Materials", material.Title);
         }
 
-        public async Task<bool> DeleteMaterial(Guid materialId) => await _fileManagementService.DeleteFileAsync(materialId.ToString(), "Materials");
+        public async Task<bool> DeleteSquadMaterial(Guid materialId, string squadName)
+        {
+            // Delete material in the database
+            int squadId = await _squadService.GetSquadIdByName(squadName);
+            List<Material> materials = await _context.Materials.Where(m => m.IdSquad == squadId && m.MaterialId == materialId).ToListAsync();
+
+            foreach (var material in materials)
+            {
+                _context.Materials.Remove(material);
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Delete file
+            await _fileManagementService.DeleteFileAsync(materialId.ToString(), "Materials");
+
+            return true;
+        }
+
+        public async Task<bool> DeleteCourseMaterial(Guid materialId, string courseName)
+        {
+            // Delete material in the database
+            int courseId = await _courseService.GetCourseIdByName(courseName);
+            List<Material> materials = await _context.Materials.Where(m => m.IdCourse == courseId && m.MaterialId == materialId).ToListAsync();
+
+            foreach (var material in materials)
+            {
+                _context.Materials.Remove(material);
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Delete file
+            await _fileManagementService.DeleteFileAsync(materialId.ToString(), "Materials");
+
+            return true;
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace EdManagementSystem.DataAccess.Interfaces
         Task<List<Material>> GetMaterialsByCourse(string courseName);
         Task<bool> CreateMaterial(List<IFormFile> files, string groupBy, List<string> foreignKeys);
         Task<IActionResult> DownloadMaterial(Guid materialId);
-        Task<bool> DeleteMaterial(Guid materialId);
+        Task<bool> DeleteSquadMaterial(Guid materialId, string squadName);
+        Task<bool> DeleteCourseMaterial(Guid materialId, string courseName);
     }
 }

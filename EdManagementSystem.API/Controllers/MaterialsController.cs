@@ -2,6 +2,7 @@
 using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.DependencyResolver;
 
 namespace EdManagementSystem.API.Controllers
 {
@@ -120,6 +121,7 @@ namespace EdManagementSystem.API.Controllers
         {
             try
             {
+                Response.Headers["Access-Control-Expose-Headers"] = "Content-Disposition";
                 return await _materialService.DownloadMaterial(materialId);
             }
             catch (Exception ex)
@@ -128,12 +130,27 @@ namespace EdManagementSystem.API.Controllers
             }
         }
 
-        [HttpDelete("{materialId}")]
-        public async Task<IActionResult> DeleteMaterial(Guid materialId)
+        [HttpDelete("{materialId}/{courseName}")]
+        public async Task<IActionResult> DeleteCourseMaterial(Guid materialId, string courseName)
         {
             try
             {
-                var result = await _materialService.DeleteMaterial(materialId);
+                var result = await _materialService.DeleteCourseMaterial(materialId, courseName);
+                if (result) return Ok("Файл успешно удален!");
+                else return BadRequest("Файл не был удален!");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        [HttpDelete("{materialId}/{squadName}")]
+        public async Task<IActionResult> DeleteSquadMaterial(Guid materialId, string squadName)
+        {
+            try
+            {
+                var result = await _materialService.DeleteSquadMaterial(materialId, squadName);
                 if (result) return Ok("Файл успешно удален!");
                 else return BadRequest("Файл не был удален!");
             }
