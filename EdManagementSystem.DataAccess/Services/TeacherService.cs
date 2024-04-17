@@ -7,9 +7,9 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class TeacherService : ITeacherService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
 
-        public TeacherService(User004Context context)
+        public TeacherService(EdSystemDbContext context)
         {
             _context = context;
         }

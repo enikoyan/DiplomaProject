@@ -8,10 +8,10 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class UserService : IUserService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
         private readonly IPasswordHasher _passwordHasher;
 
-        public UserService(User004Context context, IPasswordHasher passwordHashed)
+        public UserService(EdSystemDbContext context, IPasswordHasher passwordHashed)
         {
             _context = context;
             _passwordHasher = passwordHashed;

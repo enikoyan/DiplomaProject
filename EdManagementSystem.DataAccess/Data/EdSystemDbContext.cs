@@ -6,13 +6,13 @@ using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
 namespace EdManagementSystem.DataAccess.Data;
 
-public partial class User004Context : DbContext
+public partial class EdSystemDbContext : DbContext
 {
-    public User004Context()
+    public EdSystemDbContext()
     {
     }
 
-    public User004Context(DbContextOptions<User004Context> options)
+    public EdSystemDbContext(DbContextOptions<EdSystemDbContext> options)
         : base(options)
     {
     }
@@ -20,6 +20,8 @@ public partial class User004Context : DbContext
     public virtual DbSet<Course> Courses { get; set; }
 
     public virtual DbSet<Squad> Squads { get; set; }
+
+    public virtual DbSet<Schedule> Schedules { get; set; }
 
     public virtual DbSet<SocialMedium> SocialMedia { get; set; }
 
@@ -57,6 +59,15 @@ public partial class User004Context : DbContext
             entity.HasOne(d => d.IdSquadNavigation).WithMany(p => p.Materials)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("Material_ibfk_2");
+        });
+
+        modelBuilder.Entity<Schedule>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.HasOne(d => d.Squad).WithMany(p => p.Schedules).HasConstraintName("Schedule_ibfk_1");
+
+            entity.HasOne(d => d.Teacher).WithMany(p => p.Schedules).HasConstraintName("Schedule_ibfk_2");
         });
 
         modelBuilder.Entity<SocialMedium>(entity =>

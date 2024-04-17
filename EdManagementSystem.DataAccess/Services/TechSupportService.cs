@@ -7,9 +7,9 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class TechSupportService : ITechSupportService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
 
-        public TechSupportService(User004Context context)
+        public TechSupportService(EdSystemDbContext context)
         {
             _context = context;
         }

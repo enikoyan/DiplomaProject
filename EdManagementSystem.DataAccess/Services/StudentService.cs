@@ -7,12 +7,12 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class StudentService : IStudentService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
         private readonly ICourseService _courseService;
         private readonly ISquadService _squadService;
         private readonly ISquadStudentService _squadStudentService;
 
-        public StudentService(User004Context context, ICourseService courseService, ISquadService squadService, ISquadStudentService squadStudentService)
+        public StudentService(EdSystemDbContext context, ICourseService courseService, ISquadService squadService, ISquadStudentService squadStudentService)
         {
             _context = context;
             _courseService = courseService;

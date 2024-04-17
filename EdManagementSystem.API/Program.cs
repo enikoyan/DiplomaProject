@@ -23,7 +23,7 @@ namespace EdManagementSystem.API
 
             // Get DB connection and DBContext
             var connectionString = builderConfig.GetConnectionString("DefaultConnection");
-            services.AddDbContext<User004Context>(dbContextOptions =>
+            services.AddDbContext<EdSystemDbContext>(dbContextOptions =>
             {
                 dbContextOptions.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
                 dbContextOptions.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

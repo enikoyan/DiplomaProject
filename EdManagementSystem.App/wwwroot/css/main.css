@@ -466,6 +466,47 @@ label {
           user-select: none;
 }
 
+.calendar {
+  display: grid;
+  grid-column: 2;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  row-gap: 25px;
+  -moz-column-gap: 10px;
+       column-gap: 10px;
+  background-color: rgb(216, 237, 255);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.calendar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+.calendar-item_events {
+  background-color: rgb(230, 230, 230);
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.calendar-item_event-item {
+  background-color: rgb(235, 240, 255);
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.calendar-item_event-item p:first-child {
+  font-weight: bold;
+}
+.calendar-item_event-item p:nth-child(3) {
+  font-style: italic;
+}
+
 .custom-table {
   text-align: left;
   border-collapse: separate;

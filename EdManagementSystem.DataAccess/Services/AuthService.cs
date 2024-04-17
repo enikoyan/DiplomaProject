@@ -11,10 +11,10 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class AuthService: IAuthService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
         private readonly IPasswordHasher _passwordHasher;
 
-        public AuthService(User004Context context, IPasswordHasher passwordHasher)
+        public AuthService(EdSystemDbContext context, IPasswordHasher passwordHasher)
         {
             _context = context;
             _passwordHasher = passwordHasher;

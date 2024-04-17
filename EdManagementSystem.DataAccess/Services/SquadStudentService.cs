@@ -13,9 +13,9 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class SquadStudentService : ISquadStudentService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
 
-        public SquadStudentService(User004Context context)
+        public SquadStudentService(EdSystemDbContext context)
         {
             _context = context;
         }

@@ -9,12 +9,12 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class MaterialService : IMaterialService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
         private readonly ISquadService _squadService;
         private readonly ICourseService _courseService;
         private readonly IFileManagementService _fileManagementService;
 
-        public MaterialService(User004Context context, ISquadService squadService, ICourseService courseService, IFileManagementService fileManagementService)
+        public MaterialService(EdSystemDbContext context, ISquadService squadService, ICourseService courseService, IFileManagementService fileManagementService)
         {
             _context = context;
             _squadService = squadService;

@@ -7,9 +7,9 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class CourseService : ICourseService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
 
-        public CourseService(User004Context context)
+        public CourseService(EdSystemDbContext context)
         {
             _context = context;
         }

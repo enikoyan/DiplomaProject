@@ -34,7 +34,7 @@ namespace EdManagementSystem.App
 
             // Get DB connection and DBContext
             var connectionString = builderConfig.GetConnectionString("DefaultConnection");
-            services.AddDbContext<User004Context>(dbContextOptions => dbContextOptions
+            services.AddDbContext<EdSystemDbContext>(dbContextOptions => dbContextOptions
             .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString) ??
             throw new InvalidOperationException("Connection string is not found!")),
             ServiceLifetime.Singleton);

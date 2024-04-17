@@ -54,4 +54,8 @@ public partial class Teacher
     [JsonIgnore]
     [InverseProperty("CourseTutorNavigation")]
     public virtual ICollection<Course> Courses { get; set; } = new List<Course>();
+
+    [JsonIgnore]
+    [InverseProperty("Teacher")]
+    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 }

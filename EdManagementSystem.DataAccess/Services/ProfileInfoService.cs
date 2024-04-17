@@ -7,9 +7,9 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class ProfileInfoService : IProfileInfoService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
 
-        public ProfileInfoService(User004Context context)
+        public ProfileInfoService(EdSystemDbContext context)
         {
             _context = context;
         }

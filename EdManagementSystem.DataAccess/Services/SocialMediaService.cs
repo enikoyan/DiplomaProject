@@ -12,9 +12,9 @@ namespace EdManagementSystem.DataAccess.Services
 {
     public class SocialMediaService : ISocialMediaService
     {
-        private readonly User004Context _context;
+        private readonly EdSystemDbContext _context;
 
-        public SocialMediaService(User004Context context)
+        public SocialMediaService(EdSystemDbContext context)
         {
             _context = context;
         }
