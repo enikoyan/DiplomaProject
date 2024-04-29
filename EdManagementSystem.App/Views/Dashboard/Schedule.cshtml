@@ -3,188 +3,88 @@
     Layout = "_DashboardLayout";
 }
 
+@functions {
+    private int GetWeekNumber()
+    {
+        return System.Globalization.CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+    }
+}
+
 <h1>Расписание</h1>
 <div class="search-row">
-    <span>Текущая дата: 13 апреля</span>
+    <span>Текущая дата: @DateTime.UtcNow.Date.Day апреля</span>
+</div>
+<div class="search-row">
+    <span>Выберите дату: </span>
     <button id="previousWeekBtn">Назад</button>
-    <input type="week" id="weekInput">
+    <input type="week" id="weekInput" value="@DateTime.Now.ToString($"yyyy-'W'{GetWeekNumber()}")">
     <button id="nextWeekBtn">Вперед</button>
-    <button id="showScheduleBtn">Показать расписание</button>
+    <button id="refreshScheduleBtn">Обновить данные</button>
 </div>
-<div class="calendar">
-    <div class="calendar-item">
-        <h3 id="calendar-item_title"><span id="calendar-item_day"></span> Понедельник</h3>
-        <div class="calendar-item_events">
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
+<h3 id="errorMessage" style="color:red; display:none">РАСПИСАНИЕ НЕ НАЙДЕНО!</h3>
+<div class="schedule">
+    <div class="schedule-item" data-day="monday">
+        <div class="schedule-item__header">
+            <date class="schedule-item__date">22 апр</date>
+            <div class="schedule-item__week-day">Пн</div>
+        </div>
+        <div class="schedule-item__body">
         </div>
     </div>
-    <div class="calendar-item">
-        <h3 id="calendar-item_title"><span id="calendar-item_day"></span> Вторник</h3>
-        <div class="calendar-item_events">
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-        </div>
-    </div>
-    <div class="calendar-item">
-        <h3 id="calendar-item_title"><span id="calendar-item_day"></span> Среда</h3>
-        <div class="calendar-item_events">
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-        </div>
-    </div>
-    <div class="calendar-item">
-        <h3 id="calendar-item_title"><span id="calendar-item_day"></span> Четверг</h3>
-        <div class="calendar-item_events">
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-        </div>
-    </div>
-    <div class="calendar-item">
-        <h3 id="calendar-item_title"><span id="calendar-item_day"></span> Пятница</h3>
-        <div class="calendar-item_events">
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-        </div>
-    </div>
-    <div class="calendar-item">
-        <h3 id="calendar-item_title"><span id="calendar-item_day"></span> Суббота</h3>
-        <div class="calendar-item_events">
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-        </div>
-    </div>
-    <div class="calendar-item">
-        <h3 id="calendar-item_title"><span id="calendar-item_day"></span> Воскресенье</h3>
-        <div class="calendar-item_events">
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-            <div class="calendar-item_event-item">
-                <p id="calendar-item_course">Информационные технологии</p>
-                <p id="calendar-item_squad">ЩПКО-01-20</p>
-                <p id="calendar-item_timeline">9:00 - 10:30</p>
-                <p id="calendar-item_place">Кабинет 301</p>
-            </div>
-        </div>
-    </div>
-</div>
 
+    <div class="schedule-item" data-day="tuesday">
+        <div class="schedule-item__header">
+            <date class="schedule-item__date">23 апр</date>
+            <div class="schedule-item__week-day">Вт</div>
+        </div>
+        <div class="schedule-item__body">
+        </div>
+    </div>
+
+    <div class="schedule-item" data-day="wednesday">
+        <div class="schedule-item__header">
+            <date class="schedule-item__date">24 апр</date>
+            <div class="schedule-item__week-day">Ср</div>
+        </div>
+        <div class="schedule-item__body">
+        </div>
+    </div>
+
+    <div class="schedule-item" data-day="thursday">
+        <div class="schedule-item__header">
+            <date class="schedule-item__date">25 апр</date>
+            <div class="schedule-item__week-day">Чт</div>
+        </div>
+        <div class="schedule-item__body">
+        </div>
+    </div>
+
+    <div class="schedule-item" data-day="friday">
+        <div class="schedule-item__header">
+            <date class="schedule-item__date">26 апр</date>
+            <div class="schedule-item__week-day">Пт</div>
+        </div>
+        <div class="schedule-item__body">
+        </div>
+    </div>
+
+    <div class="schedule-item" data-day="saturday">
+        <div class="schedule-item__header">
+            <date class="schedule-item__date">27 апр</date>
+            <div class="schedule-item__week-day">Сб</div>
+        </div>
+        <div class="schedule-item__body">
+        </div>
+    </div>
+
+    <div class="schedule-item" data-day="sunday">
+        <div class="schedule-item__header">
+            <date class="schedule-item__date">28 апр</date>
+            <div class="schedule-item__week-day">Вс</div>
+        </div>
+        <div class="schedule-item__body">
+        </div>
+    </div>
+</div>
+</div>
 <script src="~/js/schedule.js"></script>

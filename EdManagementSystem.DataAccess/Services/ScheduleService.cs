@@ -20,14 +20,29 @@ namespace EdManagementSystem.DataAccess.Services
 
         public async Task<List<Schedule>> GetAllScheduleItems()
         {
-            var result = await _dbContext.Schedules.OrderBy(s => s.TimelineStart).ToListAsync();
+            var result = await _dbContext.Schedules
+                .OrderBy(s => s.TimelineStart)
+                .Select(s => new Schedule
+                {
+                    Id = s.Id,
+                    TeacherId = s.TeacherId,
+                    SquadId = s.SquadId,
+                    Weekday = s.Weekday,
+                    Date = s.Date,
+                    TimelineStart = s.TimelineStart,
+                    TimelineEnd = s.TimelineEnd,
+                    Place = s.Place,
+                    Note = s.Note,
+                    SquadName = s.Squad.SquadName
+                })
+                .ToListAsync();
 
             if (result.Count > 0)
             {
                 return result;
             }
 
-            else throw new Exception("Расписание не найдено!");
+            throw new Exception("Расписание не найдено!");
         }
 
         public async Task<List<Schedule>> GetScheduleByWeek(string teacherEmail, DateOnly weekStart, DateOnly weekEnd)
@@ -36,14 +51,31 @@ namespace EdManagementSystem.DataAccess.Services
 
             var result = await _dbContext.Schedules
                 .Where(s => (s.Date >= weekStart && s.Date <= weekEnd) && s.TeacherId == teacher.TeacherId)
-                .OrderBy(s => s.TimelineStart)
+                .OrderBy(s => s.Date)
+                .ThenBy(s => s.TimelineStart)
+                .Select(s => new Schedule
+                {
+                    Id = s.Id,
+                    TeacherId = s.TeacherId,
+                    SquadId = s.SquadId,
+                    Weekday = s.Weekday,
+                    Date = s.Date,
+                    TimelineStart = s.TimelineStart,
+                    TimelineEnd = s.TimelineEnd,
+                    Place = s.Place,
+                    Note = s.Note,
+                    SquadName = s.Squad.SquadName
+                })
                 .ToListAsync();
 
             if (result.Count > 0)
             {
                 return result;
             }
-            else throw new Exception($"Расписание в промежутке от {weekStart} по {weekEnd} для преподавателя {teacher.Fio} не найдено!");
+            else
+            {
+                throw new Exception($"Расписание в промежутке от {weekStart} по {weekEnd} для преподавателя {teacher.Fio} не найдено!");
+            }
         }
 
         public async Task<List<Schedule>> GetScheduleBySquad(string squadName)
@@ -54,6 +86,19 @@ namespace EdManagementSystem.DataAccess.Services
                 .Where(s => s.SquadId == squad.SquadId)
                 .OrderBy(s => s.Date)
                 .ThenBy(s => s.TimelineStart)
+                .Select(s => new Schedule
+                {
+                    Id = s.Id,
+                    TeacherId = s.TeacherId,
+                    SquadId = s.SquadId,
+                    Weekday = s.Weekday,
+                    Date = s.Date,
+                    TimelineStart = s.TimelineStart,
+                    TimelineEnd = s.TimelineEnd,
+                    Place = s.Place,
+                    Note = s.Note,
+                    SquadName = s.Squad.SquadName
+                })
                 .ToListAsync();
 
             if (result.Count > 0)
@@ -66,7 +111,22 @@ namespace EdManagementSystem.DataAccess.Services
 
         public async Task<List<Schedule>> GetScheduleByDay(DateOnly date)
         {
-            var result = await _dbContext.Schedules.Where(s => s.Date == date).ToListAsync();
+            var result = await _dbContext.Schedules
+                .Where(s => s.Date == date)
+                .Select(s => new Schedule
+                {
+                    Id = s.Id,
+                    TeacherId = s.TeacherId,
+                    SquadId = s.SquadId,
+                    Weekday = s.Weekday,
+                    Date = s.Date,
+                    TimelineStart = s.TimelineStart,
+                    TimelineEnd = s.TimelineEnd,
+                    Place = s.Place,
+                    Note = s.Note,
+                    SquadName = s.Squad.SquadName
+                })
+                .ToListAsync();
 
             if (result.Count > 0)
             {
@@ -85,6 +145,7 @@ namespace EdManagementSystem.DataAccess.Services
                 foreach (var item in schedules)
                 {
                     await _dbContext.Schedules.AddAsync(item);
+                    await _dbContext.SaveChangesAsync();
                 }
                 return true;
             }

@@ -40,14 +40,17 @@ namespace EdManagementSystem.DataAccess.Models
         [StringLength(255)]
         public string? Note { get; set; }
 
+        [NotMapped]
+        public string? SquadName { get; set; } = null!;
+
         [JsonIgnore]
         [ForeignKey("SquadId")]
         [InverseProperty("Schedules")]
-        public virtual Squad Squad { get; set; } = null!;
+        public virtual Squad? Squad { get; set; } = null!;
 
         [JsonIgnore]
         [ForeignKey("TeacherId")]
         [InverseProperty("Schedules")]
-        public virtual Teacher Teacher { get; set; } = null!;
+        public virtual Teacher? Teacher { get; set; } = null!;
     }
 }

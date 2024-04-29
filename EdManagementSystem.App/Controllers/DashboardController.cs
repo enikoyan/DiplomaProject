@@ -30,6 +30,14 @@ namespace EdManagementSystem.App.Controllers
             _cacheService = cacheService;
         }
 
+        [HttpGet]
+        [ActionName("getCurrentUserId")]
+        public IActionResult GetCurrentUserId()
+        {
+            string userId = HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
+            return Ok(userId);
+        }
+
         #region ProfileInfo
         [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.Client, VaryByHeader = "User-Agent")]
         [ActionName("profile")]
