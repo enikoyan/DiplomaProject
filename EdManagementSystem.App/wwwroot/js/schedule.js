@@ -5,6 +5,7 @@
     const stepUpBtn = document.getElementById('nextWeekBtn');
     const stepDownBtn = document.getElementById('previousWeekBtn');
     const scheduleItems = document.querySelectorAll('.schedule-item__body');
+    const refreshDataBtn = document.getElementById('refreshScheduleBtn');
     var weekStart = '';
     var teacherEmail = '';
     var weekEnd = '';
@@ -24,6 +25,16 @@
     stepUpBtn.addEventListener('click', async () => { await weekInput.stepUp(); await createSchedule() });
     stepDownBtn.addEventListener('click', async () => { await weekInput.stepDown(); await createSchedule() });
 
+    // Refresh data btn handler
+    refreshDataBtn.addEventListener('click', async () => await refreshData());
+
+    // Refresh data for current date
+    async function refreshData() {
+        deleteWeekScheduleData(weekInput.value);
+        localStorage.removeItem('selectedWeek');
+        await createSchedule();
+    }
+
     // Create schedule
     async function createSchedule() {
 
@@ -36,6 +47,7 @@
         if (localStorage.getItem(`weekSchedule / ${teacherEmail} / ${weekInput.value}`)) {
             const weekScheduleJSON = getWeekSchedule(weekInput.value).schedule;
             errorMessage.style.display = "none";
+            await clearScheduleEvents();
             await createScheduleEvents(weekScheduleJSON);
         }
         else await extractScheduleFromAPI();
@@ -113,6 +125,8 @@
             weekEnd
         }
 
+        await clearScheduleEvents();
+
         // GET SCHEDULE FOR SELECTED WEEK
         fetch(apiUrl + new URLSearchParams(params), {
             method: 'GET',
@@ -126,7 +140,6 @@
                         errorMessage.style.display = "block";
                         errorMessage.textContent = text;
                         isScheduleFound = false;
-                        await clearScheduleEvents();
                     });
                 }
                 else {
@@ -170,6 +183,11 @@
     function getWeekSchedule(weekNumber) {
         const storedData = localStorage.getItem(`weekSchedule / ${teacherEmail} / ${weekNumber}`);
         return storedData ? JSON.parse(storedData) : null;
+    }
+
+    // Delete schedule from localStorage
+    async function deleteWeekScheduleData(weekNumber) {
+        localStorage.removeItem(`weekSchedule / ${teacherEmail} / ${weekNumber}`);
     }
 
     // Get currentUserId
