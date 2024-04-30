@@ -22,6 +22,7 @@ namespace EdManagementSystem.App.Controllers
         private string cacheKey_students { get; set; } = null!;
         private string cacheKey_techSupport { get; set; } = null!;
         private string cacheKey_materials { get; set; } = null!;
+        private string cacheKey_homeworks { get; set; } = null!;
 
         public DashboardController(ICacheService cacheService)
         {
@@ -258,13 +259,43 @@ namespace EdManagementSystem.App.Controllers
         }
         #endregion
 
-        #region GetPages
-
+        #region SchedulePage
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.None, VaryByHeader = "User-Agent")]
         [ActionName("schedule")]
         public IActionResult Schedule()
         {
             return PartialView();
         }
+        #endregion
+
+        #region HomeworksPage
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.None, VaryByHeader = "User-Agent")]
+        [ActionName("homeworks")]
+        public async Task<IActionResult> Homeworks()
+        {
+            userId ??= HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
+
+            cacheKey_homeworks = $"homeworksOf_{userId}";
+
+            var materialsData = await _cacheService.GetOrSetAsync(cacheKey_homeworks, async () =>
+            {
+                var coursesList = await GetCourses(userId);
+                var squadsList = await GetSquads(userId);
+
+                var materialsVM = new HomeworksPageViewModel
+                {
+                    coursesList = coursesList,
+                    squadsList = squadsList
+                };
+
+                return materialsVM;
+            }, TimeSpan.FromDays(7));
+
+            return PartialView(materialsData);
+        }
+        #endregion
+
+        #region GetPages
 
         [ActionName("attendance")]
         public IActionResult Attendance()
@@ -274,12 +305,6 @@ namespace EdManagementSystem.App.Controllers
 
         [ActionName("analytics")]
         public IActionResult Analytics()
-        {
-            return PartialView();
-        }
-
-        [ActionName("homeworks")]
-        public IActionResult Homeworks()
         {
             return PartialView();
         }

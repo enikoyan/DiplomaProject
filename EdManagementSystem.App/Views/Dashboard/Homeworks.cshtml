@@ -3,4 +3,30 @@
     Layout = "_DashboardLayout";
 }
 
+@model HomeworksPageViewModel
+
 <h1>Домашние задания</h1>
+<div class="search-row">
+    <select name="filterSelector">
+        <option value="searchBySquads" selected>По группам</option>
+        <option value="searchByCourses">По курсам</option>
+    </select>
+    <select name="courseSelector" class="search-row__filter search-row__filter_courses" style="display:none">
+        @foreach (var item in Model.coursesList)
+        {
+            <option value="@item.OptionValue">@item.CourseName</option>
+        }
+    </select>
+    <select name="groupSelector" class="search-row__filter search-row__filter_student-groups">
+        @foreach (var item in Model.squadsList)
+        {
+            <option value="@item.OptionValue">@item.SquadName</option>
+        }
+    </select>
+    <button class="custom-btn search-row__btn search-row__btn_search">Найти</button>
+    <button class="custom-btn" id="add-material-btn">Выдать Д/З</button>
+</div>
+<div class="homeworks">
+    <!-- Every teacher has his / her own homework-list -->
+</div>
+<script src="~/js/homeworks.js"></script>
