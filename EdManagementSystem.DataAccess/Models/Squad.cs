@@ -35,6 +35,10 @@ public partial class Squad
     public virtual Course? IdCourseNavigation { get; set; }
 
     [JsonIgnore]
+    [InverseProperty("Squad")]
+    public virtual ICollection<Homework> Homeworks { get; set; } = new List<Homework>();
+
+    [JsonIgnore]
     [InverseProperty("IdSquadNavigation")]
     public virtual ICollection<Material> Materials { get; set; } = new List<Material>();
 

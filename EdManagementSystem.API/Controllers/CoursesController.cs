@@ -94,8 +94,7 @@ namespace EdManagementSystem.API.Controllers
         }
 
 
-        [HttpGet]
-        [Route("{courseName}")]
+        [HttpGet("{courseName}")]
         public async Task<IActionResult> GetCourseIdByName(string courseName)
         {
             try
@@ -109,8 +108,8 @@ namespace EdManagementSystem.API.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<int>>> GetCourseIds(List<string> courseNames)
+        [HttpPost]
+        public async Task<ActionResult<List<int>>> GetCourseIds([FromForm] List<string> courseNames)
         {
             try
             {

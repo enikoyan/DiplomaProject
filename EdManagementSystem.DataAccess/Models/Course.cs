@@ -30,6 +30,10 @@ public partial class Course
     public int CourseTutor { get; set; }
 
     [JsonIgnore]
+    [InverseProperty("Course")]
+    public virtual ICollection<Homework> Homeworks { get; set; } = new List<Homework>();
+
+    [JsonIgnore]
     [InverseProperty("IdCourseNavigation")]
     public virtual ICollection<Material> Materials { get; set; } = new List<Material>();
 

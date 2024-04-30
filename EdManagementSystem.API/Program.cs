@@ -56,6 +56,7 @@ namespace EdManagementSystem.API
             services.AddScoped<IMaterialService, MaterialService>();
             services.AddScoped<IFileManagementService, FileManagementService>();
             services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<IHomeworkService, HomeworkService>();
 
             var app = builder.Build();
 
