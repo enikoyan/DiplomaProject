@@ -36,16 +36,27 @@ namespace EdManagementSystem.DataAccess.Services
                         {
                             List<int> coursesIds = await _courseService.GetCoursesIdsByNames(foreignKeys);
 
+                            // Create fileItem in DB
+                            Models.File fileItem = new Models.File()
+                            {
+                                Id = newId,
+                                Title = Path.GetFileNameWithoutExtension(file.FileName),
+                                Type = Path.GetExtension(file.FileName),
+                                DateAdded = DateTime.UtcNow
+                            };
+
+                            await _context.Files.AddAsync(fileItem);
+
                             foreach (var coursesId in coursesIds)
                             {
                                 // Create materialItem row in DB
-                                Material materialItem = new Material();
-                                materialItem.MaterialId = newId;
-                                materialItem.Title = Path.GetFileNameWithoutExtension(file.FileName);
-                                materialItem.IdCourse = coursesId;
-                                materialItem.Type = Path.GetExtension(file.FileName);
-                                materialItem.DateAdded = DateTime.UtcNow;
-                                _context.Materials.Add(materialItem);
+                                Material materialItem = new Material()
+                                {
+                                    IdFile = newId,
+                                    IdCourse = coursesId,
+                                };
+
+                                await _context.Materials.AddAsync(materialItem);
                             }
                             break;
                         }
@@ -59,15 +70,26 @@ namespace EdManagementSystem.DataAccess.Services
 
                             for (int i = 0; i < foreignKeys.Count; i++)
                             {
+                                // Create fileItem in DB
+                                Models.File fileItem = new Models.File()
+                                {
+                                    Id = newId,
+                                    Title = Path.GetFileNameWithoutExtension(file.FileName),
+                                    Type = Path.GetExtension(file.FileName),
+                                    DateAdded = DateTime.UtcNow
+                                };
+
+                                await _context.Files.AddAsync(fileItem);
+
                                 // Create materialItem row in DB
-                                Material materialItem = new Material();
-                                materialItem.MaterialId = newId;
-                                materialItem.Title = Path.GetFileNameWithoutExtension(file.FileName);
-                                materialItem.IdCourse = coursesIds[i];
-                                materialItem.IdSquad = squadsIds[i];
-                                materialItem.Type = Path.GetExtension(file.FileName);
-                                materialItem.DateAdded = DateTime.UtcNow;
-                                _context.Materials.Add(materialItem);
+                                Material materialItem = new Material()
+                                {
+                                    IdFile = newId,
+                                    IdCourse = coursesIds[i],
+                                    IdSquad = squadsIds[i]
+                                };
+
+                                await _context.Materials.AddAsync(materialItem);
                             }
                             break;
                         }
@@ -92,44 +114,74 @@ namespace EdManagementSystem.DataAccess.Services
             return true;
         }
 
-        public async Task<List<Material>> GetAllMaterials() => await _context.Materials.ToListAsync();
-
-        public async Task<List<Material>> GetMaterialsByType(string fileType) => await _context.Materials.Where(u => u.Type == fileType).ToListAsync();
-
-        public async Task<Material> GetMaterialById(Guid materialId)
+        public async Task<List<MaterialWithFile>> GetAllMaterials()
         {
-            var material = await _context.Materials.FirstOrDefaultAsync(m => m.MaterialId == materialId);
+            var materials = await _context.Materials
+                    .Include(m => m.IdFileNavigation)
+                    .ToListAsync();
+
+            if (materials.Count == 0 || materials == null)
+            {
+                throw new Exception("Такого файла нет!");
+            }
+
+            return await AddMaterialsToList(materials);
+        }
+
+        public async Task<List<MaterialWithFile>> GetMaterialsByType(string fileType)
+        {
+            var materials = await _context.Materials
+                        .Include(m => m.IdFileNavigation)
+                        .Where(m => m.IdFileNavigation.Type == fileType)
+                        .ToListAsync();
+
+            if (materials.Count == 0 || materials == null)
+            {
+                throw new Exception("Такого файла нет!");
+            }
+
+            return await AddMaterialsToList(materials);
+        }
+
+        public async Task<MaterialWithFile> GetMaterialById(Guid materialId)
+        {
+            var material = await _context.Materials
+                   .Include(m => m.IdFileNavigation)
+                   .FirstOrDefaultAsync(m => m.IdFile == materialId);
 
             if (material == null)
             {
                 throw new Exception("Такого файла нет!");
             }
 
-            else return material;
+            return await AddMaterialsToList(material);
         }
 
-        public async Task<Material> GetMaterialByTitle(string materialTitle)
+        public async Task<MaterialWithFile> GetMaterialByTitle(string materialTitle)
         {
-            var material = await _context.Materials.FirstOrDefaultAsync(m => m.Title == materialTitle);
+            var material = await _context.Materials
+                .Include(m => m.IdFileNavigation)
+                .FirstOrDefaultAsync(m => m.IdFileNavigation.Title == materialTitle);
 
             if (material == null)
             {
                 throw new Exception("Такого файла нет!");
             }
 
-            else return material;
+            return await AddMaterialsToList(material);
         }
 
-        public async Task<List<Material>> GetMaterialsBySquad(string squadName)
+        public async Task<List<MaterialWithFile>> GetMaterialsBySquad(string squadName)
         {
             // Get squadId by squadName
             var squadId = await _squadService.GetSquadIdByName(squadName);
 
             List<Material> materials = await _context.Materials
+                .Include(m => m.IdFileNavigation)
                 .Where(m => m.IdSquad == squadId)
                 .ToListAsync();
 
-            var distinctMaterials = materials.GroupBy(m => m.MaterialId)
+            var distinctMaterials = materials.GroupBy(m => m.IdFile)
                                                  .Select(g => g.First())
                                                  .ToList();
 
@@ -138,19 +190,20 @@ namespace EdManagementSystem.DataAccess.Services
                 throw new Exception($"Материалов для группы {squadName} не найдено!");
             }
 
-            return distinctMaterials;
+            return await AddMaterialsToList(distinctMaterials);
         }
 
-        public async Task<List<Material>> GetMaterialsByCourse(string courseName)
+        public async Task<List<MaterialWithFile>> GetMaterialsByCourse(string courseName)
         {
             // Get courseId by courseName
             var courseId = await _courseService.GetCourseIdByName(courseName);
 
             List<Material> materials = await _context.Materials
+                .Include(m => m.IdFileNavigation)
                 .Where(m => m.IdCourse == courseId)
                 .ToListAsync();
 
-            var distinctMaterials = materials.GroupBy(m => m.MaterialId)
+            var distinctMaterials = materials.GroupBy(m => m.IdFile)
                                                  .Select(g => g.First())
                                                  .ToList();
 
@@ -159,52 +212,125 @@ namespace EdManagementSystem.DataAccess.Services
                 throw new Exception($"Материалов для курса {courseName} не найдено!");
             }
 
-            return distinctMaterials;
+            return await AddMaterialsToList(distinctMaterials);
         }
 
         public async Task<IActionResult> DownloadMaterial(Guid materialId)
         {
             var material = await GetMaterialById(materialId);
 
-            return await _fileManagementService.DownloadFileAsync(materialId.ToString(), "Materials", material.Title);
+            var file = await _context.Files.FirstOrDefaultAsync(s => s.Id == materialId);
+
+            if (file != null)
+            {
+                return await _fileManagementService.DownloadFileAsync(materialId.ToString(), "Materials", file.Title);
+            }
+            else throw new Exception("Файл не найден!");
         }
 
         public async Task<bool> DeleteSquadMaterial(Guid materialId, string squadName)
         {
             // Delete material in the database
             int squadId = await _squadService.GetSquadIdByName(squadName);
-            List<Material> materials = await _context.Materials.Where(m => m.IdSquad == squadId && m.MaterialId == materialId).ToListAsync();
+            var material = await _context.Materials.FirstOrDefaultAsync(m => m.IdSquad == squadId && m.IdFile == materialId);
 
-            foreach (var material in materials)
+            if (material != null)
             {
                 _context.Materials.Remove(material);
+
+                await _context.SaveChangesAsync();
+
+                // Check If some squad has this file
+                material = await _context.Materials.FirstOrDefaultAsync(m => m.IdFile == materialId);
+
+                if (material == null)
+                {
+                    // Delete file from server
+                    await _fileManagementService.DeleteFileAsync(materialId.ToString(), "Materials");
+
+                    // Delete file in the database
+                    _context.Files.Remove(_context.Files.FirstOrDefault(s => s.Id == materialId)!);
+                    await _context.SaveChangesAsync();
+                }
+
+                return true;
             }
 
-            await _context.SaveChangesAsync();
-
-            // Delete file
-            await _fileManagementService.DeleteFileAsync(materialId.ToString(), "Materials");
-
-            return true;
+            else
+            {
+                throw new Exception($"Материал не найден!");
+            }
         }
 
         public async Task<bool> DeleteCourseMaterial(Guid materialId, string courseName)
         {
             // Delete material in the database
             int courseId = await _courseService.GetCourseIdByName(courseName);
-            List<Material> materials = await _context.Materials.Where(m => m.IdCourse == courseId && m.MaterialId == materialId).ToListAsync();
+            var material = await _context.Materials.FirstOrDefaultAsync(m => m.IdCourse == courseId && m.IdFile == materialId);
+
+            if (material != null)
+            {
+                _context.Materials.Remove(material);
+
+                await _context.SaveChangesAsync();
+
+                // Check If some squad has this file
+                material = await _context.Materials.FirstOrDefaultAsync(m => m.IdFile == materialId);
+
+                if (material == null)
+                {
+                    // Delete file from server
+                    await _fileManagementService.DeleteFileAsync(materialId.ToString(), "Materials");
+
+                    // Delete file in the database
+                    _context.Files.Remove(_context.Files.FirstOrDefault(s => s.Id == materialId)!);
+                    await _context.SaveChangesAsync();
+                }
+
+                return true;
+            }
+
+            else
+            {
+                throw new Exception($"Материал не найден!");
+            }
+        }
+
+        #region Private methods
+        private async Task<List<MaterialWithFile>> AddMaterialsToList(List<Material> materials)
+        {
+            List<MaterialWithFile> result = new List<MaterialWithFile>();
 
             foreach (var material in materials)
             {
-                _context.Materials.Remove(material);
+                var materialWithFile = new MaterialWithFile
+                {
+                    Id = material.Id,
+                    IdFile = material.IdFile,
+                    IdCourse = material.IdCourse,
+                    IdSquad = material.IdSquad,
+                    File = material.IdFileNavigation
+                };
+
+                result.Add(materialWithFile);
             }
 
-            await _context.SaveChangesAsync();
-
-            // Delete file
-            await _fileManagementService.DeleteFileAsync(materialId.ToString(), "Materials");
-
-            return true;
+            return result;
         }
+
+        private async Task<MaterialWithFile> AddMaterialsToList(Material material)
+        {
+            var materialWithFile = new MaterialWithFile
+            {
+                Id = material.Id,
+                IdFile = material.IdFile,
+                IdCourse = material.IdCourse,
+                IdSquad = material.IdSquad,
+                File = material.IdFileNavigation
+            };
+
+            return materialWithFile;
+        }
+        #endregion
     }
 }

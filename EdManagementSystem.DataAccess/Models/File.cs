@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Models;
@@ -10,11 +11,8 @@ namespace EdManagementSystem.DataAccess.Models;
 public partial class File
 {
     [Key]
-    [Column("id", TypeName = "int(11)")]
-    public int Id { get; set; }
-
-    [Column("file_id")]
-    public Guid FileId { get; set; }
+    [Column("id")]
+    public Guid Id { get; set; }
 
     [Column("title")]
     [StringLength(255)]
@@ -27,6 +25,11 @@ public partial class File
     [Column("date_added")]
     public DateTime DateAdded { get; set; }
 
+    [JsonIgnore]
     [InverseProperty("File")]
     public virtual ICollection<HomeworkFile> HomeworkFiles { get; set; } = new List<HomeworkFile>();
+
+    [JsonIgnore]
+    [InverseProperty("IdFileNavigation")]
+    public virtual ICollection<Material> Materials { get; set; } = new List<Material>();
 }

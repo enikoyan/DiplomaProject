@@ -53,17 +53,6 @@ namespace EdManagementSystem.DataAccess.Data
                 entity.HasOne(d => d.CourseTutorNavigation).WithMany(p => p.Courses).HasConstraintName("Course_ibfk_1");
             });
 
-            modelBuilder.Entity<Material>(entity =>
-            {
-                entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-                entity.HasOne(d => d.IdCourseNavigation).WithMany(p => p.Materials).HasConstraintName("Material_ibfk_1");
-
-                entity.HasOne(d => d.IdSquadNavigation).WithMany(p => p.Materials)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("Material_ibfk_2");
-            });
-
             modelBuilder.Entity<Models.File>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -84,9 +73,22 @@ namespace EdManagementSystem.DataAccess.Data
             {
                 entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-                entity.HasOne(d => d.File).WithMany(p => p.HomeworkFiles).HasConstraintName("Homework_File_ibfk_1");
+                entity.HasOne(d => d.File).WithMany(p => p.HomeworkFiles).HasConstraintName("Homework_File_ibfk_3");
 
                 entity.HasOne(d => d.Homework).WithMany(p => p.HomeworkFiles).HasConstraintName("Homework_File_ibfk_2");
+            });
+
+            modelBuilder.Entity<Material>(entity =>
+            {
+                entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+                entity.HasOne(d => d.IdCourseNavigation).WithMany(p => p.Materials).HasConstraintName("Material_ibfk_1");
+
+                entity.HasOne(d => d.IdFileNavigation).WithMany(p => p.Materials).HasConstraintName("Material_ibfk_3");
+
+                entity.HasOne(d => d.IdSquadNavigation).WithMany(p => p.Materials)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("Material_ibfk_2");
             });
 
             modelBuilder.Entity<Schedule>(entity =>

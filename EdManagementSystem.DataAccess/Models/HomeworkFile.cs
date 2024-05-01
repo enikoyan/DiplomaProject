@@ -14,8 +14,8 @@ public partial class HomeworkFile
     [Column("id", TypeName = "int(11)")]
     public int Id { get; set; }
 
-    [Column("file_id", TypeName = "int(11)")]
-    public int FileId { get; set; }
+    [Column("file_id")]
+    public Guid FileId { get; set; }
 
     [Column("homework_id", TypeName = "int(11)")]
     public int HomeworkId { get; set; }
