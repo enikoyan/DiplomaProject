@@ -1,13 +1,15 @@
 ﻿using EdManagementSystem.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IO.Compression;
 
 namespace EdManagementSystem.DataAccess.Services
 {
     public class FileManagementService : IFileManagementService
     {
         private const int MaxFileSize = 10 * 1024 * 1024; // 10 MB
-        private static readonly string uploadsFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName, "EdManagementSystem.DataAccess", "Files");
+        private static readonly string uploadsFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName,
+            "EdManagementSystem.DataAccess", "Files");
 
         public async Task<string> UploadFileAsync(IFormFile file, string folderName)
         {
@@ -83,6 +85,52 @@ namespace EdManagementSystem.DataAccess.Services
             };
         }
 
+        public async Task<FileStreamResult> DownloadFilesAsync(List<string> fileNames, string folderName, List<string> outputFileNames, string archiveName)
+        {
+            if (fileNames.Count != outputFileNames.Count)
+            {
+                throw new ArgumentException("Количество входных и выходных имен файлов должно совпадать!");
+            }
+
+            string folderPath = Path.Combine(uploadsFolder, folderName);
+
+            byte[] zipBytes;
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                using (ZipArchive zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    for (int i = 0; i < fileNames.Count; i++)
+                    {
+                        string[] files = Directory.GetFiles(folderPath, fileNames[i] + ".*");
+
+                        if (files.Length > 0)
+                        {
+                            string filePath = files[0];
+
+                            ZipArchiveEntry entry = zipArchive.CreateEntry(outputFileNames[i] + Path.GetExtension(files[0]));
+                            using (Stream entryStream = entry.Open())
+                            using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+                            {
+                                await fileStream.CopyToAsync(entryStream);
+                            }
+                        }
+                        else
+                        {
+                            throw new FileNotFoundException($"Файл {fileNames[i]} не найден в папке {folderPath}!");
+                        }
+                    }
+                }
+
+                zipBytes = memoryStream.ToArray();
+            }
+
+            return new FileStreamResult(new MemoryStream(zipBytes), "application/zip")
+            {
+                FileDownloadName = archiveName + ".zip"
+            };
+        }
+
         public async Task<bool> DeleteFileAsync(string fileName, string folderName)
         {
             string[] allFiles = Directory.GetFiles(Path.Combine(uploadsFolder, folderName));
@@ -98,6 +146,29 @@ namespace EdManagementSystem.DataAccess.Services
             {
                 throw new FileNotFoundException("Файл не найден!");
             }
+        }
+
+        public async Task<bool> DeleteFileAsync(List<string> fileNames, string folderName)
+        {
+            string folderPath = Path.Combine(uploadsFolder, folderName);
+
+            foreach (var fileName in fileNames)
+            {
+                string filePath = Directory.GetFiles(folderPath)
+                    .FirstOrDefault(f => Path.GetFileNameWithoutExtension(f).Equals(fileName, StringComparison.OrdinalIgnoreCase));
+
+                if (filePath != null)
+                {
+                    File.Delete(filePath);
+                }
+
+                else
+                {
+                    throw new FileNotFoundException($"Файл {fileName} не найден!");
+                }
+            }
+
+            return true;
         }
     }
 }

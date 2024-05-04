@@ -2,6 +2,7 @@
 using EdManagementSystem.DataAccess.Models;
 using EdManagementSystem.DataAccess.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EdManagementSystem.API.Controllers
@@ -19,7 +20,8 @@ namespace EdManagementSystem.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult> CreateHomework([FromForm] string groupBy, [FromForm] List<string> foreignKeys,
-            [FromForm]string title, [FromForm] string? description, [FromForm] string? note, [FromForm] DateTime? deadline)
+            [FromForm] string title, [FromForm] string? description, [FromForm] string? note, [FromForm] DateTime? deadline, 
+            [FromForm] List<IFormFile>? files)
         {
             if (string.IsNullOrWhiteSpace(groupBy) || string.IsNullOrWhiteSpace(title) || foreignKeys.Count == 0)
             {
@@ -27,7 +29,7 @@ namespace EdManagementSystem.API.Controllers
             }
             try
             {
-                bool result = await _homeworkService.CreateHomework(groupBy, foreignKeys, title, description, note, deadline);
+                bool result = await _homeworkService.CreateHomework(groupBy, foreignKeys, title, description, note, deadline, files);
 
                 if (result)
                 {
@@ -41,6 +43,21 @@ namespace EdManagementSystem.API.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Возникла ошибка: {ex.Message}");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DownloadHomeworks([FromForm] Guid homeworkId, [FromForm] string homeworkName)
+        {
+            try
+            {
+                Response.Headers["Access-Control-Expose-Headers"] = "Content-Disposition";
+                return await _homeworkService.DownloadHomeworks(homeworkId, homeworkName);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
             }
         }
 
@@ -80,13 +97,49 @@ namespace EdManagementSystem.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteHomeworkById(Guid homeworkId)
+        public async Task<IActionResult> DeleteHomework([FromForm] Guid homeworkId, [FromForm] string groupBy, [FromForm] List<string> foreignKeys)
         {
             try
             {
-                bool result = await _homeworkService.DeleteHomework(homeworkId);
-                if (result) { return Ok("Домашнее задание успешно удалено!"); }
-                else { return BadRequest("Не удалось удалить Д/З!"); }
+                var result = await _homeworkService.DeleteHomework(homeworkId, groupBy, foreignKeys);
+                return Ok("Домашние задания успешно удалены!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAttachedFile(Guid homeworkId, Guid fileId)
+        {
+            var result = await _homeworkService.DeleteAttachedFile(homeworkId, fileId);
+
+            if (result)
+            {
+                return Ok("Прикрепленный файл успешно удален!");
+            }
+            else
+            {
+                return NotFound("Не удалось удалить файл!");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddHomeworkFile([FromForm] Guid homeworkId, [FromForm] List<IFormFile> files)
+        {
+            try
+            {
+                bool result = await _homeworkService.AddHomeworkFile(homeworkId, files);
+
+                if (result)
+                {
+                    return Ok("Файлы успешно прикреплены к домашнему заданию!");
+                }
+                else
+                {
+                    return BadRequest("Не удалось прикрепить файлы к домашнему заданию!");
+                }
             }
             catch (Exception ex)
             {

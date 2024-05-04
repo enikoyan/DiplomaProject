@@ -71,5 +71,19 @@ namespace EdManagementSystem.API.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteFilesAsync([FromForm] List<string> fileNames, [FromForm] string folderName)
+        {
+            try
+            {
+                await _fileManagemenetService.DeleteFileAsync(fileNames, folderName);
+                return Ok("Файл успешно удален");
+            }
+            catch (FileNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }

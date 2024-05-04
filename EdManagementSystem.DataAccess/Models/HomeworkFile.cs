@@ -17,16 +17,11 @@ public partial class HomeworkFile
     [Column("file_id")]
     public Guid FileId { get; set; }
 
-    [Column("homework_id", TypeName = "int(11)")]
-    public int HomeworkId { get; set; }
+    [Column("homework_id")]
+    public Guid HomeworkId { get; set; }
 
     [JsonIgnore]
     [ForeignKey("FileId")]
     [InverseProperty("HomeworkFiles")]
     public virtual File File { get; set; } = null!;
-
-    [JsonIgnore]
-    [ForeignKey("HomeworkId")]
-    [InverseProperty("HomeworkFiles")]
-    public virtual Homework Homework { get; set; } = null!;
 }

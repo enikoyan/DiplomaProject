@@ -5,9 +5,11 @@ namespace EdManagementSystem.DataAccess.Interfaces
 {
     public interface IFileManagementService
     {
+        Task<bool> DeleteFileAsync(List<string> fileNames, string folderName);
         Task<bool> DeleteFileAsync(string fileName, string folderName);
         Task<FileStreamResult> DownloadFileAsync(string fileName, string folderName);
         Task<FileStreamResult> DownloadFileAsync(string fileName, string folderName, string outputFileName);
+        Task<FileStreamResult> DownloadFilesAsync(List<string> fileNames, string folderName, List<string> outputFileNames, string archiveName);
         Task<string> UploadFileAsync(IFormFile file, string folderName);
     }
 }

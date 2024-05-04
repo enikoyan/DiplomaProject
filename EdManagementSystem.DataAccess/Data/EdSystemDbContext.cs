@@ -73,9 +73,9 @@ namespace EdManagementSystem.DataAccess.Data
             {
                 entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-                entity.HasOne(d => d.File).WithMany(p => p.HomeworkFiles).HasConstraintName("Homework_File_ibfk_3");
-
-                entity.HasOne(d => d.Homework).WithMany(p => p.HomeworkFiles).HasConstraintName("Homework_File_ibfk_2");
+                entity.HasOne(d => d.File).WithMany(p => p.HomeworkFiles)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Homework_File_ibfk_1");
             });
 
             modelBuilder.Entity<Material>(entity =>

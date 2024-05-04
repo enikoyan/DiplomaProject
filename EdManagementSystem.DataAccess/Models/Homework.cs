@@ -7,6 +7,7 @@ namespace EdManagementSystem.DataAccess.Models;
 
 [Table("Homework")]
 [Index("CourseId", Name = "course_id")]
+[Index("HomeworkId", Name = "homework_id")]
 [Index("SquadId", Name = "squad_id")]
 public partial class Homework
 {
@@ -14,14 +15,14 @@ public partial class Homework
     [Column("id", TypeName = "int(11)")]
     public int Id { get; set; }
 
+    [Column("homework_id")]
+    public Guid HomeworkId { get; set; }
+
     [Column("course_id", TypeName = "int(11)")]
     public int CourseId { get; set; }
 
     [Column("squad_id", TypeName = "int(11)")]
     public int? SquadId { get; set; }
-
-    [Column("homework_id", TypeName = "char(36)")]
-    public required Guid HomeworkId { get; set; }
 
     [Column("date_added")]
     public DateTime DateAdded { get; set; }
@@ -45,10 +46,6 @@ public partial class Homework
     [ForeignKey("CourseId")]
     [InverseProperty("Homeworks")]
     public virtual Course? Course { get; set; } = null!;
-
-    [JsonIgnore]
-    [InverseProperty("Homework")]
-    public virtual ICollection<HomeworkFile> HomeworkFiles { get; set; } = new List<HomeworkFile>();
 
     [JsonIgnore]
     [ForeignKey("SquadId")]
