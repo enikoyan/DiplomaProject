@@ -1,8 +1,4 @@
 ﻿using EdManagementSystem.DataAccess.Interfaces;
-using EdManagementSystem.DataAccess.Models;
-using EdManagementSystem.DataAccess.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EdManagementSystem.API.Controllers
@@ -20,7 +16,7 @@ namespace EdManagementSystem.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult> CreateHomework([FromForm] string groupBy, [FromForm] List<string> foreignKeys,
-            [FromForm] string title, [FromForm] string? description, [FromForm] string? note, [FromForm] DateTime? deadline, 
+            [FromForm] string title, [FromForm] string? description, [FromForm] string? note, [FromForm] DateTime? deadline,
             [FromForm] List<IFormFile>? files)
         {
             if (string.IsNullOrWhiteSpace(groupBy) || string.IsNullOrWhiteSpace(title) || foreignKeys.Count == 0)
@@ -48,12 +44,12 @@ namespace EdManagementSystem.API.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> DownloadHomeworks([FromForm] Guid homeworkId, [FromForm] string homeworkName)
+        public async Task<IActionResult> DownloadHomeworks([FromForm] Guid homeworkId)
         {
             try
             {
                 Response.Headers["Access-Control-Expose-Headers"] = "Content-Disposition";
-                return await _homeworkService.DownloadHomeworks(homeworkId, homeworkName);
+                return await _homeworkService.DownloadHomeworks(homeworkId);
             }
             catch (Exception ex)
             {
@@ -140,6 +136,63 @@ namespace EdManagementSystem.API.Controllers
                 {
                     return BadRequest("Не удалось прикрепить файлы к домашнему заданию!");
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateHomework([FromForm] Guid homeworkId, [FromForm] string attribute, [FromForm] string value)
+        {
+            try
+            {
+                bool result = await _homeworkService.UpdateHomework(homeworkId, attribute, value);
+
+                if (result)
+                {
+                    return Ok($"Значение поля {attribute} успешно изменено!");
+                }
+                else
+                {
+                    return BadRequest($"Не удалось изменить значение поля {attribute}!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> ChangeDeadline([FromForm] Guid homeworkId, [FromForm] DateTime deadline)
+        {
+            try
+            {
+                bool result = await _homeworkService.ChangeHomeworkDeadline(homeworkId, deadline);
+
+                if (result)
+                {
+                    return Ok($"Сроки успешно изменены на {deadline}!");
+                }
+                else
+                {
+                    return BadRequest($"Не удалось изменить сроки на {deadline}");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAttachedFiles(Guid homeworkId)
+        {
+            try
+            {
+                return Ok(await _homeworkService.GetAttachedFiles(homeworkId));
             }
             catch (Exception ex)
             {

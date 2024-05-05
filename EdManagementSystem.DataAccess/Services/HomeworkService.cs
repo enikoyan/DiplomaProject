@@ -286,12 +286,34 @@ namespace EdManagementSystem.DataAccess.Services
             catch (Exception ex) { throw new Exception(ex.Message, ex); }
         }
 
-        public async Task<IActionResult> DownloadHomeworks(Guid homeworkId, string homeworkName)
+        public async Task<List<Models.File>> GetAttachedFiles(Guid homeworkId)
+        {
+            try
+            {
+                var attachedFilesList = await _dbContext.HomeworkFiles
+                    .Where(f => f.HomeworkId == homeworkId)
+                    .Select(s => s.FileId)
+                    .ToListAsync();
+
+                return await _dbContext.Files.Where(s => attachedFilesList.Contains(s.Id)).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<IActionResult> DownloadHomeworks(Guid homeworkId)
         {
             var attachedFiles = await _dbContext.HomeworkFiles
                                 .Where(f => f.HomeworkId == homeworkId)
                                 .Select(s => s.FileId.ToString())
                                 .ToListAsync();
+
+            var homework = await _dbContext.Homeworks
+                .FirstOrDefaultAsync(s => s.HomeworkId == homeworkId);
+
+            string archiveName = $"{homework!.Title}. {homework.DateAdded.ToShortDateString()}";
 
             List<string> attachedFileNames = new List<string>();
 
@@ -309,7 +331,7 @@ namespace EdManagementSystem.DataAccess.Services
                     attachedFileNames.Add(attachedFileTitle!.Title);
                 }
 
-                return await _fileManagementService.DownloadFilesAsync(attachedFiles, folderName, attachedFileNames, homeworkName);
+                return await _fileManagementService.DownloadFilesAsync(attachedFiles, folderName, attachedFileNames, archiveName);
             }
 
             else
@@ -317,6 +339,56 @@ namespace EdManagementSystem.DataAccess.Services
                 var attachedFileName = await _dbContext.Files.FirstOrDefaultAsync(s => s.Id == Guid.Parse(attachedFiles[0]));
 
                 return await _fileManagementService.DownloadFileAsync(attachedFiles[0], folderName, attachedFileName!.Title);
+            }
+        }
+
+        public async Task<bool> UpdateHomework(Guid homeworkId, string attributeName, string value)
+        {
+            try
+            {
+                var homeworks = await _dbContext.Homeworks.Where(s => s.HomeworkId == homeworkId).ToListAsync();
+
+                if (homeworks != null || homeworks!.Count > 0)
+                {
+                    foreach (var homework in homeworks)
+                    {
+                        typeof(Homework).GetProperty(attributeName)!.SetValue(homework, value);
+                        _dbContext.Homeworks.Update(homework);
+                        await _dbContext.SaveChangesAsync();
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
+        }
+
+        public async Task<bool> ChangeHomeworkDeadline(Guid homeworkId, DateTime deadline)
+        {
+            try
+            {
+                var homeworks = await _dbContext.Homeworks.Where(s => s.HomeworkId == homeworkId).ToListAsync();
+
+                if (homeworks != null || homeworks!.Count > 0)
+                {
+                    foreach (var homework in homeworks)
+                    {
+                        homework.Deadline = deadline;
+                        _dbContext.Homeworks.Update(homework);
+                        await _dbContext.SaveChangesAsync();
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
             }
         }
 
