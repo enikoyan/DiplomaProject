@@ -43,16 +43,26 @@ async function optionHandler() {
         case "searchByCourses": {
             if (localStorage.getItem('selectedCourseOption')) {
                 courseSelector.value = localStorage.getItem('selectedCourseOption');
-                await createHomeworkItems(JSON.parse(localStorage.getItem(`homeworksData / Course / ${courseSelector.value}`)));
+                try {
+                    await createHomeworkItems(JSON.parse(localStorage.getItem(`homeworksData / Course / ${courseSelector.value}`)));
+                }
+                catch {
+                    await searchHomeworks();
+                }
             }
             break;
         }
         case "searchBySquads": {
             if (localStorage.getItem('selectedSquadOption')) {
                 groupSelector.value = localStorage.getItem('selectedSquadOption');
-                await createHomeworkItems(JSON.parse(localStorage.getItem(`homeworksData / Squad / ${groupSelector.value}`)));
-                break;
+                try {
+                    await createHomeworkItems(JSON.parse(localStorage.getItem(`homeworksData / Squad / ${groupSelector.value}`)));
+                }
+                catch {
+                    await searchHomeworks();
+                }
             }
+            break;
         }
     }
 }
@@ -162,8 +172,7 @@ async function createHomeworkItems(homeworks) {
             Скачать всё
         </button>`;
         }
-        else
-        {
+        else {
             homeworkFilesContainer.innerHTML = "<h3>Прикрепленные файлы: отсутствуют</h3>";
         }
 

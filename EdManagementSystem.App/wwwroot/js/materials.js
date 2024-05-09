@@ -121,7 +121,7 @@ function createElements(item) {
     // Download material button
     const materislItem_downloadBtn = document.createElement("button");
     materislItem_downloadBtn.textContent = "Скачать";
-    materislItem_downloadBtn.setAttribute("data-fileId", `${item.materialId}`);
+    materislItem_downloadBtn.setAttribute("data-fileId", `${item.id}`);
     materislItem_downloadBtn.addEventListener('click', () => {
         const materialId = materislItem_downloadBtn.getAttribute("data-fileId");
         downloadMaterial(materialId);
@@ -130,7 +130,7 @@ function createElements(item) {
     // Delete material button
     const materialsItem_deleteBtn = document.createElement("button");
     materialsItem_deleteBtn.textContent = "Удалить";
-    materialsItem_deleteBtn.setAttribute("data-fileId", `${item.materialId}`);
+    materialsItem_deleteBtn.setAttribute("data-fileId", `${item.id}`);
     materialsItem_deleteBtn.addEventListener('click', () => {
         var answer = window.confirm("Вы уверены, что хотите удалить данный материал?");
         if (answer) {
@@ -169,7 +169,7 @@ async function deleteMaterial(materialId) {
 
         if (response.ok) {
             alert("Материал успешно удален!");
-            await getMaterials();
+            location.reload();
         }
     } catch (error) {
         console.error(error);
@@ -245,7 +245,7 @@ function getMaterials() {
             materialsContainer.innerHTML = '';
 
             data.forEach(item => {
-                createElements(item);
+                createElements(item.file);
             });
 
             // Сохранение данных в локальное хранилище

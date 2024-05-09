@@ -6,30 +6,31 @@
 @model MaterialsPageViewModel
 
 <main class="main dashboard-content-container">
-<h1 class="title">Материалы</h1>
-<div class="search-row">
-    <select name="filterSelector">
-        <option value="searchBySquads" selected>По группам</option>
-        <option value="searchByCourses">По курсам</option>
-    </select>
-    <select name="courseSelector" class="search-row__filter search-row__filter_courses" style="display:none">
-        @foreach (var item in Model.coursesList)
-        {
-            <option value="@item.OptionValue">@item.CourseName</option>
-        }
-    </select>
-    <select name="groupSelector" class="search-row__filter search-row__filter_student-groups">
-        @foreach (var item in Model.squadsList)
-        {
-            <option value="@item.OptionValue">@item.SquadName</option>
-        }
-    </select>
-    <button class="custom-btn search-row__btn search-row__btn_search">Найти</button>
-    <button class="custom-btn" id="add-material-btn">Добавить материал</button>
-</div>
-<div class="found-materials">
-    <!-- Material items will be create here using materials.js -->
-</div>
+    <h1 class="title">Материалы</h1>
+    <div class="search-row">
+        <select name="filterSelector">
+            <option value="searchBySquads" selected>По группам</option>
+            <option value="searchByCourses">По курсам</option>
+        </select>
+        <select name="courseSelector" class="search-row__filter search-row__filter_courses" style="display:none">
+            @foreach (var item in Model.coursesList)
+            {
+                <option value="@item.OptionValue">@item.CourseName</option>
+            }
+        </select>
+        <select name="groupSelector" class="search-row__filter search-row__filter_student-groups">
+            @foreach (var item in Model.squadsList)
+            {
+                <option value="@item.OptionValue">@item.SquadName</option>
+            }
+        </select>
+        <button class="custom-btn search-row__btn search-row__btn_search">Найти</button>
+        <button class="custom-btn" id="add-material-btn">Добавить материал</button>
+    </div>
+    <div class="found-materials">
+        <!-- Material items will be create here using materials.js -->
+    </div>
+</main>
 <div class="modal-addItem" id="modal-addMaterial">
     <form class="addItemForm" id="addMaterialForm" method="post" enctype="multipart/form-data">
         <div style="display: flex; height: auto; justify-content: space-between; align-items: center;">
@@ -64,6 +65,5 @@
         </div>
     </form>
 </div>
-</main>
 <div class="overlay"></div>
 <script src="~/js/materials.js"></script>
