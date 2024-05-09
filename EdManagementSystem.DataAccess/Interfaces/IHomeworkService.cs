@@ -12,12 +12,12 @@ namespace EdManagementSystem.DataAccess.Interfaces
         Task<bool> DeleteAttachedFile(Guid homeworkId, Guid fileId);
         Task<bool> DeleteHomework(Guid homeworkId, string groupBy, List<string> foreignKeys);
         Task<IActionResult> DownloadHomeworks(Guid homeworkId);
-        Task<List<Homework>> GetAllHomeworks();
+        Task<List<HomeworkDTO>> GetAllHomeworks();
         Task<List<Models.File>> GetAttachedFiles(Guid homeworkId);
-        Task<Homework> GetHomeworkById(Guid homeworkId);
-        Task<List<Homework>> GetHomeworksByCourse(string courseName);
-        Task<List<Homework>> GetHomeworksBySquad(string squadName);
-        Task<List<Homework>> GetHomeworksByTitle(string title);
+        Task<HomeworkDTO> GetHomeworkById(Guid homeworkId);
+        Task<List<HomeworkDTO>> GetHomeworksByCourse(string courseName);
+        Task<List<HomeworkDTO>> GetHomeworksBySquad(string squadName);
+        Task<List<HomeworkDTO>> GetHomeworksByTitle(string title);
         Task<bool> UpdateHomework(Guid homeworkId, string attributeName, string value);
     }
 }

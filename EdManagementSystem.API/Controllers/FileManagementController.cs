@@ -58,6 +58,19 @@ namespace EdManagementSystem.API.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DownloadFileFromDB(Guid fileId, string folderName)
+        {
+            try
+            {
+                return await _fileManagemenetService.DownloadFileFromDB(fileId, folderName);
+            }
+            catch (FileNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         [HttpDelete]
         public async Task<IActionResult> DeleteFileAsync(string fileName, string folderName)
         {

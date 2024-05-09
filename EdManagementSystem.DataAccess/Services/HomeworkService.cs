@@ -126,19 +126,25 @@ namespace EdManagementSystem.DataAccess.Services
             }
         }
 
-        public async Task<List<Homework>> GetAllHomeworks() => await _dbContext.Homeworks.ToListAsync();
+        public async Task<List<HomeworkDTO>> GetAllHomeworks()
+        {
+            var homeworks = await _dbContext.Homeworks.ToListAsync();
+            return await CreateHomeworkDTO(homeworks);
+        }
 
-        public async Task<List<Homework>> GetHomeworksByCourse(string courseName)
+        public async Task<List<HomeworkDTO>> GetHomeworksByCourse(string courseName)
         {
             // Get course by name
             var course = await _courseService.GetCourseByName(courseName);
 
             // Get homeworks of current course
-            var result = await _dbContext.Homeworks
+            var homeworks = await _dbContext.Homeworks
                 .Where(s => s.CourseId == course.CourseId)
                 .OrderBy(s => s.DateAdded)
                 .ThenBy(s => s.Deadline)
                 .ToListAsync();
+
+            var result = await CreateHomeworkDTO(homeworks);
 
             if (result != null)
             {
@@ -148,17 +154,19 @@ namespace EdManagementSystem.DataAccess.Services
             else throw new Exception($"Домашние задания для курса {course.CourseName} не найдены!");
         }
 
-        public async Task<List<Homework>> GetHomeworksBySquad(string squadName)
+        public async Task<List<HomeworkDTO>> GetHomeworksBySquad(string squadName)
         {
             // Get squad by name
             var squad = await _squadService.GetSquadByName(squadName);
 
             // Get homeworks of current squad
-            var result = await _dbContext.Homeworks
+            var homeworks = await _dbContext.Homeworks
                 .Where(s => s.SquadId == squad.SquadId)
                 .OrderBy(s => s.DateAdded)
                 .ThenBy(s => s.Deadline)
                 .ToListAsync();
+
+            var result = await CreateHomeworkDTO(homeworks);
 
             if (result != null)
             {
@@ -168,11 +176,21 @@ namespace EdManagementSystem.DataAccess.Services
             else throw new Exception($"Домашние задания для группы {squad.SquadName} не найдены!");
         }
 
-        public async Task<List<Homework>> GetHomeworksByTitle(string title)
-            => await _dbContext.Homeworks.Where(s => s.Title == title).ToListAsync();
+        public async Task<List<HomeworkDTO>> GetHomeworksByTitle(string title)
+        {
+            var homeworks = await _dbContext.Homeworks.Where(s => s.Title == title).ToListAsync();
 
-        public async Task<Homework> GetHomeworkById(Guid homeworkId)
-    => await _dbContext.Homeworks.FirstOrDefaultAsync(s => s.HomeworkId == homeworkId);
+            return await CreateHomeworkDTO(homeworks);
+        }
+
+        public async Task<HomeworkDTO> GetHomeworkById(Guid homeworkId)
+        {
+            return new HomeworkDTO
+            {
+                Homework = await _dbContext.Homeworks.FirstOrDefaultAsync(s => s.HomeworkId == homeworkId),
+                AttachedFiles = await GetAttachedFiles(homeworkId),
+            };
+        }
 
         public async Task<bool> DeleteHomework(Guid homeworkId, string groupBy, List<string> foreignKeys)
         {
@@ -393,6 +411,23 @@ namespace EdManagementSystem.DataAccess.Services
         }
 
         #region Private functions
+        // Create homework DTO (with attached files)
+        private async Task<List<HomeworkDTO>> CreateHomeworkDTO(List<Homework> homeworks)
+        {
+            List<HomeworkDTO> result = new List<HomeworkDTO>();
+
+            foreach (var homework in homeworks)
+            {
+                result.Add(new HomeworkDTO
+                {
+                    Homework = homework,
+                    AttachedFiles = await GetAttachedFiles(homework.HomeworkId),
+                });
+            }
+
+            return result;
+        }
+
         // Remove homework entity from database
         private async Task<bool> RemoveHomeworkEntity(Guid homeworkId, List<Homework> homeworksList)
         {

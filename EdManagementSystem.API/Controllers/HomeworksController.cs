@@ -43,8 +43,8 @@ namespace EdManagementSystem.API.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> DownloadHomeworks([FromForm] Guid homeworkId)
+        [HttpGet]
+        public async Task<IActionResult> DownloadHomeworks(Guid homeworkId)
         {
             try
             {

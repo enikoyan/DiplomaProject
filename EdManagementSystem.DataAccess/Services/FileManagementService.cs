@@ -1,15 +1,19 @@
-﻿using EdManagementSystem.DataAccess.Interfaces;
+﻿using EdManagementSystem.DataAccess.Data;
+using EdManagementSystem.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.IO.Compression;
 
 namespace EdManagementSystem.DataAccess.Services
 {
-    public class FileManagementService : IFileManagementService
+    public class FileManagementService(EdSystemDbContext context) : IFileManagementService
     {
         private const int MaxFileSize = 10 * 1024 * 1024; // 10 MB
         private static readonly string uploadsFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName,
             "EdManagementSystem.DataAccess", "Files");
+
+        private readonly EdSystemDbContext _dbContext = context;
 
         public async Task<string> UploadFileAsync(IFormFile file, string folderName)
         {
@@ -129,6 +133,17 @@ namespace EdManagementSystem.DataAccess.Services
             {
                 FileDownloadName = archiveName + ".zip"
             };
+        }
+
+        public async Task<FileStreamResult> DownloadFileFromDB(Guid fileId, string folderName)
+        {
+            var file = await _dbContext.Files.FirstOrDefaultAsync(s => s.Id == fileId);
+
+            if (file != null)
+            {
+                return await DownloadFileAsync(fileId.ToString(), folderName, file.Title);
+            }
+            else throw new Exception("Файл не найден!");
         }
 
         public async Task<bool> DeleteFileAsync(string fileName, string folderName)

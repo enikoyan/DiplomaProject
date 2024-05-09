@@ -9,6 +9,7 @@ namespace EdManagementSystem.DataAccess.Interfaces
         Task<bool> DeleteFileAsync(string fileName, string folderName);
         Task<FileStreamResult> DownloadFileAsync(string fileName, string folderName);
         Task<FileStreamResult> DownloadFileAsync(string fileName, string folderName, string outputFileName);
+        Task<FileStreamResult> DownloadFileFromDB(Guid fileId, string folderName);
         Task<FileStreamResult> DownloadFilesAsync(List<string> fileNames, string folderName, List<string> outputFileNames, string archiveName);
         Task<string> UploadFileAsync(IFormFile file, string folderName);
     }

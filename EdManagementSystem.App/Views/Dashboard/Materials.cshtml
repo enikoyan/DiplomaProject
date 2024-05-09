@@ -5,6 +5,7 @@
 
 @model MaterialsPageViewModel
 
+<main class="main dashboard-content-container">
 <h1 class="title">Материалы</h1>
 <div class="search-row">
     <select name="filterSelector">
@@ -29,8 +30,8 @@
 <div class="found-materials">
     <!-- Material items will be create here using materials.js -->
 </div>
-<div id="modal-addMaterial">
-    <form id="addMaterialForm" method="post" enctype="multipart/form-data">
+<div class="modal-addItem" id="modal-addMaterial">
+    <form class="addItemForm" id="addMaterialForm" method="post" enctype="multipart/form-data">
         <div style="display: flex; height: auto; justify-content: space-between; align-items: center;">
             <h3>Добавить материалы</h3>
             <button type="button" id="btn-close" aria-label="Close">ㅤ</button>
@@ -63,5 +64,6 @@
         </div>
     </form>
 </div>
+</main>
 <div class="overlay"></div>
 <script src="~/js/materials.js"></script>
