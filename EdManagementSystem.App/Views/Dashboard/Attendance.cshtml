@@ -3,4 +3,83 @@
     Layout = "_DashboardLayout";
 }
 
-<h1>Учет посещаемости</h1>
+@model AttendanceViewModel
+
+@* SAVE STUDENTS LIST *@
+<script>
+    var attendanceData = @Html.Raw(Json.Serialize(Model.studentsList));
+    localStorage.setItem("studentsList", JSON.stringify(attendanceData));
+</script>
+
+@functions {
+    private int GetWeekNumber()
+    {
+        return System.Globalization.CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+    }
+}
+
+<main class="main dashboard-content-container">
+    <h1>Учет посещаемости</h1>
+    <div class="search-row">
+        <span>Текущая дата: @DateTime.UtcNow.Date.Day апреля</span>
+    </div>
+    <div class="search-row">
+        <span>Выберите группу</span>
+        <select name="groupSelector" class="search-row__filter search-row__filter_student-groups">
+            @foreach (var item in Model.squadsList)
+            {
+                <option value="@item.OptionValue">@item.SquadName</option>
+            }
+        </select>
+        <button class="custom-btn search-row__btn search-row__btn_search">Найти</button>
+        <button id="refreshScheduleBtn">Обновить данные</button>
+    </div>
+    <div class="search-row">
+        <span>Выберите дату: </span>
+        <button id="previousWeekBtn">Назад</button>
+        <input type="week" id="weekInput" value="@DateTime.Now.ToString($"yyyy-'W'{GetWeekNumber()}")">
+        <button id="nextWeekBtn">Вперед</button>
+    </div>
+    <table class="custom-table-attendance">
+        <thead>
+            <tr>
+                <th>№ студента</th>
+                <th>ФИО</th>
+                <th id="attendance-table-date" colspan="8">Неделя: @DateTime.Now.ToString($"{GetWeekNumber()}")</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Пн</th>
+                <th>Вт</th>
+                <th>Ср</th>
+                <th>Чт</th>
+                <th>Пт</th>
+                <th>Сб</th>
+                <th>Вс</th>
+            </tr>
+        </thead>
+        <tbody class="attendance-body">
+           
+        </tbody>
+    </table>
+
+    <div class="attendance-popup">
+        <div class="attendance-popup__arrow"></div>
+        <div class="attendance-popup__content">
+            <div class="attendance-popup__row">
+                <img class="attendance-popup__icon" src="../icons/attendance-icons/attendance-true.svg" />
+                <span class="attendance-popup__text" id="attendance-true">Присутствует</span>
+            </div>
+            <div class="attendance-popup__row">
+                <img class="attendance-popup__icon" src="../icons/attendance-icons/attendance-false.svg" />
+                <span class="attendance-popup__text" id="attendance-false">Отсутствует</span>
+            </div>
+            <div class="attendance-popup__row">
+                <img class="attendance-popup__icon" src="../icons/attendance-icons/attendance-ill.svg" />
+                <span class="attendance-popup__text" id="attendance-ill">Болеет</span>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="~/js/attendance.js"></script>

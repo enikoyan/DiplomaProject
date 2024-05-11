@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdManagementSystem.App", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdManagementSystem.API", "EdManagementSystem.API\EdManagementSystem.API.csproj", "{500C0C98-EB5D-4FD7-8C3A-52207C903F75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdManagementSystem.DataAccess", "EdManagementSystem.DataAccess\EdManagementSystem.DataAccess.csproj", "{4B23A1A6-DEE4-4443-BC97-84DCFC3F8372}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EdManagementSystem.DataAccess", "EdManagementSystem.DataAccess\EdManagementSystem.DataAccess.csproj", "{4B23A1A6-DEE4-4443-BC97-84DCFC3F8372}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -23,6 +23,7 @@ namespace EdManagementSystem.App.Controllers
         private string cacheKey_techSupport { get; set; } = null!;
         private string cacheKey_materials { get; set; } = null!;
         private string cacheKey_homeworks { get; set; } = null!;
+        private string cacheKey_attendance { get; set; } = null!;
 
         public DashboardController(ICacheService cacheService)
         {
@@ -295,14 +296,38 @@ namespace EdManagementSystem.App.Controllers
         }
         #endregion
 
-        #region GetPages
-
+        #region AttendancePage
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.None, VaryByHeader = "User-Agent")]
         [ActionName("attendance")]
-        public IActionResult Attendance()
+        public async Task<IActionResult> Attendance()
         {
-            return PartialView();
-        }
+            userId ??= HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
+            cacheKey_attendance = $"attendanceOf_{userId}";
+            List<SquadStudents> studentsList = new List<SquadStudents>();
 
+            var data = await _cacheService.GetOrSetAsync(cacheKey_attendance, async () =>
+            {
+                var squadsList = await GetSquads(userId);
+                foreach (var squad in squadsList)
+                {
+                    var students = await GetStudents(squad.OptionValue);
+                    var squadStudentsItem = new SquadStudents()
+                    {
+                        SquadName = squad.OptionValue,
+                        Students = students
+                    };
+
+                    studentsList.Add(squadStudentsItem);
+                }
+                AttendanceViewModel data = new AttendanceViewModel() { squadsList = squadsList, studentsList = studentsList };
+                return data;
+            }, TimeSpan.FromDays(7));
+
+            return PartialView(data);
+        }
+        #endregion
+
+        #region AnalyticsPage
         [ActionName("analytics")]
         public IActionResult Analytics()
         {
@@ -342,6 +367,23 @@ namespace EdManagementSystem.App.Controllers
             else
             {
                 throw new Exception("Не удалось получить информацию!");
+            }
+        }
+
+        private async Task<List<Student>> GetStudents(string squadName)
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync(_baseAddress + $"/Students/GetStudentsBySquad/{squadName}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = response.Content.ReadAsStringAsync().Result;
+                List<Student> students = JsonConvert.DeserializeObject<List<Student>>(content)!;
+
+                return students;
+            }
+            else
+            {
+                return null!;
             }
         }
         #endregion
