@@ -325,6 +325,20 @@ namespace EdManagementSystem.App.Controllers
 
             return PartialView(data);
         }
+
+        [HttpPost]
+        [ActionName("attendance/removeCache")]
+        public IActionResult RefreshDataAndClearCache()
+        {
+            userId ??= HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
+            cacheKey_attendance = $"attendanceOf_{userId}";
+
+            if (_cacheService.InvalidateCache(cacheKey_attendance))
+            {
+                return Ok("Data refreshed and cache cleared successfully");
+            }
+            else return BadRequest();
+        }
         #endregion
 
         #region AnalyticsPage

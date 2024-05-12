@@ -573,9 +573,11 @@ label {
 }
 .custom-table-attendance {
   width: 100%;
+  height: 30%;
   margin-bottom: 20px;
   border: 1px solid #dddddd;
   border-collapse: collapse;
+  position: relative;
 }
 .custom-table-attendance th,
 .custom-table-attendance tr {

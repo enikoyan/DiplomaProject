@@ -31,21 +31,23 @@
                 <option value="@item.OptionValue">@item.SquadName</option>
             }
         </select>
-        <button class="custom-btn search-row__btn search-row__btn_search">Найти</button>
-        <button id="refreshScheduleBtn">Обновить данные</button>
     </div>
     <div class="search-row">
         <span>Выберите дату: </span>
         <button id="previousWeekBtn">Назад</button>
         <input type="week" id="weekInput" value="@DateTime.Now.ToString($"yyyy-'W'{GetWeekNumber()}")">
         <button id="nextWeekBtn">Вперед</button>
+        <button id="saveAttendanceBtn" disabled>Сохранить</button>
+        <button id="downloadExcelTable">Скачать в Excel</button>
+        <button id="downloadPdfTable">Скачать в PDF</button>
+        <button id="refreshScheduleBtn">Обновить данные</button>
     </div>
     <table class="custom-table-attendance">
         <thead>
             <tr>
                 <th>№ студента</th>
                 <th>ФИО</th>
-                <th id="attendance-table-date" colspan="8">Неделя: @DateTime.Now.ToString($"{GetWeekNumber()}")</th>
+                <th id="attendance-table-date" colspan="7">Неделя: @DateTime.Now.ToString($"{GetWeekNumber()}")</th>
             </tr>
             <tr>
                 <th></th>
@@ -82,4 +84,10 @@
         </div>
     </div>
 </main>
-<script src="~/js/attendance.js"></script>
+<script src="~/js/outerJS/xlsx.full.min.js"></script>
+<!-- pdfmake files: -->
+<script src="~/js/outerJS/pdfmake.min.js"></script>
+<script src="~/js/outerJS/vfs_fonts.min.js"></script>
+<!-- html-to-pdfmake file: -->
+<script src="~/js/outerJS/browser.js"></script>
+<script defer src="~/js/attendance.js"></script>
