@@ -32,4 +32,8 @@ public partial class File
     [JsonIgnore]
     [InverseProperty("IdFileNavigation")]
     public virtual ICollection<Material> Materials { get; set; } = new List<Material>();
+
+    [JsonIgnore]
+    [InverseProperty("File")]
+    public virtual ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
 }

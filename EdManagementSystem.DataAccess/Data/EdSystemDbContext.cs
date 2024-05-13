@@ -14,6 +14,8 @@ namespace EdManagementSystem.DataAccess.Data
         {
         }
 
+        public virtual DbSet<Attendance> Attendances { get; set; }
+
         public virtual DbSet<Course> Courses { get; set; }
 
         public virtual DbSet<Squad> Squads { get; set; }
@@ -45,6 +47,17 @@ namespace EdManagementSystem.DataAccess.Data
             modelBuilder
                 .UseCollation("utf8mb4_general_ci")
                 .HasCharSet("utf8mb4");
+
+            modelBuilder.Entity<Attendance>(entity =>
+            {
+                entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+                entity.Property(e => e.WeekDate).IsFixedLength();
+
+                entity.HasOne(d => d.File).WithMany(p => p.Attendances).HasConstraintName("Attendance_ibfk_1");
+
+                entity.HasOne(d => d.Squad).WithMany(p => p.Attendances).HasConstraintName("Attendance_ibfk_2");
+            });
 
             modelBuilder.Entity<Course>(entity =>
             {

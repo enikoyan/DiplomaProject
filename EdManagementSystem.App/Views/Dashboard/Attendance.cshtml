@@ -38,6 +38,7 @@
         <input type="week" id="weekInput" value="@DateTime.Now.ToString($"yyyy-'W'{GetWeekNumber()}")">
         <button id="nextWeekBtn">Вперед</button>
         <button id="saveAttendanceBtn" disabled>Сохранить</button>
+        <button id="sendAttendanceBtn" disabled>Отправить студентам</button>
         <button id="downloadExcelTable">Скачать в Excel</button>
         <button id="downloadPdfTable">Скачать в PDF</button>
         <button id="refreshScheduleBtn">Обновить данные</button>
@@ -80,6 +81,10 @@
             <div class="attendance-popup__row">
                 <img class="attendance-popup__icon" src="../icons/attendance-icons/attendance-ill.svg" />
                 <span class="attendance-popup__text" id="attendance-ill">Болеет</span>
+            </div>
+            <div class="attendance-popup__row">
+                <img class="attendance-popup__icon" src="../icons/attendance-icons/attendance-empty.svg" />
+                <span class="attendance-popup__text" id="attendance-empty">Очистить</span>
             </div>
         </div>
     </div>

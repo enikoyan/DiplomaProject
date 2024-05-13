@@ -49,4 +49,8 @@ public partial class Squad
     [JsonIgnore]
     [InverseProperty("IdSquadNavigation")]
     public virtual ICollection<SquadStudent> SquadStudents { get; set; } = new List<SquadStudent>();
+
+    [JsonIgnore]
+    [InverseProperty("Squad")]
+    public virtual ICollection<Attendance> Attendances { get; set; } = new List<Attendance>();
 }

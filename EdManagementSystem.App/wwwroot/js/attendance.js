@@ -15,6 +15,7 @@ const attendanceTable = document.querySelector(".custom-table-attendance");
 const saveAsPdfBtn = document.getElementById("downloadPdfTable");
 const saveAsExcelBtn = document.getElementById("downloadExcelTable");
 const saveAttendanceBtn = document.getElementById("saveAttendanceBtn");
+const sendAttendanceBtn = document.getElementById("sendAttendanceBtn");
 var isTableTouched = false;
 var isAttendanceSaved = true;
 var tdFioValue = "";
@@ -322,6 +323,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (await saveAttendanceLocally()) {
                 alert("Посещаемость успешно сохранена!");
                 saveAttendanceBtn.disabled = true;
+                sendAttendanceBtn.disabled = false;
             }
         }
         isAttendanceSaved = true;
@@ -362,24 +364,70 @@ document.addEventListener('DOMContentLoaded', async () => {
             alert("Посещаемость успешно сохранена!");
             isAttendanceSaved = true;
             saveAttendanceBtn.disabled = true;
+            sendAttendanceBtn.disabled = false;
         }
     });
+    refreshScheduleBtn.addEventListener('click', async () => {
+        localStorage.removeItem("studentsList");
+
+        fetch(`${location.href}/removeCache`, { method: "POST" })
+            .then(response => {
+                if (response.ok) {
+                    localStorage.removeItem('studentsList');
+                    location.reload(true);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    })
+
+    sendAttendanceBtn.addEventListener('click', async () => {
+        var table = await createAttendanceMatrix();
+        await sendExcelAttendanceToServer(table);
+    });
+
+    async function sendExcelAttendanceToServer(table) {
+        const wb = XLSX.utils.table_to_book(table);
+
+        // Добавляем необходимые манипуляции с таблицей, если необходимо
+
+        const dateStart = (await getWeekBorders(weekInput.value)).firstDay;
+        const dateEnd = (await getWeekBorders(weekInput.value)).lastDay;
+
+        const fileName = `Посещаемость ${groupSelector.options[groupSelector.selectedIndex].text} (${dateStart}-${dateEnd}).xlsx`;
+        const fileBlob = new Blob([s2ab(XLSX.write(wb, { bookType: 'xlsx', type: 'binary' }))], { type: 'application/octet-stream' });
+
+        // Создаем объект FormData и добавляем файл
+        const formData = new FormData();
+        formData.append('file', fileBlob, fileName);
+
+        // Отправляем файл на сервер с помощью Fetch API
+        //fetch('URL_на_сервере_для_обработки_файла', {
+        //    method: 'POST',
+        //    body: formData
+        //})
+        //    .then(response => {
+        //        if (response.ok) {
+        //            console.log('Файл успешно отправлен на сервер');
+        //        } else {
+        //            console.error('Не удалось отправить файл на сервер');
+        //        }
+        //    })
+        //    .catch(error => {
+        //        console.error('Ошибка при отправке файла на сервер:', error);
+        //    });
+    }
+
+    function s2ab(s) {
+        const buf = new ArrayBuffer(s.length);
+        const view = new Uint8Array(buf);
+        for (let i = 0; i < s.length; i++) {
+            view[i] = s.charCodeAt(i) & 0xFF;
+        }
+        return buf;
+    }
 });
-
-refreshScheduleBtn.addEventListener('click', async () => {
-    localStorage.removeItem("studentsList");
-
-    fetch(`${location.href}/removeCache`, {method: "POST"})
-        .then(response => {
-            if (response.ok) {
-                localStorage.removeItem('studentsList');
-                location.reload(true);
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
-})
 
 window.onbeforeunload = function () {
     if (!isAttendanceSaved) {
