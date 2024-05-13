@@ -15,11 +15,11 @@ namespace EdManagementSystem.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadFile(IFormFile file, string folderName)
+        public async Task<IActionResult> UploadFile(IFormFile file, string folderName, bool overwrite)
         {
             try
             {
-                var filePath = await _fileManagemenetService.UploadFileAsync(file, folderName);
+                var filePath = await _fileManagemenetService.UploadFileAsync(file, folderName, overwrite);
                 return Ok($"Файл успешно загружен. Путь: {filePath}");
             }
             catch (ArgumentException ex)

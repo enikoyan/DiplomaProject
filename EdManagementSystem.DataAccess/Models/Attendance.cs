@@ -21,7 +21,7 @@ namespace EdManagementSystem.DataAccess.Models
         public Guid Id { get; set; }
 
         [Column("added_date")]
-        public DateTime AddedDate { get; set; }
+        public DateTime AddedDate { get; set; } = DateTime.UtcNow;
 
         [Column("squad_id", TypeName = "int(11)")]
         public int SquadId { get; set; }

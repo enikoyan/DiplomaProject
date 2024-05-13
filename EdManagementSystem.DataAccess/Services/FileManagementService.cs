@@ -15,7 +15,7 @@ namespace EdManagementSystem.DataAccess.Services
 
         private readonly EdSystemDbContext _dbContext = context;
 
-        public async Task<string> UploadFileAsync(IFormFile file, string folderName)
+        public async Task<string> UploadFileAsync(IFormFile file, string folderName, bool overwrite = false)
         {
             if (file == null || file.Length == 0)
             {
@@ -42,7 +42,11 @@ namespace EdManagementSystem.DataAccess.Services
 
             if (File.Exists(filePath))
             {
-                throw new ArgumentException("Файл с таким именем уже существует!");
+                if (overwrite)
+                {
+                    File.Delete(filePath);
+                }
+                else throw new ArgumentException("Файл с таким именем уже существует!");
             }
 
             using (var stream = new FileStream(filePath, FileMode.Create))
