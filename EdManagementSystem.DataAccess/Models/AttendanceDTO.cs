@@ -2,7 +2,7 @@
 {
     public class AttendanceDTO
     {
-        public int SquadId { get; set; }
+        public required string SquadName { get; set; }
 
         public string WeekDate { get; set; } = null!;
     }

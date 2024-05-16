@@ -38,10 +38,11 @@
         <input type="week" id="weekInput" value="@DateTime.Now.ToString($"yyyy-'W'{GetWeekNumber()}")">
         <button id="nextWeekBtn">Вперед</button>
         <button id="saveAttendanceBtn" disabled>Сохранить</button>
-        <button id="sendAttendanceBtn" disabled>Отправить студентам</button>
+        <button id="sendAttendanceBtn">Отправить студентам</button>
         <button id="downloadExcelTable">Скачать в Excel</button>
         <button id="downloadPdfTable">Скачать в PDF</button>
-        <button id="refreshScheduleBtn">Обновить данные</button>
+        <button id="refreshScheduleBtn">Обновить список студентов</button>
+        <button id="checkAttendanceInServerBtn">Проверить наличие посещаемости</button>
     </div>
     <table class="custom-table-attendance">
         <thead>

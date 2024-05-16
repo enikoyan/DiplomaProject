@@ -2,7 +2,9 @@
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
 
 namespace EdManagementSystem.DataAccess.Services
 {
@@ -10,11 +12,14 @@ namespace EdManagementSystem.DataAccess.Services
     {
         private readonly EdSystemDbContext _dbContext;
         private readonly IFileManagementService _fileManagementService;
+        private readonly ISquadService _squadService;
+        private const string folderName = "Attendance";
 
-        public AttendanceService(EdSystemDbContext dbContext, IFileManagementService fileManagementService)
+        public AttendanceService(EdSystemDbContext dbContext, IFileManagementService fileManagementService, ISquadService squadService)
         {
             _dbContext = dbContext;
             _fileManagementService = fileManagementService;
+            _squadService = squadService;
         }
 
         public async Task<List<Attendance>> GetAttendanceList() => await _dbContext.Attendances.ToListAsync();
@@ -23,27 +28,41 @@ namespace EdManagementSystem.DataAccess.Services
         {
             try
             {
-                // Generate id
-                var attendanceId = Guid.NewGuid();
-                var attendanceFileId = Guid.NewGuid();
+                // Get squad by squadName
+                var squadId = await _squadService.GetSquadIdByName(attendanceDTO.SquadName);
 
-                Attendance attendance = new Attendance
+                var attendanceItem = await _dbContext.Attendances.Where(s => s.SquadId == squadId && s.WeekDate == attendanceDTO.WeekDate).FirstOrDefaultAsync();
+
+                if (attendanceItem == null)
                 {
-                    Id = attendanceId,
-                    AddedDate = DateTime.UtcNow,
-                    WeekDate = attendanceDTO.WeekDate,
-                    SquadId = attendanceDTO.SquadId,
-                    FileId = attendanceFileId,
-                };
+                    // Generate id
+                    var attendanceId = Guid.NewGuid();
+                    var attendanceFileId = Guid.NewGuid();
+
+                    Attendance attendance = new Attendance
+                    {
+                        Id = attendanceId,
+                        AddedDate = DateTime.UtcNow,
+                        WeekDate = attendanceDTO.WeekDate,
+                        SquadId = squadId,
+                        FileId = attendanceFileId,
+                    };
 
 
-                // Create attendance row in the database
-                await _dbContext.Attendances.AddAsync(attendance);
+                    // Create attendance row in the database
+                    await _dbContext.Attendances.AddAsync(attendance);
 
-                // Create file row in the database
-                await AddAttendancFile(attendance.FileId, attendanceFile);
+                    // Create file row in the database
+                    await AddAttendancFile(attendance.FileId, attendanceFile);
 
-                return true;
+                    return true;
+                }
+
+                // Overwrite
+                else
+                {
+                    return await RefreshAttendanceFile(attendanceItem.Id, attendanceFile);
+                }
             }
             catch (Exception ex)
             {
@@ -71,6 +90,59 @@ namespace EdManagementSystem.DataAccess.Services
             {
                 throw new Exception(ex.Message, ex);
             }
+        }
+
+        public async Task<List<List<string>>> CreateAttendanceMatrix(AttendanceDTO attendanceDTO)
+        {
+            // Get squad by squadName
+            var squadId = await _squadService.GetSquadIdByName(attendanceDTO.SquadName);
+            var attendanceItem = await _dbContext.Attendances.Where(s => s.SquadId == squadId && s.WeekDate == attendanceDTO.WeekDate).FirstOrDefaultAsync();
+
+            if (attendanceItem != null)
+            {
+                var attendanceFile = await _fileManagementService.DownloadFileFromDB(attendanceItem.FileId, folderName);
+
+                using (var package = new ExcelPackage(attendanceFile.FileStream))
+                {
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+                    int startRow = 3;
+                    int endRow = worksheet.Dimension.End.Row;
+
+                    List<List<string>> matrix = new List<List<string>>();
+
+                    for (int row = startRow; row <= endRow; row++)
+                    {
+                        List<string> rowData = new List<string>();
+                        for (int col = 3; col <= 9; col++)
+                        {
+                            var cellValue = worksheet.Cells[row, col].Value?.ToString();
+                            string status = "";
+                            switch (cellValue)
+                            {
+                                case "+":
+                                    status = "attendance-true";
+                                    break;
+                                case "н":
+                                    status = "attendance-false";
+                                    break;
+                                case "б":
+                                    status = "attendance-ill";
+                                    break;
+                                default: status = "attendance-empty";
+                                    break;
+                            }
+
+                            rowData.Add(status);
+                        }
+                        matrix.Add(rowData);
+                    }
+
+                    return matrix;
+                }
+            }
+
+            return null!;
         }
 
         #region Private methods

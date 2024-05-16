@@ -16,6 +16,7 @@ const saveAsPdfBtn = document.getElementById("downloadPdfTable");
 const saveAsExcelBtn = document.getElementById("downloadExcelTable");
 const saveAttendanceBtn = document.getElementById("saveAttendanceBtn");
 const sendAttendanceBtn = document.getElementById("sendAttendanceBtn");
+const checkAttendanceInServerBtn = document.getElementById('checkAttendanceInServerBtn');
 var isTableTouched = false;
 var isAttendanceSaved = true;
 var tdFioValue = "";
@@ -25,6 +26,8 @@ const attendanceIconMap = {
     1: "attendance-true",
     2: "attendance-false",
 };
+const createAttendanceItemAPI = "https://localhost:44370/api/Attendances/CreateAttendanceItem";
+const checkAttendanceItemAPI = "https://localhost:44370/api/Attendances/CreateAttendanceMatrix";
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -75,11 +78,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             attendanceBody.innerHTML = "";
             localStorage.setItem("attendance_selectedSquad", selectedSquad);
             selectedSquadStudentsList.forEach(async (item) => {
-                count++;
                 var tRow = document.createElement("tr");
                 tRow.innerHTML = `<td class="attendance-td">${count}</td>
                      <td class="attendance-td"> ${item.fio}</td>
                 `;
+
+                count++;
 
                 for (let i = 0; i < 7; i++) {
                     tRow.innerHTML += `<td>
@@ -123,7 +127,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 localStorage.setItem("attendance_selectedWeek", weekInput.value);
             }
             else {
-                alert("Информация не найдена!");
+                //console.log("Информация не найдена!");
+                //alert("Информация не найдена!");
                 await changeAttendanceTableDate();
                 await createTableOfStudents();
             }
@@ -317,7 +322,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             lastDay: lastDay.toISOString().split("T")[0],
         };
     }
-
     async function confirmAttendance() {
         if (confirm("Сохранить изменения?")) {
             if (await saveAttendanceLocally()) {
@@ -359,7 +363,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('attendance_selectedWeek', weekInput.value);
     });
     saveAttendanceBtn.addEventListener('click', async () => {
-        // SAVE IN THE SERVER AND LOCALLY
+        // SAVE LOCALLY
         if (await saveAttendanceLocally()) {
             alert("Посещаемость успешно сохранена!");
             isAttendanceSaved = true;
@@ -381,51 +385,118 @@ document.addEventListener('DOMContentLoaded', async () => {
                 console.log(error);
             });
     })
-
     sendAttendanceBtn.addEventListener('click', async () => {
         var table = await createAttendanceMatrix();
         await sendExcelAttendanceToServer(table);
     });
+    checkAttendanceInServerBtn.addEventListener('click', async () => await loadExcelAttendanceFromServer());
 
-    async function sendExcelAttendanceToServer(table) {
+    // ПОД НАДПИСЬЮ УЧЕТ ПОСЕЩАЕМОСТИ ДОБАВИТЬ ПАРАГРАФ ГДЕ НАПИСАТЬ ТИПА ВЫ МОЖЕТЕ СОЗДАТЬ РАСПИСАНИЕ В РУЧНУЮ
+    //ИЛИ ПРОВЕРИТЬ ЕСТЬ ЛИ ОНО УЖЕ И ЗАГРУЗИТЬ ЕГО В СЛУЧАЕ ЕСЛИ ЕСТЬ
+
+    // SERVER SIDE
+    async function getExcelAttendanceForServer(table) {
         const wb = XLSX.utils.table_to_book(table);
 
-        // Добавляем необходимые манипуляции с таблицей, если необходимо
+        wb.SheetNames.forEach((sheetName) => {
+            const ws = wb.Sheets[sheetName];
+            const range = XLSX.utils.decode_range(ws["!ref"]);
+            range.e.r += 2;
+
+            const columnWidths = [];
+            for (let col = range.s.c; col <= range.e.c; col++) {
+                let maxLength = 0;
+                for (let row = range.s.r; row <= range.e.r; row++) {
+                    const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+                    if (ws[cellAddress] && ws[cellAddress].v) {
+                        const cellLength = String(ws[cellAddress].v).length;
+                        maxLength = Math.max(maxLength, cellLength + 2);
+                    }
+                }
+                columnWidths[col] = { wch: maxLength };
+            }
+            ws["!cols"] = columnWidths;
+
+            ws["!ref"] = XLSX.utils.encode_range(range);
+        });
+
+        wb.sheetName = "PIU";
 
         const dateStart = (await getWeekBorders(weekInput.value)).firstDay;
         const dateEnd = (await getWeekBorders(weekInput.value)).lastDay;
 
+        const wbArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+
         const fileName = `Посещаемость ${groupSelector.options[groupSelector.selectedIndex].text} (${dateStart}-${dateEnd}).xlsx`;
-        const fileBlob = new Blob([s2ab(XLSX.write(wb, { bookType: 'xlsx', type: 'binary' }))], { type: 'application/octet-stream' });
 
-        // Создаем объект FormData и добавляем файл
-        const formData = new FormData();
-        formData.append('file', fileBlob, fileName);
-
-        // Отправляем файл на сервер с помощью Fetch API
-        //fetch('URL_на_сервере_для_обработки_файла', {
-        //    method: 'POST',
-        //    body: formData
-        //})
-        //    .then(response => {
-        //        if (response.ok) {
-        //            console.log('Файл успешно отправлен на сервер');
-        //        } else {
-        //            console.error('Не удалось отправить файл на сервер');
-        //        }
-        //    })
-        //    .catch(error => {
-        //        console.error('Ошибка при отправке файла на сервер:', error);
-        //    });
+        return {
+            fileName: fileName,
+            fileData: new Blob([wbArrayBuffer], { type: 'application/octet-stream' })
+        };
     }
+    async function sendExcelAttendanceToServer(table) {
+        if (isAttendanceSaved) {
+            // Упаковка данных для отправки
+            var attendanceFile = await getExcelAttendanceForServer(table);
+            let dataSend = new FormData();
+            dataSend.append("squadName", localStorage.getItem('attendance_selectedSquad'));
+            dataSend.append("weekDate", localStorage.getItem('attendance_selectedWeek'));
+            dataSend.append("attendanceFile", attendanceFile.fileData, attendanceFile.fileName);
 
-    function s2ab(s) {
-        const buf = new ArrayBuffer(s.length);
-        const view = new Uint8Array(buf);
-        for (let i = 0; i < s.length; i++) {
-            view[i] = s.charCodeAt(i) & 0xFF;
+            // Отправка на сервер
+            fetch(createAttendanceItemAPI, {
+                method: 'POST',
+                body: dataSend
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        console.log('Не удалось отправить файл!');
+                    }
+                    return response.text();
+                })
+                .then(async data => {
+                    if (data) {
+                        alert("Посещаемость успешно отправлена на сервер!");
+                    }
+                })
+                .catch(error => {
+                    console.log('Возникла ошибка:', error);
+                });
         }
-        return buf;
+        else {
+            alert("Сохраните изменения перед отправкой!");
+        }
+    }
+    async function loadExcelAttendanceFromServer() {
+        // Get current attendance matrix from server
+        let dataSend = new FormData();
+        dataSend.append("squadName", groupSelector.value);
+        dataSend.append("weekDate", weekInput.value);
+
+        fetch(checkAttendanceItemAPI, {
+            method: 'POST',
+            body: dataSend
+        })
+            .then(response => {
+                if (!response.ok) {
+                    console.log('Не удалось получить информацию! Отправьте на сервер хотя бы раз!');
+                }
+                return response.json();
+            })
+            .then(async data => {
+                if (data) {
+                    let answer = confirm("Информация на сервере присутствует, хотите загрузить её?");
+                    if (answer) {
+                        localStorage.setItem(`attendanceDATA_${groupSelector.value}_${weekInput.value}`, JSON.stringify(data));
+                        alert("Посещаемость успешно обновлена!");
+                        await fillTableOfStudents();
+                    }
+                }
+                else console.log("НЕТ ПОСЕЩАЕМОСТИ НА СЕРВЕРЕ!");
+            })
+            .catch(error => {
+                console.log('Возникла ошибка:', error);
+            });
     }
 });
 

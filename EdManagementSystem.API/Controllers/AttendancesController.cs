@@ -2,6 +2,8 @@
 using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 
 namespace EdManagementSystem.API.Controllers
 {
@@ -41,6 +43,7 @@ namespace EdManagementSystem.API.Controllers
                 }
 
                 var success = await _attendanceService.CreateAttendanceItem(attendance, attendanceFile);
+
                 if (success)
                 {
                     return Ok("Посещаемость успешно загружена на сервер!");
@@ -77,6 +80,17 @@ namespace EdManagementSystem.API.Controllers
             {
                 return StatusCode(500, $"Возникла ошибка: {ex.Message}");
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAttendanceMatrix([FromForm] AttendanceDTO attendanceDTO)
+        {
+            var matrix = await _attendanceService.CreateAttendanceMatrix(attendanceDTO);
+            if (matrix != null)
+            {
+                return Ok(matrix);
+            }
+            return NotFound();
         }
     }
 }
