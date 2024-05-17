@@ -1,0 +1,32 @@
+.close-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background-color: $text-color;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  border-radius: 50%;
+}
+
+.close-btn::after,
+.close-btn::before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 15px;
+  background-color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-btn::before {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.close-btn:hover {
+  background-color: $btn-color;
+}

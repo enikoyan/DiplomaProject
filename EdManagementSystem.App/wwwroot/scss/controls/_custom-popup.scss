@@ -1,0 +1,49 @@
+.custom-alert {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: $border-color;
+  opacity: 0.9;
+  padding: 15px 30px;
+  justify-content: space-between;
+  width: fit-content;
+  height: fit-content;
+  flex-wrap: wrap;
+  box-shadow: $main-shadow;
+  cursor: pointer;
+  //transition: 0.5s ease-in-out;
+
+  &__icon {
+    max-width: 50px;
+  }
+
+  &__message {
+    text-wrap: wrap;
+    line-height: 1.3;
+  }
+
+  &__close-btn {
+  }
+
+  &.hide {
+    transition: 0.5s ease-in-out;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 530px) {
+  .custom-alert {
+    margin: 25px;
+    justify-content: center;
+
+    &__message {
+      text-align: center;
+    }
+  }
+}

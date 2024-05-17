@@ -1,3 +1,14 @@
+html {
+  font-family: $main-font;
+  font-size: 15px;
+  font-weight: 400;
+  color: $text-color !important;
+}
+
+body {
+  background-color: $bg-color;
+}
+
 .wrapper {
   margin: 0px 15px;
   min-height: 100vh;
@@ -9,20 +20,84 @@
   }
 }
 
+.custom-input {
+  height: 30px;
+  padding: 5px 10px;
+  background-color: transparent !important;
+  border-radius: 5px;
+  border: 2px solid $border-color;
+  transition: 0.2s ease-in-out;
+  box-shadow: inset 20px 20px 0px 20px transparent;
+
+  &:focus {
+    transition: 0.2s ease-in-out;
+    border: 2px solid $primary-color;
+    color: $primary-color;
+    &::placeholder {
+      color: $primary-color;
+    }
+  }
+
+  &_errored {
+    border: 2px solid red;
+    color: red;
+    &:focus {
+      transition: 0.2s ease-in-out;
+      border: 2px solid red;
+      color: red;
+      &::placeholder {
+        color: red;
+      }
+    }
+  }
+
+  &_correct {
+    border: 2px solid rgb(12, 168, 12);
+    color: rgb(12, 168, 12);
+    &:focus {
+      transition: 0.2s ease-in-out;
+      border: 2px solid rgb(12, 168, 12);
+      color: rgb(12, 168, 12);
+      &::placeholder {
+        color: rgb(12, 168, 12);
+      }
+    }
+  }
+}
+
+a {
+  transition: 0.2s linear;
+  border-bottom: 1px solid transparent;
+  padding: 0 0 5px;
+  color: $text-color;
+
+  &:hover {
+    transition: 0.2s linear;
+    color: $primary-color;
+    border-bottom-color: $primary-color;
+  }
+}
+
 img {
   user-select: none;
 }
 
-.title {
+input {
+  all: unset;
+  textarea:focus,
+  input:focus {
+    outline: none;
+  }
 }
 
-.logotype {
-  max-width: 120px;
+.title {
+  font-weight: bold;
+  font-size: 28px;
 }
 
 .footer_sign-page {
+  border-top: 1px solid $border-color;
   display: flex;
-  align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 15px;

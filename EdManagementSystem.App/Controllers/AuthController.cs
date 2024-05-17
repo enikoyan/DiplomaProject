@@ -34,14 +34,15 @@ namespace EdManagementSystem.App.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [Route("auth/loginRequest")]
+        public async Task<IActionResult> LoginRequest(LoginViewModel model)
         {
             var user = _authService.Authenticate(model.Email, model.Password);
 
             if (user == null)
             {
-                ViewBag.ErrorEmail = "Неправильный email или пароль!";
-                return View();
+                //ViewBag.ErrorEmail = "Неправильный email или пароль!";
+                return BadRequest("Ошибка авторизации");
             }
 
             var claims = new List<Claim>
