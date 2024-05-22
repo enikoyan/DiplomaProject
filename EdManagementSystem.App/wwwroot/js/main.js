@@ -1,67 +1,77 @@
-﻿// Aside menu buttons
-const menuItems = document.querySelectorAll(".aside-menu__item");
+﻿// Variables and controls
+const logOutBtn = document.getElementById("logOutBtn");
+const burgerCheckbox = document.querySelector(".hamburger-checkbox");
+const burgerLinesList = document.querySelectorAll(".line");
+const asideNav = document.querySelector(".aside-menu");
+const logotype = document.querySelector(".aside-logo");
+const asideMenu = document.querySelector(".aside");
+const asideMenuHeader = document.querySelector(".aside__header");
+const asideMenuTextList = document.querySelectorAll(".aside-menu__span");
+const logoutForm = document.querySelector('form[action="/Auth/Logout"]');
+const logoutItem = document.getElementById('logoutItem');
+const logoutAPIUri = "https://localhost:44354/auth/Logout";
 
-function refreshActiveBtn() {
-  let path = window.location.pathname.split("/")[2];
+window.addEventListener("DOMContentLoaded", async () => {
+    // Logout handler
+    logOutBtn.addEventListener("click", () => {
+        localStorage.clear();
+    });
 
-  menuItems.forEach((item) => {
-    item.classList.remove("aside-menu__item_active");
-  });
+    logoutItem.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const confirmLogout = confirm("Вы уверены, что хотите выйти?");
+        if (confirmLogout) {
+            logoutForm.submit();
+        }
+    });
 
-  menuItems.forEach((item) => {
-    if (item.parentElement.getAttribute("data-path") === path) {
-      item.classList.add("aside-menu__item_active");
+    burgerCheckbox.checked = JSON.parse(localStorage.getItem('sidebarState'));
+    await changeSidebarSize(JSON.parse(localStorage.getItem('sidebarState')));
+
+    // Burger menu handler
+    burgerCheckbox.addEventListener("change", async () => await setBurgerState());
+
+    async function setBurgerState() {
+        await changeSidebarSize(burgerCheckbox.checked);
     }
-  });
-}
 
-/* Hide and Show aside menu */
-const aside = document.querySelector(".aside");
-const asideToggle = document.querySelector(".aside-menu-toggle");
+    async function closeBurger() {
+        burgerLinesList[0].style.transform = "rotate(0)";
+        burgerLinesList[1].style.transform = "scaleY(1)";
+        burgerLinesList[2].style.transform = "rotate(0)";
+    }
 
-var key = "asideMenuOpened";
+    async function openBurger() {
+        burgerLinesList[0].style.transform = "rotate(45deg)";
+        burgerLinesList[1].style.transform = "scaleY(0)";
+        burgerLinesList[2].style.transform = "rotate(-45deg)";
+    }
 
-if (localStorage.getItem(key) === "true") {
-  aside.classList.remove("aside_closed");
-} else {
-  aside.classList.add("aside_closed");
-}
+    async function changeSidebarSize(sidebarState) {
+        if (sidebarState === true) {
+            asideMenu.classList.remove("aside_closed");
+            await openBurger();
+            localStorage.setItem('sidebarState', true);
+        }
+        else {
+            asideMenu.classList.add("aside_closed");
+            await closeBurger();
+            localStorage.setItem('sidebarState', false);
+        }
+    }
 
-asideToggle.addEventListener("click", () => {
-  if (aside.classList.contains("aside_closed")) {
-    aside.classList.remove("aside_closed");
-    localStorage.setItem(key, "true");
-  } else {
-    aside.classList.add("aside_closed");
-    localStorage.setItem(key, "false");
-  }
+    async function logoutUser() {
+        fetch(logoutAPIUri, {
+            method: 'POST',
+        })
+            .then(async response => {
+                if (response.ok) {
+                    console.log("URA");
+                }
+                else console.log('PIU');
+            })
+            .catch(error => {
+                console.log('Возникла ошибка:', error);
+            });
+    }
 });
-
-$(document).ready(function () {
-  const logOutBtn = document.getElementById("logOutBtn");
-  logOutBtn.addEventListener("click", () => {
-    localStorage.clear();
-  });
-
-  //// Menu buttons click handler
-  //$('.aside-menu__item').click(function (e) {
-  //    e.preventDefault();
-  //    var url = $(this).attr('href');
-
-  //    // Load content without refreshing the page
-  //    $('.dashboard-content-container').load(url + " .main > *", function () {
-  //        history.pushState(null, null, url);
-  //        refreshActiveBtn();
-  //    });
-  //});
-
-  // URL changing handler
-  window.onpopstate = function () {
-    //var url = location.pathname;
-    //$('.dashboard-content-container').load(url + " .main > *");
-    refreshActiveBtn();
-  };
-});
-
-// Set active btn
-refreshActiveBtn();

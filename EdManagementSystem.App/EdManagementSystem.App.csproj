@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\bootstrap-5.3.3-dist\**" />
+    <Content Remove="wwwroot\bootstrap-5.3.3-dist\**" />
+    <EmbeddedResource Remove="wwwroot\bootstrap-5.3.3-dist\**" />
+    <None Remove="wwwroot\bootstrap-5.3.3-dist\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\js\attendance.js" />
     <Content Remove="wwwroot\js\schedule.js" />
   </ItemGroup>

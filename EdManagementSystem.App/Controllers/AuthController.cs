@@ -42,7 +42,7 @@ namespace EdManagementSystem.App.Controllers
             if (user == null)
             {
                 //ViewBag.ErrorEmail = "Неправильный email или пароль!";
-                return BadRequest("Ошибка авторизации");
+                return BadRequest("Ошибка авторизации! Неправильный email или пароль!");
             }
 
             var claims = new List<Claim>

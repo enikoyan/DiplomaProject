@@ -65,7 +65,7 @@ body {
   }
 }
 
-a {
+.custom-link {
   transition: 0.2s linear;
   border-bottom: 1px solid transparent;
   padding: 0 0 5px;
@@ -87,6 +87,14 @@ input {
   textarea:focus,
   input:focus {
     outline: none;
+    outline-width: 0;
+  }
+
+  &:disabled {
+    user-select: none;
+    &:hover {
+      cursor: not-allowed;
+    }
   }
 }
 

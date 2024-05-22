@@ -55,6 +55,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         passwordInput.classList.add('custom-input_correct');
                         await createMessagePopup("success", "Вы успешно вошли в аккаунт!")
                         setTimeout(() => {
+                            loginForm.setAttribute('action', '/dashboard');
+                            loginForm.submit();
                             document.location = response.url;
                         }, 2000);
                     }

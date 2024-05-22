@@ -15,12 +15,16 @@
         <aside class="aside">
             <div class="aside__header">
                 <div class="aside-logo">
-                    <img style="width: 50px;" src="~/icons/common-icons/logoUntitled.svg" alt="logotype"
+                    <img src="~/icons/common-icons/logo.svg" alt="logotype"
                          class="aside-logo__img">
-                    <span class="aside-logo__title">УМДО</span>
                 </div>
-                <div class="aside-menu-toggle">
-                    <img src="~/icons/common-icons/arrow-icon.svg" alt="arrow-hide-open" class="aside-menu-toggle__img">
+                <div class="custom-hamburger">
+                    <div class="hamburger-lines">
+                        <input class="hamburger-checkbox" type="checkbox" checked/>
+                        <span class="line line1"></span>
+                        <span class="line line2"></span>
+                        <span class="line line3"></span>
+                    </div>
                 </div>
             </div>
             <nav class="aside-menu">
@@ -73,9 +77,10 @@
                             <span class="aside-menu__span">Техническая поддержка</span>
                         </a>
                     </li>
-                    <li>
+                    <li id="logoutItem">
                         <form asp-controller="Auth" asp-action="Logout" asp-antiforgery="false" method="post">
-                            <button style="width:100%" type="submit" id="logOutBtn">
+                            <button type="submit" class="aside-menu__item" style="justify-content: space-between; width: 100%" id="logOutBtn">
+                                <span class="aside-menu__span">Выйти</span>
                                 <img src="~/icons/aside-menu-icons/exit-icon.svg" alt="exit-icon" class="aside-menu__icon">
                             </button>
                         </form>
@@ -83,11 +88,11 @@
                 </ul>
             </nav>
         </aside>
-        
+
         @RenderBody()
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.js"></script>
+    @*     <script src="~/lib/jquery/dist/jquery.js"></script> *@
     <script defer type="text/javascript" src="~/js/main.js" asp-append-version="true"></script>
     @RenderSection("JavaScript", required: false)
 </body>
