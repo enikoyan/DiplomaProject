@@ -59,19 +59,4 @@ window.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem('sidebarState', false);
         }
     }
-
-    async function logoutUser() {
-        fetch(logoutAPIUri, {
-            method: 'POST',
-        })
-            .then(async response => {
-                if (response.ok) {
-                    console.log("URA");
-                }
-                else console.log('PIU');
-            })
-            .catch(error => {
-                console.log('Возникла ошибка:', error);
-            });
-    }
 });

@@ -1,151 +1,164 @@
-﻿const filterSelector = document.querySelector('[name="filterSelector"]');
-const courseSelector = document.querySelector('.search-row__filter_courses');
-const groupSelector = document.querySelector('.search-row__filter_student-groups');
+﻿const filterSelector = document.getElementById('filter-select');
+const courseSelector = document.getElementById('course-select');
+const groupSelector = document.getElementById('group-select');
 const searchBtn = document.querySelector('.search-row__btn');
 const saveAsPdfBtn = document.getElementById('downloadPdfTable');
 const saveAsExcelBtn = document.getElementById('downloadExcelTable');
 const tableElement = document.getElementById('studentsTable');
-let selectedAPI = "GetAllStudents";
-let selectedFilter = 0;
+var selectedAPI = "GetAllStudents";
+var selectedFilter = 0;
+var lastSelectControl = "searchAllStudents";
 
-/* Dynamic colSpan for table */
-var colSpanElement = document.getElementById("students-col-span");
-const checkScreenWidth = () => {
-    if (window.innerWidth < 600) {
-        colSpanElement.colSpan = "1";
-    } else {
-        colSpanElement.colSpan = "4";
-    }
-};
-window.addEventListener("resize", checkScreenWidth);
-checkScreenWidth();
+async function selectHandler(container) {
+    const children = Array.from(container.children);
+
+    children[0].classList.toggle('custom-select__btn_active');
+    children[1].classList.toggle('custom-options_disabled');
+}
 
 // Handler of changing filter event
-filterSelector.addEventListener('change', function () {
+async function selectOptionHandler(selectedOption) {
+    const value = selectedOption.getAttribute("data-value");
+    const valueText = selectedOption.textContent;
+    const customSelect = selectedOption.closest('.custom-select');
+    const customSelectTitle = customSelect.querySelector('.custom-select__title');
 
-    if (filterSelector.value === "searchAllStudents") {
-        courseSelector.disabled = true;
-        courseSelector.style.display = "none";
-        groupSelector.disabled = true;
-        groupSelector.style.display = "none";
+    customSelectTitle.textContent = selectedOption.textContent;
+    customSelect.setAttribute("data-target", value);
 
-        selectedFilter = 0;
-    }
+    await switchSelects(value);
+}
 
-    else if (filterSelector.value === "searchBySquads") {
-        courseSelector.disabled = true;
-        courseSelector.style.display = "none";
-        groupSelector.disabled = false;
-        groupSelector.style.display = "block";
+async function switchSelects(value) {
+    switch (value) {
+        case "searchAllStudents": {
+            courseSelector.disabled = true;
+            courseSelector.style.display = "none";
+            groupSelector.disabled = true;
+            groupSelector.style.display = "none";
 
-        selectedFilter = 1;
-    }
-    else if (filterSelector.value === "searchByCourses") {
-        groupSelector.disabled = true;
-        groupSelector.style.display = "none";
-        courseSelector.disabled = false;
-        courseSelector.style.display = "block";
-
-        selectedFilter = 2;
-    }
-});
-
-// API calling
-searchBtn.addEventListener('click', () => {
-    saveAsExcelBtn.disabled = false;
-    saveAsPdfBtn.disabled = false;
-    let selectedAPI = "";
-    let apiUrl = "";
-
-    switch (selectedFilter) {
-        case 0: {
-            selectedAPI = "GetAllStudents";
+            selectedFilter = 0;
+            lastSelectControl = value;
             break;
-        }
-        case 1: {
-            selectedAPI = `GetStudentsBySquad/${groupSelector.value}`;
+        };
+        case "searchByCourses": {
+            courseSelector.disabled = true;
+            courseSelector.style.display = "none";
+            groupSelector.disabled = false;
+            groupSelector.style.display = "flex";
+
+            selectedFilter = 1;
+            lastSelectControl = value;
             break;
-        }
-        case 2: {
-            selectedAPI = `GetStudentsByCourse/${courseSelector.value}`;
+        };
+        case "searchBySquads": {
+            groupSelector.disabled = true;
+            groupSelector.style.display = "none";
+            courseSelector.disabled = false;
+            courseSelector.style.display = "flex";
+
+            selectedFilter = 2;
+            lastSelectControl = value;
             break;
-        }
+        };
     }
+}
 
-    apiUrl = `https://localhost:44370/api/Students/${selectedAPI}`;
+document.addEventListener('DOMContentLoaded', async () => {
+    // API calling
+    searchBtn.addEventListener('click', () => {
+        if (filterSelector.getAttribute('data-target') === 'none') {
+            alert('Вы не выбрали фильтр для поиска!');
+        }
+        else {
+            let selectedAPI = "";
+            let apiUrl = "";
 
-    fetch(apiUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Данных не найдено');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Get table from Html
-            const studentsTable = document.querySelector('.custom-table_student-list');
-
-            // Create body of table
-            const tBody = document.getElementById("tableContentContainer");
-
-            // Clear table before adding new elements
-            tBody.innerHTML = '';
-
-            data.forEach(item => {
-                const tRow = document.createElement("tr");
-                for (let key in item) {
-                    const tHeader = document.createElement("th");
-                    tHeader.textContent = item[key];
-                    tRow.appendChild(tHeader);
+            switch (selectedFilter) {
+                case 0: {
+                    selectedAPI = "GetAllStudents";
+                    break;
                 }
+                case 1: {
+                    selectedAPI = `GetStudentsBySquad/${groupSelector.getAttribute('data-target')}`;
+                    break;
+                }
+                case 2: {
+                    selectedAPI = `GetStudentsByCourse/${courseSelector.getAttribute('data-target')}`;
+                    break;
+                }
+            }
 
-                // Create moreBtn
-                const button = document.createElement('button');
-                button.classList.add('custom-btn');
-                button.textContent = 'Узнать';
-                const th = document.createElement("th");
-                th.appendChild(button);
-                tRow.appendChild(th);
+            apiUrl = `https://localhost:44370/api/Students/${selectedAPI}`;
 
-                tBody.appendChild(tRow);
-            });
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Данных не найдено');
+                    }
+                    saveAsExcelBtn.disabled = false;
+                    saveAsPdfBtn.disabled = false;
+                    return response.json();
+                })
+                .then(data => {
+                    // Get table from Html
+                    const studentsTable = document.querySelector('.custom-table_student-list');
 
-            // Set count of students
-            document.getElementById('students-count').textContent = data.length;
+                    // Create body of table
+                    const tBody = document.getElementById("tableContentContainer");
 
-            // Insert tbody before tfoot
-            const tFoot = studentsTable.querySelector('tfoot');
-            studentsTable.insertBefore(tBody, tFoot);
-        })
-        .catch(error => {
-            alert(error.message);
-        })
-});
+                    // Clear table before adding new elements
+                    tBody.innerHTML = '';
 
-// Download as Excel
-document.getElementById('downloadExcelTable').addEventListener('click', () => {
-    const wb = XLSX.utils.table_to_book(document.getElementById('studentsTable'));
+                    data.forEach(item => {
+                        const tRow = document.createElement("tr");
+                        for (let key in item) {
+                            const tHeader = document.createElement("th");
+                            tHeader.textContent = item[key];
+                            tRow.appendChild(tHeader);
+                        }
 
-    wb.SheetNames.forEach(sheetName => {
-        const ws = wb.Sheets[sheetName];
-        const range = XLSX.utils.decode_range(ws['!ref']);
-        range.e.r += 2;
-        ws['!ref'] = XLSX.utils.encode_range(range);
+                        tBody.appendChild(tRow);
+                    });
+
+                    // Set count of students
+                    document.getElementById('students-count').textContent = data.length;
+
+                    // Insert tbody before tfoot
+                    const tFoot = studentsTable.querySelector('tfoot');
+                    studentsTable.insertBefore(tBody, tFoot);
+                })
+                .catch(error => {
+                    alert(error.message);
+                })
+        }
     });
 
-    wb.sheetName = "PIU";
+    // Download as Excel
+    document.getElementById('downloadExcelTable').addEventListener('click', () => {
+        const wb = XLSX.utils.table_to_book(document.getElementById('studentsTable'));
 
-    XLSX.writeFile(wb, 'Список студентов.xlsx');
-});
+        wb.SheetNames.forEach(sheetName => {
+            const ws = wb.Sheets[sheetName];
+            const range = XLSX.utils.decode_range(ws['!ref']);
+            range.e.r += 2;
+            ws['!ref'] = XLSX.utils.encode_range(range);
+        });
 
-// Download as Pdf
-saveAsPdfBtn.addEventListener('click', () => {
-    var table = document.getElementById('studentsTable');
-    var html = table.outerHTML;
+        wb.sheetName = "PIU";
 
-    var val = htmlToPdfmake(html);
-    var dd = {
-        content: val,
-    };
-    pdfMake.createPdf(dd).download('Список студентов');
+        XLSX.writeFile(wb, 'Список студентов.xlsx');
+    });
+
+    // Download as Pdf
+    saveAsPdfBtn.addEventListener('click', () => {
+        var table = document.getElementById('studentsTable');
+        var html = table.outerHTML;
+
+        var val = htmlToPdfmake(html);
+        var dd = {
+            content: val,
+        };
+        pdfMake.createPdf(dd).download('Список студентов');
+    });
 });

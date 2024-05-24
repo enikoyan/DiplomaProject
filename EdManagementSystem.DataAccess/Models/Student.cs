@@ -22,7 +22,8 @@ public partial class Student
     public double Rate { get; set; }
 
     [Column("birthDate")]
-    public DateTime BirthDate { get; set; }
+    [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+    public DateOnly BirthDate { get; set; }
 
     [JsonIgnore]
     [InverseProperty("IdStudentNavigation")]

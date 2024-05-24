@@ -2,7 +2,7 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
 
   &__filter {
     &_courses {
@@ -13,24 +13,21 @@
   }
 
   &__btn {
-  }
-}
+    min-width: 140px;
+    padding: 10px 40px !important;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-@media (max-width: 600px) {
-  .custom-table_student-list {
-    th:first-child,
-    th:last-child {
-      display: table-cell;
+    &::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      display: inline-block;
+      background-image: url("../../icons/common-icons/search-icon.svg");
+      background-size: cover;
     }
-
-    th:not(:first-child):not(:last-child) {
-      display: none;
-    }
   }
-}
-
-.search-input {
-}
-
-.custom-table_student-list {
 }

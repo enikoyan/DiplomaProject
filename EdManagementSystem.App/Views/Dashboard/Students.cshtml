@@ -6,50 +6,70 @@
 @model StudentsPageViewModel
 
 <main class="main dashboard-content-container">
-<h1 class="title">Список студентов</h1>
-<div class="search-row">
-@*     <input type="search" class="custom-input search-input" placeholder="Поиск студентов"> *@
-    <select name="filterSelector">
-        <option value="searchAllStudents">Все студенты</option>
-        <option value="searchBySquads">По группам</option>
-        <option value="searchByCourses">По курсам</option>
-    </select>
-    <select name="courseSelector" class="search-row__filter search-row__filter_courses" style="display:none">
-        @foreach (var item in Model.coursesList)
-        {
-            <option value="@item.OptionValue">@item.CourseName</option>
-        }
-    </select>
-    <select name="groupSelector" class="search-row__filter search-row__filter_student-groups" style="display:none">
-        @foreach (var item in Model.squadsList)
-        {
-            <option value="@item.OptionValue">@item.SquadName</option>
-        }
-    </select>
-    <button class="custom-btn search-row__btn">Найти</button>
-    <button class="custom-btn" id="downloadExcelTable" disabled="true">Сохранить в формате Excel</button>
-    <button class="custom-btn" id="downloadPdfTable" disabled="true">Сохранить в формате PDF</button>
-</div>
-<table class="custom-table custom-table_student-list" id="studentsTable">
-    <thead>
-        <tr>
-            <th scope="col">Номер</th>
-            <th scope="col">ФИО</th>
-            <th scope="col">Средняя оценка</th>
-            <th scope="col">Дата рождения</th>
-            <th scope="col">Подробнее</th>
-        </tr>
-    </thead>
-    <tbody id="tableContentContainer">
+    <h1 class="title">Список студентов</h1>
+    <div class="search-row">
+        @*     <input type="search" class="custom-input search-input" placeholder="Поиск студентов"> *@
 
-    </tbody>
-    <tfoot>
-        <tr>
-            <th id="students-col-span" scope="row" colspan="4">Количество студентов</th>
-            <th id="students-count">0</th>
-        </tr>
-    </tfoot>
-</table>
+        <div onclick="selectHandler(this)" class="custom-select" id="filter-select" data-target="none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Поисковый фильтр</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="searchAllStudents">Все студенты</li>
+                <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="searchBySquads">По группам</li>
+                <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="searchByCourses">По курсам</li>
+            </ul>
+        </div>
+
+        <div onclick="selectHandler(this)" class="custom-select" id="course-select" data-target="none" style="display:none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Выберите группу</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                @foreach (var item in Model.coursesList)
+                {
+                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="@item.OptionValue">@item.CourseName</li>
+                }
+            </ul>
+        </div>
+
+        <div onclick="selectHandler(this)" class="custom-select" id="group-select" data-target="none" style="display:none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Выберите курс</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                @foreach (var item in Model.squadsList)
+                {
+                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="@item.OptionValue">@item.SquadName</li>
+                }
+            </ul>
+        </div>
+        <button class="custom-btn_secondary" id="downloadExcelTable" disabled>Сохранить в формате Excel</button>
+        <button class="custom-btn_secondary" id="downloadPdfTable" disabled>Сохранить в формате PDF</button>
+    </div>
+
+    <button class="custom-btn_secondary search-row__btn">Найти</button>
+    <table class="custom-table custom-table_student-list" id="studentsTable">
+        <thead>
+            <tr>
+                <th scope="col">Номер</th>
+                <th scope="col">ФИО</th>
+                <th scope="col">Средняя оценка</th>
+                <th scope="col">Дата рождения</th>
+            </tr>
+        </thead>
+        <tbody id="tableContentContainer">
+        </tbody>
+        <tfoot>
+            <tr>
+                <th id="students-col-span" scope="row" colspan="3">Количество студентов</th>
+                <th id="students-count">0</th>
+            </tr>
+        </tfoot>
+    </table>
 </main>
 <script src="~/js/outerJS/xlsx.full.min.js"></script>
 <!-- pdfmake files: -->

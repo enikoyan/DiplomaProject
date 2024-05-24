@@ -4,14 +4,9 @@
   border-spacing: 0 1em;
 
   tr {
-    background-color: rgb(211, 211, 211);
+    background-color: $back-color;
     text-align: center;
     border-radius: 15px;
-    cursor: pointer;
-  }
-
-  thead tr {
-    cursor: default;
   }
 
   tr th {
