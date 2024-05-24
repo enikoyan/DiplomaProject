@@ -11,81 +11,81 @@
 }
 
 <main class="main dashboard-content-container">
-<h1>Расписание</h1>
-<div class="search-row">
-    <span>Текущая дата: @DateTime.UtcNow.Date.Day апреля</span>
-</div>
-<div class="search-row">
-    <span>Выберите дату: </span>
-    <button id="previousWeekBtn">Назад</button>
-    <input type="week" id="weekInput" value="@DateTime.Now.ToString($"yyyy-'W'{GetWeekNumber()}")">
-    <button id="nextWeekBtn">Вперед</button>
-    <button id="refreshScheduleBtn">Обновить данные</button>
-</div>
-<h3 id="errorMessage" style="color:red; display:none">РАСПИСАНИЕ НЕ НАЙДЕНО!</h3>
-<div class="schedule">
-    <div class="schedule-item" data-day="monday">
-        <div class="schedule-item__header">
-            <date class="schedule-item__date">22 апр</date>
-            <div class="schedule-item__week-day">Пн</div>
-        </div>
-        <div class="schedule-item__body">
-        </div>
+    <h1 class="title">Расписание</h1>
+    <div class="search-row">
+        <span id="currentDateSpan">🕐 Текущая дата: <b style="font-weight:bold">@DateTime.UtcNow.Date.Day апреля</b></span>
     </div>
+    <span style="font-weight: 600">Выберите дату</span>
+    <div class="search-row" id="search-filter">
+        <button class="custom-btn_secondary" style="padding: 10px 15px;" id="previousWeekBtn"><i class="arrow arrow_left"></i></button>
+        <input type="week" id="weekInput" value="@DateTime.Now.ToString($"yyyy-'W'{GetWeekNumber()}")">
+        <button class="custom-btn_secondary" style="padding: 10px 15px;" id="nextWeekBtn"><i class="arrow arrow_right"></i></button>
+        <button class="custom-btn_secondary" id="refreshScheduleBtn">Обновить данные</button>
+    </div>
+    <h3 id="errorMessage" style="color:red; display:none">РАСПИСАНИЕ НЕ НАЙДЕНО!</h3>
+    <div class="schedule">
+        <div class="schedule-item" data-day="monday">
+            <div class="schedule-item__header">
+                <date class="schedule-item__date">22 апр</date>
+                <div class="schedule-item__week-day">Пн</div>
+            </div>
+            <div class="schedule-item__body">
+            </div>
+        </div>
 
-    <div class="schedule-item" data-day="tuesday">
-        <div class="schedule-item__header">
-            <date class="schedule-item__date">23 апр</date>
-            <div class="schedule-item__week-day">Вт</div>
+        <div class="schedule-item" data-day="tuesday">
+            <div class="schedule-item__header">
+                <date class="schedule-item__date">23 апр</date>
+                <div class="schedule-item__week-day">Вт</div>
+            </div>
+            <div class="schedule-item__body">
+            </div>
         </div>
-        <div class="schedule-item__body">
-        </div>
-    </div>
 
-    <div class="schedule-item" data-day="wednesday">
-        <div class="schedule-item__header">
-            <date class="schedule-item__date">24 апр</date>
-            <div class="schedule-item__week-day">Ср</div>
+        <div class="schedule-item" data-day="wednesday">
+            <div class="schedule-item__header">
+                <date class="schedule-item__date">24 апр</date>
+                <div class="schedule-item__week-day">Ср</div>
+            </div>
+            <div class="schedule-item__body">
+            </div>
         </div>
-        <div class="schedule-item__body">
-        </div>
-    </div>
 
-    <div class="schedule-item" data-day="thursday">
-        <div class="schedule-item__header">
-            <date class="schedule-item__date">25 апр</date>
-            <div class="schedule-item__week-day">Чт</div>
+        <div class="schedule-item" data-day="thursday">
+            <div class="schedule-item__header">
+                <date class="schedule-item__date">25 апр</date>
+                <div class="schedule-item__week-day">Чт</div>
+            </div>
+            <div class="schedule-item__body">
+            </div>
         </div>
-        <div class="schedule-item__body">
-        </div>
-    </div>
 
-    <div class="schedule-item" data-day="friday">
-        <div class="schedule-item__header">
-            <date class="schedule-item__date">26 апр</date>
-            <div class="schedule-item__week-day">Пт</div>
+        <div class="schedule-item" data-day="friday">
+            <div class="schedule-item__header">
+                <date class="schedule-item__date">26 апр</date>
+                <div class="schedule-item__week-day">Пт</div>
+            </div>
+            <div class="schedule-item__body">
+            </div>
         </div>
-        <div class="schedule-item__body">
-        </div>
-    </div>
 
-    <div class="schedule-item" data-day="saturday">
-        <div class="schedule-item__header">
-            <date class="schedule-item__date">27 апр</date>
-            <div class="schedule-item__week-day">Сб</div>
+        <div class="schedule-item" data-day="saturday">
+            <div class="schedule-item__header">
+                <date class="schedule-item__date">27 апр</date>
+                <div class="schedule-item__week-day">Сб</div>
+            </div>
+            <div class="schedule-item__body">
+            </div>
         </div>
-        <div class="schedule-item__body">
-        </div>
-    </div>
 
-    <div class="schedule-item" data-day="sunday">
-        <div class="schedule-item__header">
-            <date class="schedule-item__date">28 апр</date>
-            <div class="schedule-item__week-day">Вс</div>
-        </div>
-        <div class="schedule-item__body">
+        <div class="schedule-item" data-day="sunday">
+            <div class="schedule-item__header">
+                <date class="schedule-item__date">28 апр</date>
+                <div class="schedule-item__week-day">Вс</div>
+            </div>
+            <div class="schedule-item__body">
+            </div>
         </div>
     </div>
-</div>
 </main>
 <script src="~/js/schedule.js"></script>

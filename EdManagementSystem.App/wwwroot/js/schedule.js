@@ -98,9 +98,12 @@
         const eventSquad = document.createElement('span');
         eventSquad.className = 'schedule-item__squad';
         eventSquad.textContent = event.squadName;
+
+        let startTime = event.timelineStart.slice(0, -3);
+        let endTime = event.timelineEnd.slice(0, -3);
         const eventTimeline = document.createElement('time');
         eventTimeline.className = 'schedule-item__timeline';
-        eventTimeline.textContent = `${event.timelineStart} - ${event.timelineEnd}`;
+        eventTimeline.textContent = `${startTime} - ${endTime}`;
 
         eventElement.appendChild(eventNote);
         eventElement.appendChild(eventPlace);

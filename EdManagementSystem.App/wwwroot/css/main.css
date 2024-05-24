@@ -167,6 +167,30 @@ h3 {
   margin: 15px;
 }
 
+.arrow {
+  border: solid #364c70;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  transition: 0.2s linear;
+}
+.arrow_down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+.arrow_top {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+.arrow_right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+.arrow_left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
 .login-form-container {
   display: flex;
   justify-content: center;
@@ -605,6 +629,16 @@ label {
   gap: 5px;
 }
 
+#currentDateSpan {
+  background-color: rgba(228, 228, 228, 0.6156862745);
+  border-radius: 5px;
+  padding: 15px;
+}
+
+#search-filter {
+  align-items: center;
+}
+
 .schedule-item {
   display: flex;
   flex-direction: column;
@@ -616,8 +650,8 @@ label {
 .schedule-item__header, .schedule-item__body {
   display: flex;
   padding: 15px;
-  background: #f0f3f5;
-  border: 1px solid rgb(212, 212, 212);
+  background: rgba(255, 255, 255, 0.4196078431);
+  border: 2px solid #dee2e9;
   border-radius: 6px;
 }
 .schedule-item__body {
@@ -629,7 +663,8 @@ label {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  background-color: rgb(223, 224, 219);
+  background-color: rgba(228, 228, 228, 0.6156862745);
+  opacity: 0.9;
   border-radius: 6px;
   padding: 15px;
   transition: all 0.2s ease-in-out;
@@ -637,6 +672,10 @@ label {
 .schedule-item__event:hover {
   transition: all 0.2s ease-in-out;
   cursor: pointer;
+  transform: scale(1.05);
+}
+.schedule-item__note {
+  font-weight: 600;
 }
 @media (max-width: 1460px) {
   .schedule {
@@ -654,6 +693,24 @@ label {
     grid-template-columns: auto;
   }
 }
+input[type=week] {
+  background-color: #128dff;
+  border: 2px solid #dee2e9;
+  padding: 10px;
+  color: #ffffff;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+::-webkit-calendar-picker-indicator {
+  background-color: #ffffff;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
 .homeworks {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1010,22 +1067,6 @@ label {
 .custom-select__title {
   font-size: 15px;
   padding-right: 10px;
-}
-
-.arrow {
-  border: solid #364c70;
-  border-width: 0 3px 3px 0;
-  display: inline-block;
-  padding: 3px;
-  transition: 0.2s linear;
-}
-.arrow_down {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
-}
-.arrow_top {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
 }
 
 .custom-options {

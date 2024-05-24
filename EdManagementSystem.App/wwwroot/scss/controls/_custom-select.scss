@@ -49,24 +49,6 @@
   }
 }
 
-.arrow {
-  border: solid $text-color;
-  border-width: 0 3px 3px 0;
-  display: inline-block;
-  padding: 3px;
-  transition: 0.2s linear;
-
-  &_down {
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-  }
-
-  &_top {
-    transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-  }
-}
-
 .custom-options {
   display: flex;
   flex-direction: column;
