@@ -673,7 +673,9 @@ input[type=date] {
   flex-direction: column;
   height: -moz-fit-content;
   height: fit-content;
-  background-color: rgb(250, 243, 235);
+  flex-wrap: wrap;
+  background-color: rgba(228, 228, 228, 0.6156862745);
+  border: 2px solid #ced3db;
   border-radius: 10px;
   padding: 20px;
   gap: 10px;
@@ -687,24 +689,51 @@ input[type=date] {
 .homeworks__description {
   text-align: justify;
   text-wrap: balance;
+  padding: 10px;
+  border: 2px solid #ced3db;
+  border-radius: 5px;
+}
+.homeworks__title {
+  font-size: 18px;
+  font-weight: bold;
+}
+.homeworks__date {
+  font-style: italic;
+  padding: 10px;
+  border: 2px solid #ced3db;
+  background-color: #7e96e6;
+  color: white;
+  border-radius: 5px;
+}
+.homeworks__note {
+  padding: 10px;
+  border: 2px solid #ced3db;
+  border-radius: 5px;
 }
 .homeworks__files {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: rgb(230, 230, 230);
-  padding: 10px;
+  background-color: rgba(245, 245, 245, 0.7607843137);
+  border: 2px solid #ced3db;
+  padding: 25px;
   border-radius: 10px;
+}
+.homeworks__files a {
+  padding: 10px;
+  background-color: rgba(228, 228, 228, 0.6156862745);
+  border: 2px solid transparent;
+  transition: 0.2s ease-in-out;
+  border-radius: 5px;
+}
+.homeworks__files a:hover {
+  transition: 0.2s ease-in-out;
+  border: 2px solid #ced3db;
 }
 
 @media (max-width: 1024px) {
   .homeworks {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 768px) {
-  .homeworks {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(1, 1fr);
   }
 }
 .custom-table-attendance {

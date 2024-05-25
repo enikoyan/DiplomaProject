@@ -5,6 +5,7 @@ const groupSelector = document.getElementById('group-select');
 const courseSelector = document.getElementById('course-select');
 const searchBtn = document.getElementById('search-btn');
 const homeworksContainer = document.querySelector(".homeworks");
+const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 let checkedOptions = "squads";
 var isDeadlineExist = false;
 const getHomeworkUrl = "https://localhost:44370/api/Homeworks/GetHomeworksBy";
@@ -173,7 +174,7 @@ async function createHomeworkItems(homeworks) {
         // Homework item components
         const homeworkTitle = document.createElement("h3");
         homeworkTitle.textContent = item.homework.title;
-        homeworkTitle.className = "homeworks_title";
+        homeworkTitle.className = "homeworks__title";
 
         /* Info block */
         const homeworkInfo = document.createElement("div");
@@ -187,11 +188,11 @@ async function createHomeworkItems(homeworks) {
 
         // Dates
         homeworkInfo.innerHTML = `
-          <span><date class="homeworks__date">Дата добавления: ${item.homework.dateAdded
-            }</date></span>
-          <span><date  class="homeworks__date">Крайний срок сдачи : ${item.homework.deadline ? item.homework.deadline : "отсутствует"
-            }</date></span>
-          `;
+            <date class="homeworks__date">Дата добавления: ${new Date(item.homework.dateAdded).toLocaleDateString('ru-RU', options)}
+            </date>
+            <date class="homeworks__date">Крайний срок сдачи:
+                ${item.homework.deadline ? new Date(item.homework.deadline).toLocaleDateString('ru-RU', options) : "отсутствует"}
+            </date>`;
 
         // Note
         if (item.homework.note != "null")
@@ -209,10 +210,10 @@ async function createHomeworkItems(homeworks) {
               </a>`;
             }
 
-            homeworkFilesContainer.innerHTML += `<button class="custom-btn homeworks__download-all-btn">
-          Скачать всё
-      </button>`;
-        } else {
+            homeworkFilesContainer.innerHTML += `<button class="custom-btn homeworks__download-all-btn">Скачать всё</button>`;
+        }
+        else
+        {
             homeworkFilesContainer.innerHTML =
                 "<h3>Прикрепленные файлы: отсутствуют</h3>";
         }
