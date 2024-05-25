@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Files\Attendance\" />
     <Folder Include="Files\Homeworks\" />
     <Folder Include="Files\Materials\" />
   </ItemGroup>

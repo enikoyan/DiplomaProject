@@ -22,28 +22,28 @@
             </ul>
         </div>
 
-        <div onclick="selectHandler(this)" class="custom-select" id="course-select" data-target="none" style="display:none">
-            <button class="custom-select__btn">
-                <span class="custom-select__title">Выберите группу</span>
-                <i class="arrow arrow_down"></i>
-            </button>
-            <ul class="custom-options custom-options_disabled">
-                @foreach (var item in Model.coursesList)
-                {
-                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="@item.OptionValue">@item.CourseName</li>
-                }
-            </ul>
-        </div>
-
         <div onclick="selectHandler(this)" class="custom-select" id="group-select" data-target="none" style="display:none">
             <button class="custom-select__btn">
-                <span class="custom-select__title">Выберите курс</span>
+                <span class="custom-select__title">Выберите группу</span>
                 <i class="arrow arrow_down"></i>
             </button>
             <ul class="custom-options custom-options_disabled">
                 @foreach (var item in Model.squadsList)
                 {
                     <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="@item.OptionValue">@item.SquadName</li>
+                }
+            </ul>
+        </div>
+
+        <div onclick="selectHandler(this)" class="custom-select" id="course-select" data-target="none" style="display:none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Выберите курс</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                @foreach (var item in Model.coursesList)
+                {
+                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="@item.OptionValue">@item.CourseName</li>
                 }
             </ul>
         </div>

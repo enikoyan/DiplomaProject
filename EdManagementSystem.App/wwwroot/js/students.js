@@ -41,7 +41,7 @@ async function switchSelects(value) {
             lastSelectControl = value;
             break;
         };
-        case "searchByCourses": {
+        case "searchBySquads": {
             courseSelector.disabled = true;
             courseSelector.style.display = "none";
             groupSelector.disabled = false;
@@ -51,7 +51,7 @@ async function switchSelects(value) {
             lastSelectControl = value;
             break;
         };
-        case "searchBySquads": {
+        case "searchByCourses": {
             groupSelector.disabled = true;
             groupSelector.style.display = "none";
             courseSelector.disabled = false;

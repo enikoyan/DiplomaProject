@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Домашняя страница";
+    Layout = "_DashboardLayout";
+}
+
+@model HomeworksPageViewModel
+
+<main class="main dashboard-content-container">
+    <form id="addHomeworkForm" style="display: flex; flex-direction: column; gap: 20px" method="post" enctype="multipart/form-data">
+        <h1 class="title">Выдать домашнее задание</h1>
+        <div onclick="selectHandler(this)" style="max-width: 100%" class="custom-select" id="filter-select" data-target="searchBySquads">
+                <button type="button" class="custom-select__btn">
+                    <span class="custom-select__title">По группам</span>
+                    <i class="arrow arrow_down"></i>
+                </button>
+                <ul class="custom-options custom-options_disabled">
+                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="searchBySquads">По группам</li>
+                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="searchByCourses">По курсам</li>
+                </ul>
+            </div>
+            <div id="options-container-courses" style="display: none; flex-wrap: wrap; gap: 15px;">
+                @foreach (var item in Model.coursesList)
+                {
+                    <div class="checkbox-container">
+                        <input type="checkbox" class="custom-checkbox" id="@item.OptionValue" name="@item.OptionValue" value="@item.OptionValue" />
+                        <label for="@item.OptionValue">@item.CourseName</label>
+                    </div>
+                }
+            </div>
+            <div id="options-container-squads" style="display: flex; flex-wrap: wrap; gap: 15px; ">
+                @foreach (var item in Model.squadsList)
+                {
+                    <div class="checkbox-container">
+                        <input type="checkbox" class="custom-checkbox" id="@item.OptionValue" name="@item.OptionValue" value="@item.OptionValue" />
+                        <label for="@item.OptionValue">@item.SquadName</label>
+                    </div>
+                }
+            </div>
+            <input type="text" class="custom-input" id="homeworkTitleTb" placeholder="Тема: " autocomplete="off" />
+            <textarea class="custom-textArea" inputmode="latin" style="resize: none; min-height: 100px;" id="homeworkDescTb" placeholder="Описание: "></textarea>
+            <input class="custom-input" type="text" placeholder="Примечание: (необязательно)" id="homeworkNoteTb" autocomplete="off" />
+            <span>Срок сдачи: </span>
+            <input type="date" id="homeworkDeadlineTb" autocomplete="off" />
+            <div style="display: flex; justify-content: flex-start; gap: 5px; align-items: center">
+                <input type="checkbox" class="custom-radioBtn" id="homeworkOffDeadlineBtn" name="homeworkDeadline" />
+                <label for="homeworkOffDeadlineBtn">бессрочно</label>
+            </div>
+            <label for="attachedFiles" class="drop-container" id="dropcontainer">
+                <span class="drop-title">Перетащите файлы сюда</span>
+                или
+                <input type="file" id="attachedFiles" class="add-file-input" name="files" multiple />
+            </label>
+            <button type="submit" class="custom-btn" id="send-homeworks-btn">Сохранить</button>
+            <button type="button" class="custom-btn_secondary" id="go-back-btn">Вернуться назад</button>
+    </form>
+</main>
+
+<script src="~/js/addingHomework.js"></script>

@@ -1,179 +1,220 @@
-﻿window.addEventListener('DOMContentLoaded', async () => {
-    // Filter handler
-    await filterHandler();
-
-    // Option handler
-    await optionHandler();
-});
-
-// Variables and controls
-const filterSelector = document.querySelector('[name="filterSelector"]');
-const filterSelectorHomework = document.querySelector('[name="filterSelectorHomework"]');
-const courseSelector = document.querySelector('.search-row__filter_courses');
-const groupSelector = document.querySelector('.search-row__filter_student-groups');
-const searchBtn = document.querySelector('.search-row__btn_search');
-const homeworksContainer = document.querySelector('.homeworks');
-const optionsContainerCourses = document.getElementById('options-container-courses');
-const optionsContainerSquads = document.getElementById('options-container-squads');
-const homewrkDeadlineTb = document.getElementById('homewrkDeadlineTb');
+﻿// Variables and controls
+const filterSelector = document.getElementById('filter-select');
+const filterSelectorHomework = document.getElementById('filter-select-adding');
+const groupSelector = document.getElementById('group-select');
+const courseSelector = document.getElementById('course-select');
+const searchBtn = document.getElementById('search-btn');
+const homeworksContainer = document.querySelector(".homeworks");
 let checkedOptions = "squads";
 var isDeadlineExist = false;
-const downloadApiUrl = "https://localhost:44370/api/FileManagement/DownloadFileFromDB";
 const getHomeworkUrl = "https://localhost:44370/api/Homeworks/GetHomeworksBy";
 const downloadAllApiUrl = "https://localhost:44370/api/Homeworks/DownloadHomeworks";
+const downloadApiUrl = "https://localhost:44370/api/FileManagement/DownloadFileFromDB";
 const createHomeworkApiUrl = "https://localhost:44370/api/Homeworks/CreateHomework";
 
-async function filterHandler() {
-    if (localStorage.getItem('selectedFilter')) filterSelector.value = localStorage.getItem('selectedFilter');
-    await changeFilter();
-    switch (filterSelector.value) {
+/* FILTER SELECTOR HANDLER */
+async function selectOptionHandler(selectedOption, saveBool) {
+    const value = selectedOption.getAttribute("data-value");
+    //const valueText = selectedOption.textContent;
+    const customSelect = selectedOption.closest(".custom-select");
+    const customSelectTitle = customSelect.querySelector(".custom-select__title");
+
+    customSelectTitle.textContent = selectedOption.textContent;
+    customSelect.setAttribute("data-target", value);
+
+    await switchSelects(value, saveBool);
+}
+
+async function switchSelects(value, saveBool) {
+    switch (value) {
         case "searchBySquads": {
-            if (localStorage.getItem('groupSelectorValue')) groupSelector.value = localStorage.getItem('groupSelectorValue');
+            courseSelector.disabled = true;
+            courseSelector.style.display = "none";
+            groupSelector.disabled = false;
+            groupSelector.style.display = "flex";
+
+            if (saveBool) {
+                localStorage.setItem("homeworks_lastSelectFilter", "searchBySquads");
+            }
+
             break;
         }
         case "searchByCourses": {
-            if (localStorage.getItem('courseSelectorValue')) courseSelector.value = localStorage.getItem('courseSelectorValue');
+            groupSelector.disabled = true;
+            groupSelector.style.display = "none";
+            courseSelector.disabled = false;
+            courseSelector.style.display = "flex";
+
+            if (saveBool) {
+                localStorage.setItem("homeworks_lastSelectFilter", "searchByCourses");
+            }
+
             break;
         }
-    };
+    }
 }
 
-async function optionHandler() {
-    switch (localStorage.getItem('selectedFilter')) {
-        case "searchByCourses": {
-            if (localStorage.getItem('selectedCourseOption')) {
-                courseSelector.value = localStorage.getItem('selectedCourseOption');
-                try {
-                    await createHomeworkItems(JSON.parse(localStorage.getItem(`homeworksData / Course / ${courseSelector.value}`)));
-                }
-                catch {
-                    await searchHomeworks();
-                }
-            }
-            break;
-        }
+async function selectHandler(container) {
+    const children = Array.from(container.children);
+
+    children[0].classList.toggle("custom-select__btn_active");
+    children[1].classList.toggle("custom-options_disabled");
+}
+
+// Set last selected filter
+async function setLastSelectedFilter(lastFilter) {
+    filterSelector.setAttribute('data-target', lastFilter);
+    switch (lastFilter) {
         case "searchBySquads": {
-            if (localStorage.getItem('selectedSquadOption')) {
-                groupSelector.value = localStorage.getItem('selectedSquadOption');
-                try {
-                    await createHomeworkItems(JSON.parse(localStorage.getItem(`homeworksData / Squad / ${groupSelector.value}`)));
-                }
-                catch {
-                    await searchHomeworks();
-                }
+            filterSelector.querySelector(".custom-select__title").textContent = "По группам";
+            try {
+                let option = localStorage.getItem("selectedSquadOption").split(',');
+                await setLastSelectedOption(groupSelector, option[0], option[1]);
+
+            }
+            catch {
+               // continue;
             }
             break;
         }
+        case "searchByCourses": {
+            filterSelector.querySelector(".custom-select__title").textContent = "По курсам";
+            try {
+                let option = localStorage.getItem("selectedCourseOption").split(',');
+                await setLastSelectedOption(courseSelector, option[0], option[1]);
+            }
+            catch {
+                //continue;
+            }
+
+            break;
+        }
     }
+    await switchSelects(lastFilter);
+    await searchHomeworks();
 }
 
-// Handler of changing filter event
-filterSelector.addEventListener('change', function () { changeFilter() });
-
-// Search filter change handler
-async function changeFilter() {
-    if (filterSelector.value === "searchBySquads") {
-        courseSelector.disabled = true;
-        courseSelector.style.display = "none";
-        groupSelector.disabled = false;
-        groupSelector.style.display = "block";
-
-        selectedFilter = 0;
-    }
-    else if (filterSelector.value === "searchByCourses") {
-        groupSelector.disabled = true;
-        groupSelector.style.display = "none";
-        courseSelector.disabled = false;
-        courseSelector.style.display = "block";
-
-        selectedFilter = 1;
-    }
-    localStorage.setItem('selectedFilter', filterSelector.value);
+async function setLastSelectedOption(selectOjbect, option, optionValue) {
+    selectOjbect.setAttribute('data-target', option);
+    selectOjbect.querySelector(".custom-select__title").textContent = optionValue;
 }
 
-// Search button click handler
-searchBtn.addEventListener('click', async () => searchHomeworks());
-
+// SEARCH HANDLER
 async function searchHomeworks() {
-    switch (localStorage.getItem('selectedFilter')) {
+    let selectedFilter = localStorage.getItem('homeworks_lastSelectFilter');
+    switch (selectedFilter) {
         case "searchByCourses": {
-            if (localStorage.getItem(`homeworksData / Course / ${courseSelector.value}`)) {
-                const data = JSON.parse(localStorage.getItem(`homeworksData / Course / ${courseSelector.value}`));
+            let dataTarget = courseSelector.getAttribute("data-target");
+            if (localStorage.getItem(`homeworksData / Course / ${dataTarget}`)) {
+                const data = JSON.parse(
+                    localStorage.getItem(
+                        `homeworksData / Course / ${dataTarget}`
+                    )
+                );
                 await createHomeworkItems(data);
             }
             else {
-                await getHomeworksFromDB("Course", courseSelector.value);
+                await getHomeworksFromDB("Course", courseSelector.getAttribute('data-target'));
             }
-            localStorage.setItem('selectedCourseOption', courseSelector.value);
             break;
         }
         case "searchBySquads": {
-            if (localStorage.getItem(`homeworksData / Squad / ${courseSelector.value}`)) {
-                const data = JSON.parse(localStorage.getItem(`homeworksData / Squad / ${courseSelector.value}`));
+            if (localStorage.getItem(`homeworksData / Squad / ${groupSelector.getAttribute("data-target")}`)) {
+                const data = JSON.parse(localStorage.getItem(`homeworksData / Squad / ${groupSelector.getAttribute("data-target")}`));
                 await createHomeworkItems(data);
             }
             else {
-                await getHomeworksFromDB("Squad", groupSelector.value);
+                await getHomeworksFromDB("Squad", groupSelector.getAttribute("data-target"));
             }
-            localStorage.setItem('selectedSquadOption', groupSelector.value);
             break;
         }
     }
+}
+
+// Get homeworks from database
+async function getHomeworksFromDB(apiEnd, attribute) {
+    fetch(`${getHomeworkUrl}${apiEnd}/${attribute}`)
+        .then((response) => {
+            if (!response.ok) {
+                homeworksContainer.innerHTML = "";
+                localStorage.removeItem(`homeworksData / ${apiEnd} / ${attribute}`);
+                throw new Error("Данных не найдено");
+            }
+            return response.json();
+        })
+        .then(async (data) => {
+            if (data.length > 0) {
+                await createHomeworkItems(data);
+                localStorage.setItem(
+                    `homeworksData / ${apiEnd} / ${attribute}`,
+                    JSON.stringify(data)
+                );
+            } else {
+                homeworksContainer.innerHTML = "";
+                homeworksContainer.setAttribute('data-isFilled', "false");
+                alert("Домашние задания не найдены!");
+            }
+        })
+        .catch((error) => {
+            console.log(error.message);
+        });
 }
 
 // Create homeworks in the HTML
 async function createHomeworkItems(homeworks) {
-    homeworksContainer.innerHTML = '';
+    homeworksContainer.innerHTML = "";
 
     homeworks.forEach((item) => {
         // Homework item container
-        const homeworkItem = document.createElement('div');
+        const homeworkItem = document.createElement("div");
         homeworkItem.className = "homeworks__item";
-        homeworkItem.setAttribute('data-homeworkId', item.homework.homeworkId);
+        homeworkItem.setAttribute("data-homeworkId", item.homework.homeworkId);
 
         // Homework item components
-        const homeworkTitle = document.createElement('h3');
+        const homeworkTitle = document.createElement("h3");
         homeworkTitle.textContent = item.homework.title;
         homeworkTitle.className = "homeworks_title";
 
         /* Info block */
-        const homeworkInfo = document.createElement('div');
+        const homeworkInfo = document.createElement("div");
         homeworkInfo.className = "homeworks__info";
 
         // Description
-        const homeworkDescription = document.createElement('p');
+        const homeworkDescription = document.createElement("p");
         homeworkDescription.textContent = `описание: ${item.homework.description}`;
         homeworkDescription.className = "homeworks__description";
         homeworkInfo.appendChild(homeworkDescription);
 
         // Dates
         homeworkInfo.innerHTML = `
-            <span><date class="homeworks__date">Дата добавления: ${item.homework.dateAdded}</date></span>
-            <span><date  class="homeworks__date">Крайний срок сдачи : ${item.homework.deadline ? item.homework.deadline : "отсутствует"}</date></span>
-            `;
+          <span><date class="homeworks__date">Дата добавления: ${item.homework.dateAdded
+            }</date></span>
+          <span><date  class="homeworks__date">Крайний срок сдачи : ${item.homework.deadline ? item.homework.deadline : "отсутствует"
+            }</date></span>
+          `;
 
         // Note
-        if (item.homework.note != "null") homeworkInfo.innerHTML += `<span class="homeworks__note">Примечание: ${item.homework.note}</span>`;
+        if (item.homework.note != "null")
+            homeworkInfo.innerHTML += `<span class="homeworks__note">Примечание: ${item.homework.note}</span>`;
 
         /* Attached files block */
-        const homeworkFilesContainer = document.createElement('div');
+        const homeworkFilesContainer = document.createElement("div");
         homeworkFilesContainer.className = "homeworks__files";
         homeworkFilesContainer.innerHTML = "<h3>Прикрепленные файлы: </h3>";
 
         if (item.attachedFiles.length > 0) {
             for (let i = 0; i < item.attachedFiles.length; i++) {
-                homeworkFilesContainer.innerHTML +=
-                    `<a href="${downloadApiUrl}?fileId=${item.attachedFiles[i].id}&folderName=Homeworks" download="download">
-                ${item.attachedFiles[i].title}
-                </a>`;
+                homeworkFilesContainer.innerHTML += `<a href="${downloadApiUrl}?fileId=${item.attachedFiles[i].id}&folderName=Homeworks" download="download">
+              ${item.attachedFiles[i].title}
+              </a>`;
             }
 
             homeworkFilesContainer.innerHTML += `<button class="custom-btn homeworks__download-all-btn">
-            Скачать всё
-        </button>`;
-        }
-        else {
-            homeworkFilesContainer.innerHTML = "<h3>Прикрепленные файлы: отсутствуют</h3>";
+          Скачать всё
+      </button>`;
+        } else {
+            homeworkFilesContainer.innerHTML =
+                "<h3>Прикрепленные файлы: отсутствуют</h3>";
         }
 
         // Adding components into item
@@ -187,177 +228,39 @@ async function createHomeworkItems(homeworks) {
     });
 
     // Download all files as archive
-    const downloadAllBtn = document.querySelectorAll(".homeworks__download-all-btn");
-    downloadAllBtn.forEach(item => {
-        item.addEventListener('click', () => {
+    const downloadAllBtn = document.querySelectorAll(
+        ".homeworks__download-all-btn"
+    );
+    downloadAllBtn.forEach((item) => {
+        item.addEventListener("click", () => {
             const parentElement = item.closest(".homeworks__item");
             const homeworkId = parentElement.dataset.homeworkid;
             window.location.href = `${downloadAllApiUrl}?homeworkId=${homeworkId}`;
         });
-    })
-}
-
-// Get homeworks from database
-async function getHomeworksFromDB(apiEnd, attribute) {
-    fetch(`${getHomeworkUrl}${apiEnd}/${attribute}`)
-        .then(response => {
-            if (!response.ok) {
-                homeworksContainer.innerHTML = '';
-                localStorage.removeItem(`homeworksData / ${apiEnd} / ${attribute}`);
-                throw new Error('Данных не найдено');
-            }
-            return response.json();
-        })
-        .then(async data => {
-            if (data.length > 0) {
-                await createHomeworkItems(data);
-                localStorage.setItem(`homeworksData / ${apiEnd} / ${attribute}`, JSON.stringify(data));
-            }
-            else {
-                alert("Домашние задания не найдены!");
-            }
-        })
-        .catch(error => {
-            console.log(error.message);
-        })
-}
-
-/* ModalScreen */
-filterSelectorHomework.addEventListener('change', function () { changeHomeworkItems() });
-function changeHomeworkItems() {
-    if (filterSelectorHomework.value === "searchBySquads") {
-        optionsContainerSquads.style.display = "flex";
-        optionsContainerCourses.style.display = "none";
-        checkedOptions = "squads";
-    }
-    else if (filterSelectorHomework.value === "searchByCourses") {
-        optionsContainerCourses.style.display = "flex";
-        optionsContainerSquads.style.display = "none";
-        checkedOptions = "courses";
-    }
-}
-const addHomeworkModalScreen = document.querySelector(".modal-addItem");
-const shadowBg = document.querySelector(".overlay");
-function displayModal() {
-    shadowBg.style.display = "block";
-    addHomeworkModalScreen.style.display = "flex";
-}
-var addHomeworkBtn = document.getElementById("add-homework-btn");
-addHomeworkBtn.addEventListener("click", function () {
-    displayModal();
-});
-const btnClose = document.getElementById("btn-close");
-btnClose.addEventListener("click", () => {
-    shadowBg.style.display = "none";
-    addHomeworkModalScreen.style.display = "none";
-});
-
-// Homework deadline off
-const homeworkOffDeadlineBtn = document.getElementById("homeworkOffDeadlineBtn");
-homeworkOffDeadlineBtn.addEventListener('change', () => {
-    if (homeworkOffDeadlineBtn.checked) {
-        homewrkDeadlineTb.disabled = true;
-        isDeadlineExist = true;
-    }
-    else {
-        homewrkDeadlineTb.disabled = false;
-        isDeadlineExist = true;
-    }
-})
-
-/* API calling (create homework) */
-document.getElementById('addHomeworkForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    // Selection items check
-    const selectedItems = await getSelectedItems();
-
-    if (selectedItems != null) {
-
-        const formData = new FormData();
-
-        // Adding files
-        const attachedFiles = document.querySelector('.add-file-input').files;
-        if (attachedFiles.length == 0) {
-            formData.append('files', null);
-        }
-        else {
-            for (let i = 0; i < attachedFiles.length; i++) {
-                formData.append('files', attachedFiles[i]);
-            }
-        }
-
-        // Arguments
-        formData.append('groupBy', filterSelectorHomework.value);
-        switch (filterSelectorHomework.value) {
-            case "searchByCourses": {
-                for (let i = 0; i < selectedItems.length; i++) {
-                    formData.append('foreignKeys', selectedItems[i]);
-                    localStorage.removeItem(`homeworksData / Course / ${courseSelector.value}`);
-                }
-                break;
-            }
-            case "searchBySquads": {
-                for (let i = 0; i < selectedItems.length; i++) {
-                    formData.append('foreignKeys', selectedItems[i]);
-                    localStorage.removeItem(`homeworksData / Squad / ${groupSelector.value}`);
-                }
-                break;
-            }
-        }
-
-        formData.append('title', document.getElementById('homeworkTitleTb').value);
-        formData.append('description', document.getElementById('homeworkDescTb').value);
-        let noteValue = document.getElementById('homeworkNoteTb').value;
-        formData.append('note', noteValue ? noteValue : null);
-        let deadlineTb = document.getElementById('homewrkDeadlineTb');
-        if (isDeadlineExist) {
-            formData.append('deadline', deadlineTb.value);
-        }
-
-        // Query options
-        const requestOptions = {
-            method: 'POST',
-            body: formData
-        };
-
-        // Calling API method
-        fetch(createHomeworkApiUrl, requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => { alert(text) })
-                }
-                else {
-                    return response.text();
-                }
-            })
-            .then(async data => {
-                if (data) {
-                    alert("Домашнее задание успешно выдано!");
-                    await searchHomeworks();
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
-});
-
-async function getSelectedItems() {
-    // Get all checkboxes inside the container
-    const checkboxes = document.querySelectorAll(`#options-container-${checkedOptions} input[type="checkbox"]`);
-    const selectedValues = [];
-
-    // Add selected items inside the array
-    checkboxes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            selectedValues.push(checkbox.value);
-        }
     });
 
-    // Check if any of items was selected
-    if (selectedValues.length > 0) {
-        return selectedValues;
-    } else {
-        alert('Выберите хотя бы одно значение');
+    let selectedFilter = localStorage.getItem('homeworks_lastSelectFilter');
+
+    switch (selectedFilter) {
+        case "searchByCourses": {
+            localStorage.setItem("selectedCourseOption",
+                `${courseSelector.getAttribute('data-target')},${courseSelector.querySelector(".custom-select__title").textContent}`);
+            break;
+        }
+        case "searchBySquads": {
+            localStorage.setItem("selectedSquadOption",
+                `${groupSelector.getAttribute('data-target')},${groupSelector.querySelector(".custom-select__title").textContent}`);
+            break;
+        }
     }
 }
+
+window.addEventListener('DOMContentLoaded', async () => {
+
+    // First load
+    let lastFilter = localStorage.getItem('homeworks_lastSelectFilter');
+    await setLastSelectedFilter(lastFilter);
+
+    // Search button click handler
+    searchBtn.addEventListener("click", async () => searchHomeworks());
+});

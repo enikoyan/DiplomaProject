@@ -6,71 +6,50 @@
 @model HomeworksPageViewModel
 
 <main class="main dashboard-content-container">
-<h1>Домашние задания</h1>
-<div class="search-row">
-    <select name="filterSelector">
-        <option value="searchBySquads" selected>По группам</option>
-        <option value="searchByCourses">По курсам</option>
-    </select>
-    <select name="courseSelector" class="search-row__filter search-row__filter_courses" style="display:none">
-        @foreach (var item in Model.coursesList)
-        {
-            <option value="@item.OptionValue">@item.CourseName</option>
-        }
-    </select>
-    <select name="groupSelector" class="search-row__filter search-row__filter_student-groups">
-        @foreach (var item in Model.squadsList)
-        {
-            <option value="@item.OptionValue">@item.SquadName</option>
-        }
-    </select>
-    <button class="custom-btn search-row__btn search-row__btn_search">Найти</button>
-    <button class="custom-btn" id="add-homework-btn">Выдать Д/З</button>
-</div>
-<div class="homeworks"></div>
-</main>
-<div class="modal-addItem" id="modal-addHomework">
-    <form class="addItemForm" id="addHomeworkForm" method="post" enctype="multipart/form-data">
-        <div style="display: flex; height: auto; justify-content: space-between; align-items: center;">
-            <h3>Выдать домашнее задание</h3>
-            <button type="button" id="btn-close" aria-label="Close">ㅤ</button>
+    <h1 class="title">Домашние задания</h1>
+    <div class="search-row">
+        <div onclick="selectHandler(this)" class="custom-select" id="filter-select" data-target="none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Поисковый фильтр</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                <li class="custom-options__item" onclick="selectOptionHandler(this, true)" data-value="searchBySquads">По группам</li>
+                <li class="custom-options__item" onclick="selectOptionHandler(this, true)" data-value="searchByCourses">По курсам</li>
+            </ul>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-            <select name="filterSelectorHomework">
-                <option value="searchBySquads">Выбрать группы</option>
-                <option value="searchByCourses">Выбрать курсы</option>
-            </select>
-            <div id="options-container-courses" style="display: none; flex-wrap: wrap; gap: 15px;">
-                @foreach (var item in Model.coursesList)
-                {
-                    <div>
-                        <input type="checkbox" id="@item.OptionValue" name="@item.OptionValue" value="@item.OptionValue" />
-                        <label for="@item.OptionValue">@item.CourseName</label>
-                    </div>
-                }
-            </div>
-            <div id="options-container-squads" style="display: flex; flex-wrap: wrap; gap: 15px; ">
+
+        <div onclick="selectHandler(this)" class="custom-select" id="group-select" data-target="none" style="display:none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Выберите группу</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
                 @foreach (var item in Model.squadsList)
                 {
-                    <div>
-                        <input type="checkbox" id="@item.OptionValue" name="@item.OptionValue" value="@item.OptionValue" />
-                        <label for="@item.OptionValue">@item.SquadName</label>
-                    </div>
+                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="@item.OptionValue">@item.SquadName</li>
                 }
-            </div>
-            <input type="text" required id="homeworkTitleTb" placeholder="Тема: " />
-            <textarea inputmode="latin" required style="resize: none; min-height: 100px;" id="homeworkDescTb" placeholder="Описание: "></textarea>
-            <input type="text" placeholder="Примечание: (необязательно)" id="homeworkNoteTb" />
-            <span>Срок сдачи: </span>
-            <input type="date" id="homewrkDeadlineTb" />
-            <div style="display: flex; justify-content: flex-start; gap: 5px; align-items: center">
-                <input type="checkbox" id="homeworkOffDeadlineBtn" />
-                <label for="homeworkOffDeadlineBtn">бессрочно</label>
-            </div>
-            <input type="file" class="custom-input add-file-input" name="files" multiple />
-            <button type="submit" class="custom-btn" id="send-homeworks-btn">Сохранить</button>
+            </ul>
         </div>
-    </form>
-</div>
-<div class="overlay"></div>
+
+        <div onclick="selectHandler(this)" class="custom-select" id="course-select" data-target="none" style="display:none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Выберите курс</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                @foreach (var item in Model.coursesList)
+                {
+                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="@item.OptionValue">@item.CourseName</li>
+                }
+            </ul>
+        </div>
+
+        <button id="search-btn" class="custom-btn_secondary search-row__btn">Найти</button>
+        <form method="post" asp-action="AddHomework">
+            <button type="submit" class="custom-btn_secondary" id="add-homework-btn">Выдать Д/З</button>
+        </form>
+    </div>
+    <div class="homeworks"></div>
+</main>
 <script src="~/js/homeworks.js"></script>
