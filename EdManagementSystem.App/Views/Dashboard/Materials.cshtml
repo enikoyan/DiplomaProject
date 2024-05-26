@@ -8,62 +8,50 @@
 <main class="main dashboard-content-container">
     <h1 class="title">Материалы</h1>
     <div class="search-row">
-        <select name="filterSelector">
-            <option value="searchBySquads" selected>По группам</option>
-            <option value="searchByCourses">По курсам</option>
-        </select>
-        <select name="courseSelector" class="search-row__filter search-row__filter_courses" style="display:none">
-            @foreach (var item in Model.coursesList)
-            {
-                <option value="@item.OptionValue">@item.CourseName</option>
-            }
-        </select>
-        <select name="groupSelector" class="search-row__filter search-row__filter_student-groups">
-            @foreach (var item in Model.squadsList)
-            {
-                <option value="@item.OptionValue">@item.SquadName</option>
-            }
-        </select>
-        <button class="custom-btn search-row__btn search-row__btn_search">Найти</button>
-        <button class="custom-btn" id="add-material-btn">Добавить материал</button>
+        <div onclick="selectHandler(this)" class="custom-select" id="filter-select" data-target="none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Поисковый фильтр</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                <li class="custom-options__item" onclick="selectOptionHandler(this, true)" data-value="searchBySquads">По группам</li>
+                <li class="custom-options__item" onclick="selectOptionHandler(this, true)" data-value="searchByCourses">По курсам</li>
+            </ul>
+        </div>
+
+        <div onclick="selectHandler(this)" class="custom-select" id="group-select" data-target="none" style="display:none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Выберите группу</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                @foreach (var item in Model.squadsList)
+                {
+                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="@item.OptionValue">@item.SquadName</li>
+                }
+            </ul>
+        </div>
+
+        <div onclick="selectHandler(this)" class="custom-select" id="course-select" data-target="none" style="display:none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Выберите курс</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                @foreach (var item in Model.coursesList)
+                {
+                    <li class="custom-options__item" onclick="selectOptionHandler(this)" data-value="@item.OptionValue">@item.CourseName</li>
+                }
+            </ul>
+        </div>
+        <form method="get" asp-action="AddMaterial">
+            <button type="submit" class="custom-btn_secondary" id="add-material-btn">Добавить материал</button>
+        </form>
     </div>
+
+    <button id="search-btn" class="custom-btn_secondary search-row__btn">Найти</button>
     <div class="found-materials">
         <!-- Material items will be create here using materials.js -->
     </div>
 </main>
-<div class="modal-addItem" id="modal-addMaterial">
-    <form class="addItemForm" id="addMaterialForm" method="post" enctype="multipart/form-data">
-        <div style="display: flex; height: auto; justify-content: space-between; align-items: center;">
-            <h3>Добавить материалы</h3>
-            <button type="button" id="btn-close" aria-label="Close">ㅤ</button>
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 40px;">
-            <select name="filterSelectorMaterial">
-                <option value="searchBySquads">Выбрать группы</option>
-                <option value="searchByCourses">Выбрать курсы</option>
-            </select>
-            <div id="options-container-courses" style="display: none; flex-wrap: wrap; gap: 15px;">
-                @foreach (var item in Model.coursesList)
-                {
-                    <div>
-                        <input type="checkbox" id="@item.OptionValue" name="@item.OptionValue" value="@item.OptionValue" />
-                        <label for="@item.OptionValue">@item.CourseName</label>
-                    </div>
-                }
-            </div>
-            <div id="options-container-squads" style="display: flex; flex-wrap: wrap; gap: 15px; ">
-                @foreach (var item in Model.squadsList)
-                {
-                    <div>
-                        <input type="checkbox" id="@item.OptionValue" name="@item.OptionValue" value="@item.OptionValue" />
-                        <label for="@item.OptionValue">@item.SquadName</label>
-                    </div>
-                }
-            </div>
-            <input type="file" class="custom-input add-file-input" name="files" multiple required>
-            <button type="submit" class="custom-btn" id="send-materials-btn">Сохранить</button>
-        </div>
-    </form>
-</div>
-<div class="overlay"></div>
 <script src="~/js/materials.js"></script>

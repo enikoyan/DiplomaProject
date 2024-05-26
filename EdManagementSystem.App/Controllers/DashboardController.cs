@@ -258,6 +258,31 @@ namespace EdManagementSystem.App.Controllers
 
             return PartialView(materialsData);
         }
+
+        [ResponseCache(Duration = 3600, Location = ResponseCacheLocation.None, VaryByHeader = "User-Agent")]
+        [ActionName("addMaterial")]
+        public async Task<IActionResult> AddMaterial()
+        {
+            userId ??= HttpContext.User.FindFirstValue(ClaimTypes.Name)!;
+
+            cacheKey_materials = $"materialsOf_{userId}";
+
+            var materialsData = await _cacheService.GetOrSetAsync(cacheKey_materials, async () =>
+            {
+                var coursesList = await GetCourses(userId);
+                var squadsList = await GetSquads(userId);
+
+                var materialsVM = new MaterialsPageViewModel
+                {
+                    coursesList = coursesList,
+                    squadsList = squadsList
+                };
+
+                return materialsVM;
+            }, TimeSpan.FromDays(7));
+
+            return PartialView(materialsData);
+        }
         #endregion
 
         #region SchedulePage

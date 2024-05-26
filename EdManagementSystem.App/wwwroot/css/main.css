@@ -518,7 +518,7 @@ h3 {
 
 .found-materials {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 30px;
 }
 .found-materials__item {
@@ -526,10 +526,17 @@ h3 {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  border: 2px solid rgb(138, 138, 138);
+  border: 2px solid #ced3db;
+  background-color: rgba(228, 228, 228, 0.6156862745);
   border-radius: 10px;
   padding: 15px;
   gap: 20px;
+  transition: 0.2s ease-in-out;
+}
+.found-materials__item:hover {
+  transform: translateY(5px);
+  transition: 0.2s ease-in-out;
+  cursor: pointer;
 }
 .found-materials__info {
   display: flex;
@@ -540,6 +547,12 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+.found-materials__info_text span:first-child {
+  font-weight: bold;
+}
+.found-materials__info_text span:last-child {
+  line-height: 1.5;
 }
 .found-materials__btns {
   display: flex;
