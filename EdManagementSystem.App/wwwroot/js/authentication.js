@@ -97,11 +97,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         popupElement.innerHTML = popupHTML;
         document.body.appendChild(popupElement);
 
+        let closeButtonClicked = false;
+
         document.querySelector('.custom-alert__close-btn').addEventListener('click', async () => {
+            closeButtonClicked = true;
             popupElement.remove();
         });
 
-        setTimeout(await destroyMessagePopup, 4000);
+        setTimeout(async () => {
+            if (!closeButtonClicked) {
+                await destroyMessagePopup();
+            }
+        }, 4000);
     }
     async function destroyMessagePopup() {
         const popup = document.querySelector('.custom-alert');

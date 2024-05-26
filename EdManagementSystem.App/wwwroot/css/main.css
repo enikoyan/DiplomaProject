@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*IMPORTS*/
 html {
   font-family: "Open Sans", sans-serif;
@@ -140,6 +141,20 @@ h3 {
 .arrow_left {
   transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
+}
+
+body::-webkit-scrollbar {
+  width: 6px; /* ширина scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+  background: rgba(228, 228, 228, 0.6156862745); /* цвет дорожки */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #cfcfcf; /* цвет плашки */
+  border-radius: 20px; /* закругления плашки */
+  border: 1px solid #ced3db; /* padding вокруг плашки */
 }
 
 .login-form-container {
@@ -922,20 +937,30 @@ input[type=date] {
   right: 0;
   margin: 0 auto;
   border-radius: 15px;
-  display: flex;
-  align-items: center;
   gap: 10px;
   background-color: #ced3db;
   opacity: 0.9;
   padding: 15px 30px;
   justify-content: space-between;
-  width: -moz-fit-content;
-  width: fit-content;
+  max-width: 550px !important;
+  width: -moz-fit-content !important;
+  width: fit-content !important;
   height: -moz-fit-content;
   height: fit-content;
-  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
   cursor: pointer;
+}
+.custom-alert_confirm {
+  align-items: stretch;
+}
+.custom-alert_confirm div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 .custom-alert__icon {
   max-width: 50px;
@@ -943,6 +968,8 @@ input[type=date] {
 .custom-alert__message {
   text-wrap: wrap;
   line-height: 1.3;
+  max-width: -moz-max-content;
+  max-width: max-content;
 }
 .custom-alert.hide {
   transition: 0.5s ease-in-out;
@@ -954,13 +981,10 @@ input[type=date] {
     margin: 25px;
     justify-content: center;
   }
-  .custom-alert__message {
-    text-align: center;
-  }
 }
 .close-btn {
-  width: 30px;
-  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
   border: none;
   background-color: #364c70;
   color: white;

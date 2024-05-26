@@ -147,3 +147,15 @@ h3 {
     -webkit-transform: rotate(135deg);
   }
 }
+
+body::-webkit-scrollbar {
+  width: 6px; /* ширина scrollbar */
+}
+body::-webkit-scrollbar-track {
+  background: $back-color; /* цвет дорожки */
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #cfcfcf; /* цвет плашки */
+  border-radius: 20px; /* закругления плашки */
+  border: 1px solid $border-color; /* padding вокруг плашки */
+}

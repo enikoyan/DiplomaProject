@@ -13,6 +13,11 @@ var isTouched = false;
 var isDeadlineExist = true;
 const createHomeworkApiUrl = "https://localhost:44370/api/Homeworks/CreateHomework";
 
+// Preloader
+var preloader = document.querySelector(".preloader");
+var lottieLogo = document.getElementById("logoLottie");
+var links = document.querySelectorAll("a");
+
 radioBtn.addEventListener('click', function (event) {
     if (this.checked) {
         homeworkDeadlineTb.disabled = true;
@@ -59,6 +64,86 @@ async function selectHandler(container) {
     children[1].classList.toggle("custom-options_disabled");
 }
 
+// Message popup handler
+async function createMessagePopup(messageStatus, messageText) {
+    try {
+        document.querySelector('.custom-alert').remove();
+    }
+    catch {
+
+    }
+
+    let popupHTML =
+        `<div class="custom-alert">
+            <img class="custom-alert__icon" src="../icons/message-icons/${messageStatus}-message.svg" data-status:"${messageStatus}"/>
+            <p class="custom-alert__message">${messageText}</p>
+            <span class="custom-alert__close-btn close-btn"></span>
+        </div>`;
+
+    const popupElement = document.createElement('div');
+    popupElement.innerHTML = popupHTML;
+    document.body.appendChild(popupElement);
+
+    let closeButtonClicked = false;
+
+    document.querySelector('.custom-alert__close-btn').addEventListener('click', async () => {
+        closeButtonClicked = true;
+        popupElement.remove();
+    });
+
+    setTimeout(async () => {
+        if (!closeButtonClicked) {
+            await destroyMessagePopup();
+        }
+    }, 4000);
+}
+
+function confirmPopup(messageText) {
+    return new Promise((resolve, reject) => {
+        try {
+            document.querySelector('.custom-alert').remove();
+        }
+        catch {
+
+        }
+
+        const popupElement = document.createElement('div');
+        const popupHTML =
+        `<div class="custom-alert custom-alert_confirm">
+            <div>
+                <img class="custom-alert__icon" src="../icons/message-icons/info-message.svg" data-status:"info"/>
+                <p class="custom-alert__message">${messageText}</p>
+            </div>
+            <div>
+                <button type="button" class="custom-btn_secondary" data-returnValue="yes">Да</button>
+                <button type="button" class="custom-btn_secondary" data-returnValue="no">Нет</button>
+            </div>
+        </div>`;
+
+        popupElement.innerHTML = popupHTML;
+        document.body.appendChild(popupElement);
+
+        popupElement.querySelector('[data-returnValue="yes"]').addEventListener('click', function () {
+            popupElement.remove();
+            resolve(true);
+        });
+
+        popupElement.querySelector('[data-returnValue="no"]').addEventListener('click', function () {
+            popupElement.remove();
+            resolve(false);
+        });
+    });
+}
+
+async function destroyMessagePopup() {
+    const popup = document.querySelector('.custom-alert');
+    popup.classList.add('hide');
+
+    setTimeout(() => {
+        popup.remove();
+    }, 500);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
     // File drug and drop
@@ -94,7 +179,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     async function createHomework() {
+        setTimeout(function () {
+            preloader.classList.remove("preloader_hidden");
+            lottieLogo.classList.remove("logoLottie_hidden");
+            animation.play();
+        }, 400);
+
         const formData = new FormData();
+        const checkedValues = [];
 
         // Adding files 
         const attachedFiles = fileInput.files;
@@ -111,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function () {
         switch (filterSelector.getAttribute('data-target')) {
             case "searchByCourses": {
                 const checkedCheckboxes = optionsContainerCourses.querySelectorAll('input[type="checkbox"]:checked');
-                const checkedValues = [];
                 checkedCheckboxes.forEach((checkbox) => {
                     checkedValues.push(checkbox.value);
                 });
@@ -121,7 +212,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             case "searchBySquads": {
                 const checkedCheckboxes = optionsContainerSquads.querySelectorAll('input[type="checkbox"]:checked');
-                const checkedValues = [];
                 checkedCheckboxes.forEach((checkbox) => {
                     checkedValues.push(checkbox.value);
                 });
@@ -150,10 +240,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Calling API method
         fetch(createHomeworkApiUrl, requestOptions)
-            .then((response) => {
+            .then(async (response) => {
                 if (!response.ok) {
-                    return response.text().then((text) => {
-                        alert(text);
+                    return response.text().then(async (text) => {
+                        await createMessagePopup("warning", text);
                     });
                 } else {
                     return response.text();
@@ -161,38 +251,60 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .then(async (data) => {
                 if (data) {
-                    if (confirm("Домашнее задание успешно выдано! Хотите вернуться назад к списку Д/З?")) {
+                    switch (filterSelector.getAttribute('data-target')) {
+                        case "searchByCourses": {
+                            for (var i = 0; i < checkedValues.length; i++) {
+                                localStorage.removeItem(`homeworksData / Course / ${checkedValues[i]}`);
+                            }
+                            break;
+                        }
+                        case "searchBySquads": {
+                            for (var i = 0; i < checkedValues.length; i++) {
+                                localStorage.removeItem(`homeworksData / Squad / ${checkedValues[i]}`);
+                            }
+                            break;
+                        }
+                    }
+
+                    setTimeout(function () {
+                        preloader.classList.add("preloader_hidden");
+                        lottieLogo.classList.add("logoLottie_hidden");
+                        animation.pause();
+                    }, 400);
+
+                    var result = await confirmPopup("Домашнее задание успешно выдано! Хотите вернуться назад к списку Д/З?");
+                    if (result == true) {
                         window.location.href = 'https://localhost:44354/dashboard/homeworks';
-                    } else {
+                    } else if (result == false) {
                         location.reload();
                     }
                 }
             })
-            .catch((error) => {
-                console.log(error);
+            .catch(async (error) => {
+                await createMessagePopup("error", error.message);
             });
     }
 
     async function checkFilled() {
         const checkboxList = document.querySelectorAll('.custom-checkbox:checked');
         if (checkboxList.length == 0) {
-            alert("Выберите хотя бы одну группу или курс!");
+            await createMessagePopup("warning", "Выберите хотя бы одну группу или курс!");
             return false;
         }
         else {
             if (homeworkTitleTb.value.trim().length === 0) {
                 homeworkTitleTb.classList.add('custom-input_errored');
-                alert("Заполните обязательные поля (тема, описание)!");
+                await createMessagePopup("warning", "Заполните обязательные поля (тема, описание)!");
                 return false;
             }
             else if (homeworkDescTb.value.trim().length === 0) {
                 homeworkTitleTb.classList.add('custom-input_correct');
                 homeworkDescTb.classList.add('custom-input_errored');
-                alert("Заполните обязательные поля (тема, описание)!");
+                await createMessagePopup("warning", "Заполните обязательные поля (тема, описание)!");
                 return false;
             }
             else if (homeworkDeadlineTb.value == "" && isDeadlineExist) {
-                alert("Укажите срок сдачи!");
+                await createMessagePopup("warning", "Укажите срок сдачи!");
             }
             else {
                 return true;
@@ -204,9 +316,3 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = 'https://localhost:44354/dashboard/homeworks';
     });
 });
-
-window.onbeforeunload = function () {
-    if (!isTouched) {
-        return "Данные не сохранены. Точно перейти?";
-    }
-}

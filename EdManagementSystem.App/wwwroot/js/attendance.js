@@ -2,9 +2,7 @@
 const weekInput = document.getElementById("weekInput");
 const stepUpBtn = document.getElementById("nextWeekBtn");
 const stepDownBtn = document.getElementById("previousWeekBtn");
-const attendanceSelectVars = document.querySelectorAll(
-    ".attendance-popup__text"
-);
+const attendanceSelectVars = document.querySelectorAll(".attendance-popup__text");
 const popup = document.querySelector(".attendance-popup");
 const groupSelector = document.getElementById("group-select");
 const attendanceBody = document.querySelector(".attendance-body");
@@ -28,6 +26,91 @@ const attendanceIconMap = {
 };
 const createAttendanceItemAPI = "https://localhost:44370/api/Attendances/CreateAttendanceItem";
 const checkAttendanceItemAPI = "https://localhost:44370/api/Attendances/CreateAttendanceMatrix";
+
+// Preloader
+var preloader = document.querySelector(".preloader");
+var lottieLogo = document.getElementById("logoLottie");
+var links = document.querySelectorAll("a");
+
+// Message popup handler
+async function createMessagePopup(messageStatus, messageText) {
+    try {
+        document.querySelector('.custom-alert').remove();
+    }
+    catch {
+
+    }
+
+    let popupHTML =
+        `<div class="custom-alert">
+            <img class="custom-alert__icon" src="../icons/message-icons/${messageStatus}-message.svg" data-status:"${messageStatus}"/>
+            <p class="custom-alert__message">${messageText}</p>
+            <span class="custom-alert__close-btn close-btn"></span>
+        </div>`;
+
+    const popupElement = document.createElement('div');
+    popupElement.innerHTML = popupHTML;
+    document.body.appendChild(popupElement);
+
+    let closeButtonClicked = false;
+
+    document.querySelector('.custom-alert__close-btn').addEventListener('click', async () => {
+        closeButtonClicked = true;
+        popupElement.remove();
+    });
+
+    setTimeout(async () => {
+        if (!closeButtonClicked) {
+            await destroyMessagePopup();
+        }
+    }, 4000);
+}
+
+function confirmPopup(messageText) {
+    return new Promise((resolve, reject) => {
+        try {
+            document.querySelector('.custom-alert').remove();
+        }
+        catch {
+
+        }
+
+        const popupElement = document.createElement('div');
+        const popupHTML =
+            `<div class="custom-alert custom-alert_confirm">
+            <div>
+                <img class="custom-alert__icon" src="../icons/message-icons/info-message.svg" data-status:"info"/>
+                <p class="custom-alert__message">${messageText}</p>
+            </div>
+            <div>
+                <button type="button" class="custom-btn_secondary" data-returnValue="yes">Да</button>
+                <button type="button" class="custom-btn_secondary" data-returnValue="no">Нет</button>
+            </div>
+        </div>`;
+
+        popupElement.innerHTML = popupHTML;
+        document.body.appendChild(popupElement);
+
+        popupElement.querySelector('[data-returnValue="yes"]').addEventListener('click', function () {
+            popupElement.remove();
+            resolve(true);
+        });
+
+        popupElement.querySelector('[data-returnValue="no"]').addEventListener('click', function () {
+            popupElement.remove();
+            resolve(false);
+        });
+    });
+}
+
+async function destroyMessagePopup() {
+    const popup = document.querySelector('.custom-alert');
+    popup.classList.add('hide');
+
+    setTimeout(() => {
+        popup.remove();
+    }, 500);
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
 
@@ -128,7 +211,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             saveAsExcelBtn.disabled = false;
         }
         else {
-            alert("Студенты не найдены!");
+            await createMessagePopup("warning", "Студенты не найдены!");
         }
 
         await attendanceBtnHandler();
@@ -158,8 +241,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 localStorage.setItem("attendance_selectedWeek", weekInput.value);
             }
             else {
-                //console.log("Информация не найдена!");
-                //alert("Информация не найдена!");
+                await createMessagePopup("warning", "Информация не найдена!");
                 await changeAttendanceTableDate();
                 await createTableOfStudents();
             }
@@ -353,7 +435,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function confirmAttendance() {
         if (confirm("Сохранить изменения?")) {
             if (await saveAttendanceLocally()) {
-                alert("Посещаемость успешно сохранена!");
+                await createMessagePopup("Посещаемость успешно сохранена!");
                 saveAttendanceBtn.disabled = true;
                 sendAttendanceBtn.disabled = false;
             }
@@ -389,7 +471,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     saveAttendanceBtn.addEventListener('click', async () => {
         // SAVE LOCALLY
         if (await saveAttendanceLocally()) {
-            alert("Посещаемость успешно сохранена!");
+            await createMessagePopup("success", "Посещаемость успешно сохранена!");
             isAttendanceSaved = true;
             saveAttendanceBtn.disabled = true;
             sendAttendanceBtn.disabled = false;
@@ -457,6 +539,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     async function sendExcelAttendanceToServer(table) {
         if (isAttendanceSaved) {
+            setTimeout(function () {
+                preloader.classList.remove("preloader_hidden");
+                lottieLogo.classList.remove("logoLottie_hidden");
+                animation.play();
+            }, 400);
+
             // Упаковка данных для отправки
             var attendanceFile = await getExcelAttendanceForServer(table);
             let dataSend = new FormData();
@@ -469,23 +557,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                 method: 'POST',
                 body: dataSend
             })
-                .then(response => {
+                .then(async response => {
                     if (!response.ok) {
-                        console.log('Не удалось отправить файл!');
+                        await createMessagePopup("error", "Не удалось отправить файл!");
                     }
                     return response.text();
                 })
                 .then(async data => {
                     if (data) {
-                        alert("Посещаемость успешно отправлена на сервер!");
+                        setTimeout(function () {
+                            preloader.classList.add("preloader_hidden");
+                            lottieLogo.classList.add("logoLottie_hidden");
+                            animation.pause();
+                        }, 400);
+                        await createMessagePopup("info", "Посещаемость успешно отправлена на сервер!");
                     }
                 })
-                .catch(error => {
-                    console.log('Возникла ошибка:', error);
+                .catch(async error => {
+                    await createMessagePopup("error", error);
                 });
         }
         else {
-            alert("Сохраните изменения перед отправкой!");
+            await createMessagePopup("warning", "Сохраните изменения перед отправкой!");
         }
     }
     async function loadExcelAttendanceFromServer() {
@@ -506,23 +599,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             })
             .then(async data => {
                 if (data) {
-                    let answer = confirm("Информация на сервере присутствует, хотите загрузить её?");
-                    if (answer) {
+                    let answer = await confirmPopup("Информация на сервере присутствует, хотите загрузить её?");
+                    if (answer == true) {
                         localStorage.setItem(`attendanceDATA_${groupSelector.getAttribute('data-target')}_${weekInput.value}`, JSON.stringify(data));
-                        alert("Посещаемость успешно обновлена!");
+                        await createMessagePopup("info", "Посещаемость успешно обновлена!");
                         await fillTableOfStudents();
                     }
                 }
-                else console.log("НЕТ ПОСЕЩАЕМОСТИ НА СЕРВЕРЕ!");
+                else await createMessagePopup("warning", "Информация на сервере отсутствует!");
             })
-            .catch(error => {
-                console.log('Возникла ошибка:', error);
+            .catch(async error => {
+                await createMessagePopup("error", error);
             });
     }
 });
-
-window.onbeforeunload = function () {
-    if (!isAttendanceSaved) {
-        return "Данные не сохранены. Точно перейти?";
-    }
-};

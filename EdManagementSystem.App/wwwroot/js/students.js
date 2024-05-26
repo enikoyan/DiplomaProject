@@ -66,9 +66,9 @@ async function switchSelects(value) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     // API calling
-    searchBtn.addEventListener('click', () => {
+    searchBtn.addEventListener('click', async () => {
         if (filterSelector.getAttribute('data-target') === 'none') {
-            alert('Вы не выбрали фильтр для поиска!');
+            await createMessagePopup("warning", "Вы не выбрали фильтр для поиска!");
         }
         else {
             let selectedAPI = "";
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     saveAsPdfBtn.disabled = false;
                     return response.json();
                 })
-                .then(data => {
+                .then(async data => {
                     // Get table from Html
                     const studentsTable = document.querySelector('.custom-table_student-list');
 
@@ -127,9 +127,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     // Insert tbody before tfoot
                     const tFoot = studentsTable.querySelector('tfoot');
                     studentsTable.insertBefore(tBody, tFoot);
+
+                    await createMessagePopup("success", "Данные успешно найдены!");
                 })
-                .catch(error => {
-                    alert(error.message);
+                .catch(async error => {
+                    await createMessagePopup("error", error);
                 })
         }
     });
@@ -161,4 +163,47 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         pdfMake.createPdf(dd).download('Список студентов');
     });
+
+    // Message popup handler
+    async function createMessagePopup(messageStatus, messageText) {
+        try {
+            document.querySelector('.custom-alert').remove();
+        }
+        catch {
+
+        }
+
+        let popupHTML =
+            `<div class="custom-alert">
+            <img class="custom-alert__icon" src="../icons/message-icons/${messageStatus}-message.svg" data-status:"${messageStatus}"/>
+            <p class="custom-alert__message">${messageText}</p>
+            <span class="custom-alert__close-btn close-btn"></span>
+        </div>`;
+
+        const popupElement = document.createElement('div');
+        popupElement.innerHTML = popupHTML;
+        document.body.appendChild(popupElement);
+
+        let closeButtonClicked = false;
+
+        document.querySelector('.custom-alert__close-btn').addEventListener('click', async () => {
+            closeButtonClicked = true;
+            popupElement.remove();
+        });
+
+        setTimeout(async () => {
+            if (!closeButtonClicked) {
+                await destroyMessagePopup();
+            }
+        }, 4000);
+    }
+
+    async function destroyMessagePopup() {
+        const popup = document.querySelector('.custom-alert');
+        popup.classList.add('hide');
+
+        setTimeout(() => {
+            popup.remove();
+        }, 500);
+    }
 });

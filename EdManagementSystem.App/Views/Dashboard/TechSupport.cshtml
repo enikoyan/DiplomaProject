@@ -26,8 +26,7 @@
         <h3>Не нашли ответа на свой вопрос?</h3>
         <p>Опишите проблему в поле ниже и с вами обязательно свяжутся по электронной почте, указанной в профиле!</p>
         <form id="submit-form" method="post" class="question-form__container" asp-antiforgery="false">
-            <span style="color: red;" id="warningMessage"></span>
-            <textarea required id="question-form__text" class="custom-textArea" style="resize:none" name="question" rows="10"></textarea>
+            <textarea id="question-form__text" class="custom-textArea" style="resize:none" name="question" rows="10"></textarea>
             <button id="submit-btn" type="submit" class="custom-btn question-form__btn">Отправить</button>
         </form>
     </div>

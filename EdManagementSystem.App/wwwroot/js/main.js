@@ -24,6 +24,43 @@ const animation = lottie.loadAnimation({
     path: "../js/outerJS/lottie_logo.json",
 });
 
+async function confirmPopup(messageText) {
+    return new Promise((resolve, reject) => {
+        try {
+            document.querySelector('.custom-alert').remove();
+        }
+        catch {
+
+        }
+
+        const popupElement = document.createElement('div');
+        const popupHTML =
+            `<div class="custom-alert custom-alert_confirm">
+            <div>
+                <img class="custom-alert__icon" src="../icons/message-icons/info-message.svg" data-status:"info"/>
+                <p class="custom-alert__message">${messageText}</p>
+            </div>
+            <div>
+                <button type="button" class="custom-btn_secondary" data-returnValue="yes">Да</button>
+                <button type="button" class="custom-btn_secondary" data-returnValue="no">Нет</button>
+            </div>
+        </div>`;
+
+        popupElement.innerHTML = popupHTML;
+        document.body.appendChild(popupElement);
+
+        popupElement.querySelector('[data-returnValue="yes"]').addEventListener('click', function () {
+            popupElement.remove();
+            resolve(true);
+        });
+
+        popupElement.querySelector('[data-returnValue="no"]').addEventListener('click', function () {
+            popupElement.remove();
+            resolve(false);
+        });
+    });
+}
+
 window.addEventListener("DOMContentLoaded", async () => {
 
     // Preloader handler
@@ -32,6 +69,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             setTimeout(function () {
                 preloader.classList.remove("preloader_hidden");
                 lottieLogo.classList.remove("logoLottie_hidden");
+                animation.play();
             }, 800);
         });
     });
@@ -40,6 +78,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         setTimeout(function () {
             preloader.classList.add("preloader_hidden");
             lottieLogo.classList.add("logoLottie_hidden");
+            animation.pause();
         }, 1000);
     });
 
@@ -50,8 +89,8 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     logoutItem.addEventListener("click", async (event) => {
         event.preventDefault();
-        const confirmLogout = confirm("Вы уверены, что хотите выйти?");
-        if (confirmLogout) {
+        const confirmLogout = await confirmPopup("Вы уверены, что хотите выйти?");
+        if (confirmLogout == true) {
             logoutForm.submit();
         }
     });

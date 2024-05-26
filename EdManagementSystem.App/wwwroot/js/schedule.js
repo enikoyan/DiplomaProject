@@ -46,14 +46,11 @@
         // Check localStorage
         if (localStorage.getItem(`weekSchedule / ${teacherEmail} / ${weekInput.value}`)) {
             const weekScheduleJSON = getWeekSchedule(weekInput.value).schedule;
-            errorMessage.style.display = "none";
             await clearScheduleEvents();
             await createScheduleEvents(weekScheduleJSON);
         }
         else await extractScheduleFromAPI();
     }
-
-    /* ПРИ ОБНОВЛЕНИИ УДАЛИТЬ LOCALSTORAGE ЕСЛИ ЕСТЬ И ВЫЗВАТЬ CREATESCHEDULE ДЛЯ ТЕКУЩЕЙ НЕДЕЛИ !!!!!!!!!!!!!!!!!! */
 
     // Create events in HTML
     async function createScheduleEvents(data) {
@@ -140,13 +137,12 @@
             .then(async response => {
                 if (!response.ok) {
                     response.text().then(async text => {
-                        errorMessage.style.display = "block";
-                        errorMessage.textContent = text;
+                        await createMessagePopup("error", text);
                         isScheduleFound = false;
                     });
                 }
                 else {
-                    errorMessage.style.display = "none";
+                    await createMessagePopup("success", "Расписание успешно загружено!");
                     isScheduleFound = true;
                     return response.json();
                 }
@@ -160,7 +156,7 @@
                 }
             })
             .catch(error => {
-                console.log(error.message);
+                console.log(error);
             });
     }
 
@@ -256,5 +252,48 @@
             firstDay: firstDay.toISOString().split('T')[0],
             lastDay: lastDay.toISOString().split('T')[0]
         };
+    }
+
+    // Message popup handler
+    async function createMessagePopup(messageStatus, messageText) {
+        try {
+            document.querySelector('.custom-alert').remove();
+        }
+        catch {
+
+        }
+
+        let popupHTML =
+            `<div class="custom-alert">
+            <img class="custom-alert__icon" src="../icons/message-icons/${messageStatus}-message.svg" data-status:"${messageStatus}"/>
+            <p class="custom-alert__message">${messageText}</p>
+            <span class="custom-alert__close-btn close-btn"></span>
+        </div>`;
+
+        const popupElement = document.createElement('div');
+        popupElement.innerHTML = popupHTML;
+        document.body.appendChild(popupElement);
+
+        let closeButtonClicked = false;
+
+        document.querySelector('.custom-alert__close-btn').addEventListener('click', async () => {
+            closeButtonClicked = true;
+            popupElement.remove();
+        });
+
+        setTimeout(async () => {
+            if (!closeButtonClicked) {
+                await destroyMessagePopup();
+            }
+        }, 4000);
+    }
+
+    async function destroyMessagePopup() {
+        const popup = document.querySelector('.custom-alert');
+        popup.classList.add('hide');
+
+        setTimeout(() => {
+            popup.remove();
+        }, 500);
     }
 });
