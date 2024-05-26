@@ -5,30 +5,32 @@
 @model List<TechSupportViewModel>
 
 <main class="main dashboard-content-container">
-<h1 class="title">Техническая поддержка</h1>
-<h3>Часто задаваемые вопросы</h3>
-<div class="questions">
-    @foreach (var question in Model)
-    {
-        <div class="questions-item">
-            <div class="questions-item__header">
-                <h4 class="questions-item__title">@question.Question</h4>
-                <button class="questions-item__toggle-btn">+</button>
+    <h1 class="title">Техническая поддержка</h1>
+    <h3>Часто задаваемые вопросы</h3>
+    <div class="questions">
+        @foreach (var question in Model)
+        {
+            <div class="questions-item">
+                <div class="questions-item__header">
+                    <h4 class="questions-item__title">@question.Question</h4>
+                    <button class="custom-select__btn">
+                        <i class="arrow arrow_down"></i>
+                    </button>
+                </div>
+                <p class="questions-item__answer">@question.Answer</p>
             </div>
-            <p class="questions-item__answer">@question.Answer</p>
-        </div>
-    }
-</div>
-<hr width="100%" size="1" color="#c3c3c3"/>
-<div class="question-form">
-    <h3>Не нашли ответа на свой вопрос?</h3>
-    <p>Опишите проблему в поле ниже и с вами обязательно свяжутся по электронной почте, указанной в профиле!</p>
-    <form id="submit-form" method="post" class="question-form__container" asp-antiforgery="false">
-        <span style="color: red;" id="warningMessage"></span>
-        <textarea required id="question-form__text" name="question" rows="10"></textarea>
-        <button id="submit-btn" type="submit" class="custom-btn question-form__btn">Отправить</button>
-    </form>
-</div>
+        }
+    </div>
+    <hr width="100%" size="1" color="#c3c3c3" />
+    <div class="question-form">
+        <h3>Не нашли ответа на свой вопрос?</h3>
+        <p>Опишите проблему в поле ниже и с вами обязательно свяжутся по электронной почте, указанной в профиле!</p>
+        <form id="submit-form" method="post" class="question-form__container" asp-antiforgery="false">
+            <span style="color: red;" id="warningMessage"></span>
+            <textarea required id="question-form__text" class="custom-textArea" style="resize:none" name="question" rows="10"></textarea>
+            <button id="submit-btn" type="submit" class="custom-btn question-form__btn">Отправить</button>
+        </form>
+    </div>
 </main>
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script asp-append-version="true" src="~/js/techSupport.js"></script>

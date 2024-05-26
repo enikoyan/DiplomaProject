@@ -457,13 +457,19 @@ h3 {
 }
 
 .questions-item {
-  background-color: rgb(204, 204, 204);
+  background-color: rgba(228, 228, 228, 0.6156862745);
+  border: 2px solid #ced3db;
   border-radius: 10px;
   padding: 15px;
   display: flex;
   flex-direction: column;
   align-self: flex-start;
   gap: 5px;
+  transition: border 0.2s ease-in-out;
+}
+.questions-item_active {
+  border: 2px solid #128dff;
+  transition: border 0.2s ease-in-out;
 }
 .questions-item__header {
   display: flex;
@@ -471,10 +477,15 @@ h3 {
   align-items: center;
   gap: 5px;
 }
+.questions-item__title {
+  font-weight: 600;
+  line-height: 1.5;
+}
 .questions-item__answer {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s ease-out;
+  line-height: 1.5;
 }
 
 .question-form {

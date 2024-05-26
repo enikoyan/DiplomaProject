@@ -1,15 +1,18 @@
 ﻿$(document).ready(function () {
-    $("body").on("click", ".questions-item__toggle-btn", function () {
+    $("body").on("click", ".custom-select__btn", function () {
         const btn = $(this);
         const parent = btn.closest(".questions-item");
         const answer = parent.find(".questions-item__answer");
 
-        if (btn.text() === "+") {
-            btn.text("-");
-            answer.css("max-height", answer[0].scrollHeight + "px");
-        } else {
-            btn.text("+");
+        if (btn.hasClass('custom-select__btn_active')) {
+            btn.removeClass('custom-select__btn_active');
+            parent.removeClass('questions-item_active');
             answer.css("max-height", "0");
+
+        } else {
+            btn.addClass('custom-select__btn_active');
+            parent.addClass('questions-item_active');
+            answer.css("max-height", answer[0].scrollHeight + "px");
         }
     });
 
