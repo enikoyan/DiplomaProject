@@ -259,7 +259,7 @@ h3 {
 }
 .aside-menu__item:hover {
   transition: 0.2s ease-in;
-  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
 }
 .aside-menu__item:last-child:hover {
   cursor: pointer;
@@ -753,7 +753,7 @@ input[type=date] {
   width: 100%;
   height: 30%;
   margin-bottom: 20px;
-  border: 1px solid #dddddd;
+  border: 2px solid #ced3db;
   border-collapse: collapse;
   position: relative;
 }
@@ -761,14 +761,14 @@ input[type=date] {
 .custom-table-attendance tr {
   font-weight: bold;
   padding: 5px;
-  background: #efefef;
-  border: 1px solid #dddddd;
+  background: rgba(228, 228, 228, 0.6156862745);
+  border: 2px solid #ced3db;
 }
 .custom-table-attendance tr {
   font-weight: 400;
 }
 .custom-table-attendance td {
-  border: 1px solid #dddddd;
+  border: 2px solid #ced3db;
   position: relative;
   min-width: 50px;
 }
@@ -780,6 +780,9 @@ input[type=date] {
 .attendance-icon {
   width: 70%;
   height: 70%;
+}
+.attendance-icon:hover {
+  cursor: pointer;
 }
 
 .attendance-btn {
@@ -798,7 +801,8 @@ input[type=date] {
   position: absolute;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #e6e6e6;
+  background-color: #e0e0e0;
+  border: 2px solid #ced3db;
   width: 180px;
   padding: 15px;
   border-radius: 10px;
@@ -809,23 +813,38 @@ input[type=date] {
   position: absolute;
   border-width: 10px;
   border-style: solid;
-  border-color: transparent transparent #e6e6e6;
+  border-color: transparent transparent #e0e0e0;
   top: -20px;
   left: 50%;
   transform: translateX(-50%);
 }
 .attendance-popup__content {
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 5px;
 }
 .attendance-popup__row {
   display: flex;
   align-items: center;
   gap: 15px;
   padding: 15px;
-  border-bottom: 1px solid rgb(160, 160, 160);
+  border-bottom: 2px solid #ced3db;
+}
+.attendance-popup__row span {
+  transition: -webkit-text-decoration 0.2s ease-in-out;
+  transition: text-decoration 0.2s ease-in-out;
+  transition: text-decoration 0.2s ease-in-out, -webkit-text-decoration 0.2s ease-in-out;
+  text-decoration: underline;
+  text-decoration-color: transparent;
 }
 .attendance-popup__row span:hover {
-  text-decoration: underline;
+  transition: -webkit-text-decoration 0.2s ease-in-out;
+  transition: text-decoration 0.2s ease-in-out;
+  transition: text-decoration 0.2s ease-in-out, -webkit-text-decoration 0.2s ease-in-out;
+  color: #128dff;
+  text-decoration-color: #128dff;
   cursor: pointer;
 }
 .attendance-popup__icon {
@@ -872,7 +891,7 @@ input[type=date] {
   height: -moz-fit-content;
   height: fit-content;
   flex-wrap: wrap;
-  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
   cursor: pointer;
 }
 .custom-alert__icon {
@@ -1008,7 +1027,7 @@ input[type=date] {
 .custom-btn_secondary:hover {
   transition: box-shadow 0.2s ease-in-out;
   background-color: transparent;
-  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
   cursor: pointer;
 }
 .custom-btn_secondary:focus {
@@ -1016,6 +1035,8 @@ input[type=date] {
 }
 .custom-btn_secondary:disabled {
   opacity: 0.4;
+  box-shadow: none;
+  cursor: not-allowed;
 }
 
 .custom-select {

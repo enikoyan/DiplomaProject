@@ -6,9 +6,7 @@ const attendanceSelectVars = document.querySelectorAll(
     ".attendance-popup__text"
 );
 const popup = document.querySelector(".attendance-popup");
-const groupSelector = document.querySelector(
-    ".search-row__filter_student-groups"
-);
+const groupSelector = document.getElementById("group-select");
 const attendanceBody = document.querySelector(".attendance-body");
 const attendanceDate = document.getElementById("attendance-table-date");
 const attendanceTable = document.querySelector(".custom-table-attendance");
@@ -17,6 +15,8 @@ const saveAsExcelBtn = document.getElementById("downloadExcelTable");
 const saveAttendanceBtn = document.getElementById("saveAttendanceBtn");
 const sendAttendanceBtn = document.getElementById("sendAttendanceBtn");
 const checkAttendanceInServerBtn = document.getElementById('checkAttendanceInServerBtn');
+const filterTitle = document.querySelector(".custom-select__title");
+const filterOptions = document.querySelectorAll(".custom-options__item");
 var isTableTouched = false;
 var isAttendanceSaved = true;
 var tdFioValue = "";
@@ -31,6 +31,29 @@ const checkAttendanceItemAPI = "https://localhost:44370/api/Attendances/CreateAt
 
 document.addEventListener('DOMContentLoaded', async () => {
 
+    /* FILTER SELECTOR HANDLER */
+    groupSelector.addEventListener('click', async () => {
+        const children = Array.from(groupSelector.children);
+
+        children[0].classList.toggle("custom-select__btn_active");
+        children[1].classList.toggle("custom-options_disabled");
+    });
+
+    filterOptions.forEach(item => {
+        item.addEventListener('click', async () => {
+            const value = item.getAttribute("data-value");
+            //const valueText = selectedOption.textContent;
+            const customSelect = item.closest(".custom-select");
+            const customSelectTitle = customSelect.querySelector(".custom-select__title");
+
+            customSelectTitle.textContent = item.textContent;
+            customSelect.setAttribute("data-target", value);
+
+            await createTableOfStudents();
+            localStorage.setItem('attendance_selectedWeek', weekInput.value);
+        });
+    })
+
     // Check selected squad
     await checkSelectedSquad();
     // Check selected date
@@ -41,7 +64,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // WEEK INPUT
     async function checkSelectedSquad() {
         if (localStorage.getItem("attendance_selectedSquad")) {
-            groupSelector.value = localStorage.getItem("attendance_selectedSquad");
+            groupSelector.setAttribute('data-target', localStorage.getItem("attendance_selectedSquad"));
+            const targetValue = groupSelector.getAttribute('data-target');
+            const targetOption = groupSelector.querySelector(`.custom-options__item[data-value="${targetValue}"]`);
+            filterTitle.textContent = targetOption.textContent;
+
             await createTableOfStudents();
         }
     }
@@ -50,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             weekInput.value = localStorage.getItem("attendance_selectedWeek");
             await changeAttendanceTableDate();
 
-            if (localStorage.getItem(`attendanceDATA_${groupSelector.value}_${weekInput.value}`)) {
+            if (localStorage.getItem(`attendanceDATA_${groupSelector.getAttribute('data-target')}_${weekInput.value}`)) {
                 await fillTableOfStudents();
             }
         }
@@ -64,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Attendance TABLE
     async function createTableOfStudents() {
         let count = 0;
-        let selectedSquad = groupSelector.value;
+        let selectedSquad = groupSelector.getAttribute('data-target');
 
         // Get students list
         const studentsList = JSON.parse(localStorage.getItem("studentsList"));
@@ -95,6 +122,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 attendanceBody.appendChild(tRow);
             });
+
+            sendAttendanceBtn.disabled = false;
+            saveAsPdfBtn.disabled = false;
+            saveAsExcelBtn.disabled = false;
         }
         else {
             alert("Студенты не найдены!");
@@ -106,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const storedData = JSON.parse(
                 localStorage.getItem(
-                    `attendanceDATA_${groupSelector.value}_${weekInput.value}`
+                    `attendanceDATA_${groupSelector.getAttribute('data-target')}_${weekInput.value}`
                 )
             );
             if (storedData != null) {
@@ -157,7 +188,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             localStorage.setItem(
-                `attendanceDATA_${groupSelector.value}_${weekInput.value}`,
+                `attendanceDATA_${groupSelector.getAttribute('data-target')}_${weekInput.value}`,
                 JSON.stringify(attendanceData)
             );
 
@@ -200,9 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const dateEnd = (await getWeekBorders(weekInput.value)).lastDay;
 
         XLSX.writeFile(
-            wb,
-            `Посещаемость ${groupSelector.options[groupSelector.selectedIndex].text
-            } (${dateStart}-${dateEnd}).xlsx`
+            wb, `Посещаемость ${filterTitle.textContent} (${dateStart}-${dateEnd}).xlsx`
         );
     }
     async function createPdfAttendance(table) {
@@ -219,8 +248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         pdfMake
             .createPdf(dd)
             .download(
-                `Посещаемость ${groupSelector.options[groupSelector.selectedIndex].text
-                } (${dateStart}-${dateEnd}).pdf`
+                `Посещаемость ${filterTitle.textContent} (${dateStart}-${dateEnd}).pdf`
             );
     }
     async function createAttendanceMatrix() {
@@ -358,10 +386,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         await createTableOfStudents();
         await fillTableOfStudents();
     });
-    groupSelector.addEventListener('change', async () => {
-        await createTableOfStudents();
-        localStorage.setItem('attendance_selectedWeek', weekInput.value);
-    });
     saveAttendanceBtn.addEventListener('click', async () => {
         // SAVE LOCALLY
         if (await saveAttendanceLocally()) {
@@ -390,9 +414,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         await sendExcelAttendanceToServer(table);
     });
     checkAttendanceInServerBtn.addEventListener('click', async () => await loadExcelAttendanceFromServer());
-
-    // ПОД НАДПИСЬЮ УЧЕТ ПОСЕЩАЕМОСТИ ДОБАВИТЬ ПАРАГРАФ ГДЕ НАПИСАТЬ ТИПА ВЫ МОЖЕТЕ СОЗДАТЬ РАСПИСАНИЕ В РУЧНУЮ
-    //ИЛИ ПРОВЕРИТЬ ЕСТЬ ЛИ ОНО УЖЕ И ЗАГРУЗИТЬ ЕГО В СЛУЧАЕ ЕСЛИ ЕСТЬ
 
     // SERVER SIDE
     async function getExcelAttendanceForServer(table) {
@@ -427,7 +448,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const wbArrayBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
 
-        const fileName = `Посещаемость ${groupSelector.options[groupSelector.selectedIndex].text} (${dateStart}-${dateEnd}).xlsx`;
+        const fileName = `Посещаемость ${filterTitle.textContent} (${dateStart}-${dateEnd}).xlsx`;
 
         return {
             fileName: fileName,
@@ -470,7 +491,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadExcelAttendanceFromServer() {
         // Get current attendance matrix from server
         let dataSend = new FormData();
-        dataSend.append("squadName", groupSelector.value);
+        dataSend.append("squadName", groupSelector.getAttribute('data-target'));
         dataSend.append("weekDate", weekInput.value);
 
         fetch(checkAttendanceItemAPI, {
@@ -487,7 +508,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (data) {
                     let answer = confirm("Информация на сервере присутствует, хотите загрузить её?");
                     if (answer) {
-                        localStorage.setItem(`attendanceDATA_${groupSelector.value}_${weekInput.value}`, JSON.stringify(data));
+                        localStorage.setItem(`attendanceDATA_${groupSelector.getAttribute('data-target')}_${weekInput.value}`, JSON.stringify(data));
                         alert("Посещаемость успешно обновлена!");
                         await fillTableOfStudents();
                     }

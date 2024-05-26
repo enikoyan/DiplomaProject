@@ -19,30 +19,36 @@
 }
 
 <main class="main dashboard-content-container">
-    <h1>Учет посещаемости</h1>
+    <h1 class="title">Учет посещаемости</h1>
     <div class="search-row">
-        <span>Текущая дата: @DateTime.UtcNow.Date.Day апреля</span>
+        <span><strong style="font-weight: 600">Текущая дата: </strong><date>@DateTime.UtcNow.Date.Day апреля</date></span>
+        
     </div>
     <div class="search-row">
-        <span>Выберите группу</span>
-        <select name="groupSelector" class="search-row__filter search-row__filter_student-groups">
-            @foreach (var item in Model.squadsList)
-            {
-                <option value="@item.OptionValue">@item.SquadName</option>
-            }
-        </select>
+        <div class="custom-select" id="group-select" data-target="none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Выберите группу</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                @foreach (var item in Model.squadsList)
+                {
+                    <li class="custom-options__item" data-value="@item.OptionValue">@item.SquadName</li>
+                }
+            </ul>
+        </div>
     </div>
+    <span>Выберите дату: </span>
     <div class="search-row">
-        <span>Выберите дату: </span>
-        <button id="previousWeekBtn">Назад</button>
+        <button class="custom-btn_secondary" style="padding: 10px 15px;" id="previousWeekBtn"><i class="arrow arrow_left"></i></button>
         <input type="week" id="weekInput" value="@DateTime.Now.ToString($"yyyy-'W'{GetWeekNumber()}")">
-        <button id="nextWeekBtn">Вперед</button>
-        <button id="saveAttendanceBtn" disabled>Сохранить</button>
-        <button id="sendAttendanceBtn">Отправить студентам</button>
-        <button id="downloadExcelTable">Скачать в Excel</button>
-        <button id="downloadPdfTable">Скачать в PDF</button>
-        <button id="refreshScheduleBtn">Обновить список студентов</button>
-        <button id="checkAttendanceInServerBtn">Проверить наличие посещаемости</button>
+        <button class="custom-btn_secondary" style="padding: 10px 15px;" id="nextWeekBtn"><i class="arrow arrow_right"></i></button>
+        <button id="saveAttendanceBtn" class="custom-btn_secondary" disabled>Сохранить</button>
+        <button id="sendAttendanceBtn" class="custom-btn_secondary" disabled>Отправить студентам</button>
+        <button id="downloadExcelTable" class="custom-btn_secondary" disabled>Скачать в Excel</button>
+        <button id="downloadPdfTable" class="custom-btn_secondary" disabled>Скачать в PDF</button>
+        <button id="refreshScheduleBtn" class="custom-btn_secondary">Обновить список студентов</button>
+        <button id="checkAttendanceInServerBtn" class="custom-btn_secondary">Проверить наличие посещаемости</button>
     </div>
     <table class="custom-table-attendance">
         <thead>
