@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="~/icons/logo_favicon.ico" rel="shortcut icon" runat="server" type="image/x-icon" />
+    <link href="~/icons/logo_favicon.ico" rel="icon" runat="server" type="image/ico" />
 </head>
 <body>
     <div class="wrapper wrapper_dashboard">
@@ -92,7 +94,12 @@
         @RenderBody()
     </div>
 
-    @*     <script src="~/lib/jquery/dist/jquery.js"></script> *@
+    <div class="preloader">
+        <div class="logo-lottie" id="logoLottie"></div>
+    </div>
+
+@*     <script src="~/lib/jquery/dist/jquery.js"></script> *@
+    <script src="~/js/outerJS/lottie.js"></script>
     <script defer type="text/javascript" src="~/js/main.js" asp-append-version="true"></script>
     @RenderSection("JavaScript", required: false)
 </body>

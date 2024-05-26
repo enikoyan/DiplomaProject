@@ -1,0 +1,32 @@
+.preloader {
+  background-color: #eeeeee;
+  transition: all 0.3s ease-in-out;
+  z-index: 1000;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &_hidden {
+    opacity: 0;
+    visibility: hidden;
+    z-index: -1;
+  }
+}
+
+.logo-lottie {
+  opacity: 1;
+  width: 30%;
+  height: 30%;
+  z-index: 1001;
+
+  &_hidden {
+    opacity: 0;
+    visibility: hidden;
+    z-index: -1;
+  }
+}

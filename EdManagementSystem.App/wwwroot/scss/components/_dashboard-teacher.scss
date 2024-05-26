@@ -1,6 +1,7 @@
 .wrapper_dashboard {
   display: grid;
   grid-template-columns: auto 1fr;
+  transition: all 0.3s ease-in-out;
   margin: 0;
 }
 
