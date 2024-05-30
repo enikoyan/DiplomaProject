@@ -1,4 +1,4 @@
-﻿namespace EdManagementSystem.DataAccess.Models
+﻿namespace EdManagementSystem.DataAccess.DTO
 {
     public class AttendanceDTO
     {

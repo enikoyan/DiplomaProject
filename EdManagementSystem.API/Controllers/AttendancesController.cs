@@ -1,5 +1,5 @@
-﻿using EdManagementSystem.DataAccess.Interfaces;
-using EdManagementSystem.DataAccess.Models;
+﻿using EdManagementSystem.DataAccess.DTO;
+using EdManagementSystem.DataAccess.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

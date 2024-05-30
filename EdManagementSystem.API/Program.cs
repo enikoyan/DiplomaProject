@@ -1,4 +1,5 @@
 ﻿using EdManagementSystem.DataAccess.Data;
+using EdManagementSystem.DataAccess.DTO;
 using EdManagementSystem.DataAccess.Infrastructure;
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Services;
@@ -58,6 +59,7 @@ namespace EdManagementSystem.API
             services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<IHomeworkService, HomeworkService>();
             services.AddScoped<IAttendanceService, AttendanceService>();
+            services.AddScoped<IEmailClient, EmailClient>();
 
             var app = builder.Build();
 

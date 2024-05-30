@@ -1,4 +1,5 @@
-﻿using EdManagementSystem.DataAccess.Models;
+﻿using EdManagementSystem.DataAccess.DTO;
+using EdManagementSystem.DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 
 namespace EdManagementSystem.DataAccess.Interfaces

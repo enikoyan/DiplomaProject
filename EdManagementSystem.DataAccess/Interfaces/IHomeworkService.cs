@@ -1,4 +1,4 @@
-﻿using EdManagementSystem.DataAccess.Models;
+﻿using EdManagementSystem.DataAccess.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
