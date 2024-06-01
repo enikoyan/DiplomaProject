@@ -32,4 +32,8 @@ public partial class User
     [JsonIgnore]
     [InverseProperty("IdUserNavigation")]
     public virtual ICollection<TechSupport> TechSupports { get; set; } = new List<TechSupport>();
+
+    [JsonIgnore]
+    [InverseProperty("User")]
+    public virtual ICollection<Recovery> Recoveries { get; set; } = new List<Recovery>();
 }

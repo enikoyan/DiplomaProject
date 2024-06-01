@@ -26,6 +26,8 @@ namespace EdManagementSystem.DataAccess.Data
 
         public virtual DbSet<SquadStudent> SquadStudents { get; set; }
 
+        public virtual DbSet<Recovery> Recoveries { get; set; }
+
         public virtual DbSet<Student> Students { get; set; }
 
         public virtual DbSet<Teacher> Teachers { get; set; }
@@ -65,6 +67,16 @@ namespace EdManagementSystem.DataAccess.Data
 
                 entity.HasOne(d => d.CourseTutorNavigation).WithMany(p => p.Courses).HasConstraintName("Course_ibfk_1");
             });
+
+            modelBuilder.Entity<Recovery>(entity =>
+            {
+                entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+                entity.Property(e => e.ExpireTime).HasDefaultValueSql("'00:05:00'");
+
+                entity.HasOne(d => d.User).WithMany(p => p.Recoveries).HasConstraintName("Recovery_ibfk_1");
+            });
+
 
             modelBuilder.Entity<Models.File>(entity =>
             {
