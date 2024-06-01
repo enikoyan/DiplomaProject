@@ -1,7 +1,6 @@
 ﻿using EdManagementSystem.DataAccess.Data;
 using EdManagementSystem.DataAccess.Interfaces;
 using EdManagementSystem.DataAccess.Models;
-using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.EntityFrameworkCore;
 
 namespace EdManagementSystem.DataAccess.Services
@@ -55,6 +54,22 @@ namespace EdManagementSystem.DataAccess.Services
         public async Task<List<User>> GetAllUsers()
         {
             return await _context.Users.ToListAsync();
+        }
+
+        public async Task<bool> ChangePassword(User user, string newPassword)
+        {
+            try
+            {
+                var changedPassword = _passwordHasher.Generate(newPassword);
+                user.UserPassword = changedPassword;
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message, ex);
+            }
         }
     }
 }

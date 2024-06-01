@@ -13,5 +13,6 @@ namespace EdManagementSystem.DataAccess.Interfaces
         Task<User> GetUserByEmail(string userEmail);
         Task CreateUser(User user);
         Task DeleteUser(int userId);
+        Task<bool> ChangePassword(User user, string newPassword);
     }
 }

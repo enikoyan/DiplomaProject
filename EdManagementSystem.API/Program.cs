@@ -60,6 +60,7 @@ namespace EdManagementSystem.API
             services.AddScoped<IHomeworkService, HomeworkService>();
             services.AddScoped<IAttendanceService, AttendanceService>();
             services.AddScoped<IEmailClient, EmailClient>();
+            services.AddScoped<IRecoveryService, RecoveryService>();
 
             var app = builder.Build();
 

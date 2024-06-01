@@ -22,7 +22,7 @@ public partial class Recovery
     public DateTime Date { get; set; }
 
     [Column("confirmed")]
-    public bool Confirmed { get; set; }
+    public bool Confirmed { get; set; } = false;
 
     [Column("user_key")]
     public Guid UserKey { get; set; }
