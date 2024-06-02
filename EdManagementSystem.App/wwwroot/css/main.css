@@ -143,6 +143,18 @@ h3 {
   -webkit-transform: rotate(135deg);
 }
 
+.timer {
+  align-self: center;
+  font-style: italic;
+  color: rgb(16, 141, 16);
+}
+.timer span {
+  font-weight: bold;
+}
+.timer_lessLeft {
+  color: red;
+}
+
 body::-webkit-scrollbar {
   width: 6px; /* ширина scrollbar */
 }

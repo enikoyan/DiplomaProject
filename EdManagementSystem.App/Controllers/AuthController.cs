@@ -79,8 +79,16 @@ namespace EdManagementSystem.App.Controllers
             return Redirect("/auth/login");
         }
 
-        [Route("[controller]/recovery-password")]
+        [HttpGet]
+        [Route("auth/recoveryPassword/")]
         public IActionResult RecoveryPassword()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [Route("auth/recoveryPassword/getRecoveryKey")]
+        public IActionResult GetRecoveryKey()
         {
             return View();
         }

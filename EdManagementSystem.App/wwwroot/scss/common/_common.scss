@@ -148,6 +148,20 @@ h3 {
   }
 }
 
+.timer {
+  align-self: center;
+  font-style: italic;
+  color: rgb(16, 141, 16);
+
+  span {
+    font-weight: bold;
+  }
+
+  &_lessLeft {
+    color: red;
+  }
+}
+
 body::-webkit-scrollbar {
   width: 6px; /* ширина scrollbar */
 }

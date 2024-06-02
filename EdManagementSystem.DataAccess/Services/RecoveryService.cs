@@ -19,7 +19,7 @@ namespace EdManagementSystem.DataAccess.Services
             _emailClient = emailClient;
         }
 
-        public async Task<Guid> RecoveryTrigger(string userEmail, EmailConfigDTO emailConfig)
+        public async Task<string> RecoveryTrigger(string userEmail, EmailConfigDTO emailConfig)
         {
             try
             {
@@ -28,31 +28,42 @@ namespace EdManagementSystem.DataAccess.Services
 
                 if (user != null)
                 {
-                    // Generate user key
-                    Guid userKey = GenerateKey();
+                    var currentDate = DateTime.Today;
+                    var recoveryList = await _context.Recoveries
+                        .Where(x => x.Date.Date == currentDate).ToListAsync();
 
-                    // Generate server key
-                    Guid serverKey = GenerateKey();
-
-                    Recovery recoveryDTO = new Recovery()
+                    if (recoveryList.Count > 3)
                     {
-                        UserId = user.UserId,
-                        Date = DateTime.Now,
-                        UserKey = userKey,
-                        ServerKey = serverKey,
-                    };
+                        throw new Exception("Пароль можно менять только 3 раза в день!");
+                    }
+                    else
+                    {
+                        // Generate user key
+                        Guid userKey = GenerateKey();
 
-                    var message = $"<h1>Уважаемый пользователь УМДО!</h1></br>" +
-                        $"<h2>Для смены пароля используйте данный ключ: <i>{userKey}<i></h2>";
+                        // Generate server key
+                        Guid serverKey = GenerateKey();
 
-                    // Send email to client
-                    _emailClient.SendMessage(emailConfig, userEmail, message);
+                        Recovery recoveryDTO = new Recovery()
+                        {
+                            UserId = user.UserId,
+                            Date = DateTime.Now,
+                            UserKey = userKey,
+                            ServerKey = serverKey,
+                        };
 
-                    // Add data in database
-                    await _context.Recoveries.AddAsync(recoveryDTO);
-                    await _context.SaveChangesAsync();
+                        var message = $"<h1>Уважаемый пользователь УМДО!</h1></br>" +
+                            $"<h3>Для смены пароля используйте данный ключ: <i>{userKey}<i></h3>";
 
-                    return serverKey;
+                        // Send email to client
+                        _emailClient.SendMessage(emailConfig, userEmail, message);
+
+                        // Add data in database
+                        await _context.Recoveries.AddAsync(recoveryDTO);
+                        await _context.SaveChangesAsync();
+
+                        return serverKey.ToString();
+                    }
                 }
                 else
                 {
@@ -65,7 +76,7 @@ namespace EdManagementSystem.DataAccess.Services
             }
         }
 
-        public async Task<bool> RecoveryProcess(Guid serverKey, Guid clientKey, string newPassword)
+        public async Task<string> RecoveryProcess(Guid serverKey, Guid clientKey, string newPassword)
         {
             if (string.IsNullOrEmpty(newPassword))
             {
@@ -101,7 +112,7 @@ namespace EdManagementSystem.DataAccess.Services
                                 recoverySession.Confirmed = true;
                                 _context.Entry(recoverySession).State = EntityState.Modified;
                                 await _context.SaveChangesAsync();
-                                return true;
+                                return user!.UserEmail;
                             }
                             else throw new Exception("Не удалось сменить пароль!");
                         }

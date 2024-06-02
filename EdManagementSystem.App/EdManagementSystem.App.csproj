@@ -18,16 +18,22 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\attendance.js" />
+    <Content Remove="wwwroot\js\recoveryKey.js" />
+    <Content Remove="wwwroot\js\recoveryPassword.js" />
     <Content Remove="wwwroot\js\schedule.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\js\attendance.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\recoveryKey.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\recoveryPassword.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\schedule.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\js\attendance.js" />
+    <None Include="wwwroot\js\recoveryKey.js" />
+    <None Include="wwwroot\js\recoveryPassword.js" />
     <None Include="wwwroot\js\schedule.js" />
   </ItemGroup>
 

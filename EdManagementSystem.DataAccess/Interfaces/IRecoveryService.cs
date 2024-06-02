@@ -4,7 +4,7 @@ namespace EdManagementSystem.DataAccess.Interfaces
 {
     public interface IRecoveryService
     {
-        Task<bool> RecoveryProcess(Guid serverKey, Guid clientKey, string newPassword);
-        Task<Guid> RecoveryTrigger(string userEmail, EmailConfigDTO emailConfig);
+        Task<string> RecoveryProcess(Guid serverKey, Guid clientKey, string newPassword);
+        Task<string> RecoveryTrigger(string userEmail, EmailConfigDTO emailConfig);
     }
 }
