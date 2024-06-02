@@ -10,8 +10,7 @@ namespace EdManagementSystem.DataAccess.Services
     public class FileManagementService(EdSystemDbContext context) : IFileManagementService
     {
         private const int MaxFileSize = 10 * 1024 * 1024; // 10 MB
-        private static readonly string uploadsFolder = Path.Combine(Directory.GetParent(Directory.GetCurrentDirectory())!.FullName,
-            "EdManagementSystem.DataAccess", "Files");
+        private static readonly string uploadsFolder = Path.Combine("EdManagementSystem.DataAccess", "Files");
 
         private readonly EdSystemDbContext _dbContext = context;
 
