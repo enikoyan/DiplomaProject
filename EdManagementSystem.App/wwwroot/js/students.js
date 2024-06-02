@@ -5,6 +5,9 @@ const searchBtn = document.querySelector('.search-row__btn');
 const saveAsPdfBtn = document.getElementById('downloadPdfTable');
 const saveAsExcelBtn = document.getElementById('downloadExcelTable');
 const tableElement = document.getElementById('studentsTable');
+const tableFooter = document.getElementById('students-col-span');
+const courseTitle = document.getElementById('course-title');
+const groupTitle = document.getElementById('group-title');
 var selectedAPI = "GetAllStudents";
 var selectedFilter = 0;
 var lastSelectControl = "searchAllStudents";
@@ -65,6 +68,16 @@ async function switchSelects(value) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    const checkScreenWidth = () => {
+        if (window.innerWidth < 600) {
+            tableFooter.colSpan = "1";
+        } else {
+            tableFooter.colSpan = "3";
+        }
+    };
+    window.addEventListener("resize", checkScreenWidth);
+    checkScreenWidth();
+
     // API calling
     searchBtn.addEventListener('click', async () => {
         if (filterSelector.getAttribute('data-target') === 'none') {
@@ -147,9 +160,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             ws['!ref'] = XLSX.utils.encode_range(range);
         });
 
-        wb.sheetName = "PIU";
+        var fileName = '';
 
-        XLSX.writeFile(wb, 'Список студентов.xlsx');
+        switch (filterSelector.getAttribute('data-target')) {
+            case "searchAllStudents": {
+                fileName = 'Общий список студентов';
+                break;
+            };
+            case "searchBySquads": {
+                fileName = `Список студентов группы ${groupTitle.textContent}`;
+                break;
+            };
+            case "searchByCourses": {
+                fileName = `Список студентов курса ${courseTitle.textContent}`;
+                break;
+            };
+        }
+
+        wb.sheetName = fileName;
+
+        XLSX.writeFile(wb, `${fileName}.xlsx`);
     });
 
     // Download as Pdf
@@ -161,7 +191,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         var dd = {
             content: val,
         };
-        pdfMake.createPdf(dd).download('Список студентов');
+
+        var fileName = '';
+
+        switch (filterSelector.getAttribute('data-target')) {
+            case "searchAllStudents": {
+                fileName = 'Общий список студентов';
+                break;
+            };
+            case "searchBySquads": {
+                fileName = `Список студентов группы ${groupTitle.textContent}`;
+                break;
+            };
+            case "searchByCourses": {
+                fileName = `Список студентов курса ${courseTitle.textContent}`;
+                break;
+            };
+        }
+        pdfMake.createPdf(dd).download(fileName);
     });
 
     // Message popup handler

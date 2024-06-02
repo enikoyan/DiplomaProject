@@ -1,5 +1,5 @@
 .custom-alert {
-  position: absolute;
+  position: fixed;
   top: 30px;
   left: 0;
   right: 0;
@@ -50,7 +50,6 @@
 
 @media (max-width: 530px) {
   .custom-alert {
-    margin: 25px;
     justify-content: center;
   }
 }

@@ -49,24 +49,6 @@ async function destroyMessagePopup() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    document.body.addEventListener('click', function (event) {
-        if (event.target.classList.contains('custom-select__btn')) {
-            const btn = event.target;
-            const parent = btn.closest('.questions-item');
-            const answer = parent.querySelector('.questions-item__answer');
-
-            if (btn.classList.contains('custom-select__btn_active')) {
-                btn.classList.remove('custom-select__btn_active');
-                parent.classList.remove('questions-item_active');
-                answer.style.maxHeight = '0';
-
-            } else {
-                btn.classList.add('custom-select__btn_active');
-                parent.classList.add('questions-item_active');
-                answer.style.maxHeight = answer.scrollHeight + 'px';
-            }
-        }
-    });
 
     submitForm.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -77,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             let response = await fetch('/dashboard/getCurrentUserId');
             userEmail = await response.text();
         } catch (error) {
-            createMessagePopup("error", error);
+            await createMessagePopup("error", error);
             return;
         }
 
@@ -85,20 +67,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         let requestDescription = document.getElementById('question-form__text').value;
 
         if (!requestDescription.trim()) {
-            createMessagePopup("warning", "Поле не может быть пустым!");
+            await createMessagePopup("warning", "Поле не может быть пустым!");
         } else if (requestDescription.length < 250) {
-            createMessagePopup("warning", "Обращение должно быть минимум на 250 символов");
+            await createMessagePopup("warning", "Обращение должно быть минимум на 250 символов");
         } else {
-            let preloader = document.getElementById('preloader');
-            let lottieLogo = document.getElementById('lottie-logo');
-            let animation = lottie.loadAnimation({
-                container: lottieLogo,
-                renderer: 'svg',
-                loop: true,
-                autoplay: false,
-                path: 'animation.json'
-            });
-
             preloader.classList.remove("preloader_hidden");
             lottieLogo.classList.remove("logoLottie_hidden");
             animation.play();

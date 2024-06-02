@@ -88,6 +88,12 @@
   .aside {
     max-width: 100%;
     padding: 15px 0px !important;
+
+    &-logo {
+      img {
+        width: 120px;
+      }
+    }
   }
   .aside_closed {
     .aside-logo {

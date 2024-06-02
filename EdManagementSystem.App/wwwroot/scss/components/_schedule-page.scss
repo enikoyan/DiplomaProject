@@ -110,3 +110,22 @@ input[type="date"] {
   cursor: pointer;
   border-radius: 3px;
 }
+
+@media (max-width: 768px) {
+  input[type="week"],
+  input[type="date"] {
+    width: 100%;
+  }
+
+  .arrow_left {
+    transform: rotate(-135deg);
+  }
+
+  .arrow_right {
+    transform: rotate(45deg);
+  }
+
+  .schedule-item__body {
+    min-height: fit-content;
+  }
+}

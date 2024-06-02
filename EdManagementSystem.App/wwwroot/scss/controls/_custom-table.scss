@@ -22,3 +22,20 @@
     }
   }
 }
+
+@media (max-width: 600px) {
+  .custom-table_student-list {
+    th:first-child,
+    th:last-child {
+      display: table-cell;
+    }
+
+    th:not(:first-child):not(:nth-child(2)) {
+      display: none;
+    }
+
+    th:nth-child(2) {
+      border-radius: 0 10px 10px 0;
+    }
+  }
+}

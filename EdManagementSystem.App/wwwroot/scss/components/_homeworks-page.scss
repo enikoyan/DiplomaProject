@@ -85,3 +85,9 @@
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+@media (max-width: 768px) {
+  #addHomeworkForm {
+    width: 100%;
+  }
+}

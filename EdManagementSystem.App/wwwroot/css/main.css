@@ -304,6 +304,9 @@ body::-webkit-scrollbar-thumb {
     max-width: 100%;
     padding: 15px 0px !important;
   }
+  .aside-logo img {
+    width: 120px;
+  }
   .aside_closed .aside-logo {
     display: block;
   }
@@ -555,6 +558,16 @@ body::-webkit-scrollbar-thumb {
   background-size: cover;
 }
 
+@media (max-width: 768px) {
+  .custom-select,
+  .custom-btn_secondary {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  #downloadPdfTable {
+    display: none;
+  }
+}
 .found-materials {
   display: grid;
   grid-template-columns: 1fr;
@@ -615,6 +628,11 @@ body::-webkit-scrollbar-thumb {
     flex-direction: column;
     text-align: left;
     align-items: flex-start;
+  }
+}
+@media (max-width: 768px) {
+  #addMaterialForm {
+    width: 100%;
   }
 }
 label {
@@ -715,6 +733,22 @@ input[type=date] {
   border-radius: 3px;
 }
 
+@media (max-width: 768px) {
+  input[type=week],
+  input[type=date] {
+    width: 100%;
+  }
+  .arrow_left {
+    transform: rotate(-135deg);
+  }
+  .arrow_right {
+    transform: rotate(45deg);
+  }
+  .schedule-item__body {
+    min-height: -moz-fit-content;
+    min-height: fit-content;
+  }
+}
 .homeworks {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -786,6 +820,11 @@ input[type=date] {
 @media (max-width: 1024px) {
   .homeworks {
     grid-template-columns: repeat(1, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  #addHomeworkForm {
+    width: 100%;
   }
 }
 .custom-table-attendance {
@@ -942,8 +981,20 @@ input[type=date] {
   border-radius: 0 10px 10px 0;
 }
 
+@media (max-width: 600px) {
+  .custom-table_student-list th:first-child,
+  .custom-table_student-list th:last-child {
+    display: table-cell;
+  }
+  .custom-table_student-list th:not(:first-child):not(:nth-child(2)) {
+    display: none;
+  }
+  .custom-table_student-list th:nth-child(2) {
+    border-radius: 0 10px 10px 0;
+  }
+}
 .custom-alert {
-  position: absolute;
+  position: fixed;
   top: 30px;
   left: 0;
   right: 0;
@@ -990,7 +1041,6 @@ input[type=date] {
 
 @media (max-width: 530px) {
   .custom-alert {
-    margin: 25px;
     justify-content: center;
   }
 }

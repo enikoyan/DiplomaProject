@@ -31,3 +31,14 @@
     }
   }
 }
+
+@media (max-width: 768px) {
+  .custom-select,
+  .custom-btn_secondary {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  #downloadPdfTable {
+    display: none;
+  }
+}

@@ -66,16 +66,17 @@ window.addEventListener("DOMContentLoaded", async () => {
     // Preloader handler
     links.forEach(function (link) {
         link.addEventListener("click", function () {
-            setTimeout(function () {
+            setTimeout(async function () {
                 preloader.classList.remove("preloader_hidden");
                 lottieLogo.classList.remove("logoLottie_hidden");
+                await closeBurger();
                 animation.play();
             }, 800);
         });
     });
 
     window.addEventListener("load", function () {
-        setTimeout(function () {
+        setTimeout(async function () {
             preloader.classList.add("preloader_hidden");
             lottieLogo.classList.add("logoLottie_hidden");
             animation.pause();
