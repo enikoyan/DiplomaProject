@@ -48,8 +48,26 @@ async function destroyMessagePopup() {
     }, 500);
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.body.addEventListener('click', function (event) {
+    if (event.target.classList.contains('custom-select__btn')) {
+        const btn = event.target;
+        const parent = btn.closest('.questions-item');
+        const answer = parent.querySelector('.questions-item__answer');
 
+        if (btn.classList.contains('custom-select__btn_active')) {
+            btn.classList.remove('custom-select__btn_active');
+            parent.classList.remove('questions-item_active');
+            answer.style.maxHeight = '0';
+
+        } else {
+            btn.classList.add('custom-select__btn_active');
+            parent.classList.add('questions-item_active');
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+        }
+    }
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
     submitForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
