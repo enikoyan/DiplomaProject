@@ -1,0 +1,50 @@
+.custom-input {
+  height: 30px;
+  padding: 5px 10px;
+  background-color: transparent !important;
+  border-radius: 5px;
+  border: 2px solid $border-color;
+  transition: 0.2s ease-in-out;
+  box-shadow: inset 20px 20px 0px 20px transparent;
+
+  &:focus {
+    transition: 0.2s ease-in-out;
+    border: 2px solid $primary-color;
+    color: $primary-color;
+    &::placeholder {
+      color: $primary-color;
+    }
+  }
+
+  &_errored {
+    border: 2px solid red;
+    color: red;
+
+    &::placeholder {
+      color: red;
+    }
+
+    &:focus {
+      transition: 0.2s ease-in-out;
+      border: 2px solid red;
+      color: red;
+
+      &::placeholder {
+        color: red;
+      }
+    }
+  }
+
+  &_correct {
+    border: 2px solid rgb(12, 168, 12);
+    color: rgb(12, 168, 12);
+    &:focus {
+      transition: 0.2s ease-in-out;
+      border: 2px solid rgb(12, 168, 12);
+      color: rgb(12, 168, 12);
+      &::placeholder {
+        color: rgb(12, 168, 12);
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Авторизация";
+}
+
+<div class="wrapper wrapper_login">
+    @model LoginViewModel
+    <div class="login-form-container">
+        <form method="post" class="login-form" asp-antiforgery="false" autocomplete="on" novalidate>
+            <img src="~/icons/common-icons/logo.svg" alt="logotypeImg" class="logotype login-form__img" loading="eager">
+            <h1 class="title login-form__title">Авторизация</h1>
+            <div id="loader-container" style="display: flex; justify-content: center"></div>
+            <input asp-for="Email" type="email" class="custom-input login-form__input_email" placeholder="Электронная почта">
+            <input asp-for="Password" type="password" class="custom-input login-form__input_password" placeholder="Пароль">
+            <button type="submit" class="custom-btn login-form__signIn-btn">Войти</button>
+            <a href="./recoveryPassword/getRecoveryKey" class="custom-link login-form__recovery-password">Забыли пароль?</a>
+        </form>
+    </div>
+    <footer class="footer footer_sign-page">
+        <a href="#!" class="custom-link footer_sign-page__supportLink">Техническая поддержка</a>
+        <h3 class="footer_sign-page__copyright">© 2024 Университет энергии и позитива</h3>
+    </footer>
+</div>
+
+<script src="~/js/authentication.js"></script>

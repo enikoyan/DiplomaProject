@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  edsystemapp:
+    image: eriknikoyan/edsystemapp
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_URLS=http://+:8080
+    ports:
+      - "8080:8080"
+  edsystemapi:
+    image: eriknikoyan/edsystemapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8001
+      - ASPNETCORE_URLS=http://+:8001
+    ports:
+      - "8001:8080"

@@ -1,0 +1,173 @@
+.aside {
+  max-width: 300px;
+  background-color: transparent;
+  border-right: 1px solid $border-color;
+  padding: 25px 5px;
+  transition: transform 0.4s ease-in-out;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    height: 60px;
+  }
+}
+
+// Closed by burger button
+.aside_closed {
+  transition: all 0.2s ease-in-out;
+
+  .aside-logo {
+    display: none;
+  }
+  .aside {
+    &__header {
+      justify-content: center;
+    }
+
+    &-menu__span {
+      display: none;
+    }
+  }
+}
+
+.aside-logo {
+  &__img {
+    width: 100px;
+  }
+}
+
+.aside-menu {
+  padding: 0 15px;
+  transition: transform 0.4s ease-in-out;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 15px;
+  }
+
+  &__item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid $border-color;
+    border-radius: 10px;
+    padding: 10px 15px;
+    transition: 0.2s ease-in;
+
+    &:hover {
+      transition: 0.2s ease-in;
+      box-shadow: $main-shadow;
+    }
+
+    &:last-child {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &__icon {
+    width: 35px;
+  }
+
+  &__span {
+    color: $text-color;
+    font-size: 14px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .aside {
+    max-width: 100%;
+    padding: 15px 0px !important;
+
+    &-logo {
+      img {
+        width: 120px;
+      }
+    }
+  }
+  .aside_closed {
+    .aside-logo {
+      display: block;
+    }
+    .aside {
+      &__header {
+        justify-content: space-between;
+      }
+
+      &-menu {
+        display: none;
+      }
+
+      &-menu__span {
+        display: block;
+      }
+    }
+  }
+  .dashboard-content-container {
+    padding: 15px 20px !important;
+  }
+}
+
+.custom-hamburger {
+  position: relative;
+}
+
+.hamburger-checkbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.hamburger-lines {
+  display: block;
+  height: 26px;
+  width: 32px;
+  top: 17px;
+  left: 20px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger-lines .line {
+  display: block;
+  height: 4px;
+  width: 100%;
+  border-radius: 10px;
+  background: $text-color;
+}
+
+.hamburger-lines .line1 {
+  transform-origin: 0% 0%;
+  transition: transform 0.4s ease-in-out;
+  transform: rotate(45deg);
+}
+
+.hamburger-lines .line2 {
+  transition: transform 0.2s ease-in-out;
+  transform: scaleY(0);
+}
+
+.hamburger-lines .line3 {
+  transform-origin: 0% 100%;
+  transition: transform 0.4s ease-in-out;
+  transform: rotate(-45deg);
+}

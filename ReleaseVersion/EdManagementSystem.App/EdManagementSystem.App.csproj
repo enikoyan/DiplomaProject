@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>9eaf9169-43be-465d-8f4e-59f1cf877108</UserSecretsId>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\bootstrap-5.3.3-dist\**" />
+    <Content Remove="wwwroot\bootstrap-5.3.3-dist\**" />
+    <EmbeddedResource Remove="wwwroot\bootstrap-5.3.3-dist\**" />
+    <None Remove="wwwroot\bootstrap-5.3.3-dist\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\js\attendance.js" />
+    <Content Remove="wwwroot\js\recoveryKey.js" />
+    <Content Remove="wwwroot\js\recoveryPassword.js" />
+    <Content Remove="wwwroot\js\schedule.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\attendance.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\recoveryKey.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\recoveryPassword.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\schedule.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\attendance.js" />
+    <None Include="wwwroot\js\recoveryKey.js" />
+    <None Include="wwwroot\js\recoveryPassword.js" />
+    <None Include="wwwroot\js\schedule.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EdManagementSystem.DataAccess\EdManagementSystem.DataAccess.csproj" />
+  </ItemGroup>
+
+</Project>

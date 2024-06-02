@@ -1,6 +1,0 @@
-@EdManagementSystem.API_HostAddress = http://localhost:5042
-
-GET {{EdManagementSystem.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

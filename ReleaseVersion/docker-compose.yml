@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  edsystemapp:
+    image: eriknikoyan/edsystemapp
+    build:
+      context: .
+      dockerfile: EdManagementSystem.App/Dockerfile
+    ports:
+      - 8080:8080
+
+  edsystemapi:
+    image: eriknikoyan/edsystemapi
+    build:
+      context: .
+      dockerfile: EdManagementSystem.API/Dockerfile
+    ports:
+      - 8001:8080

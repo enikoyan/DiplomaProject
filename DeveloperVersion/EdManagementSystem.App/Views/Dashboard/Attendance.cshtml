@@ -1,0 +1,105 @@
+﻿@{
+    ViewData["Title"] = "Домашняя страница";
+    Layout = "_DashboardLayout";
+}
+
+@model AttendanceViewModel
+
+@* SAVE STUDENTS LIST *@
+<script>
+    var attendanceData = @Html.Raw(Json.Serialize(Model.studentsList));
+    localStorage.setItem("studentsList", JSON.stringify(attendanceData));
+</script>
+
+@functions {
+    private int GetWeekNumber()
+    {
+        return System.Globalization.CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(DateTime.Now, System.Globalization.CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+    }
+}
+
+<main class="main dashboard-content-container">
+    <h1 class="title">Учет посещаемости</h1>
+    <div class="search-row">
+        <span><strong style="font-weight: 600">Текущая дата: </strong><date>@DateTime.UtcNow.Date.Day апреля</date></span>
+        
+    </div>
+    <div class="search-row">
+        <div class="custom-select" id="group-select" data-target="none">
+            <button class="custom-select__btn">
+                <span class="custom-select__title">Выберите группу</span>
+                <i class="arrow arrow_down"></i>
+            </button>
+            <ul class="custom-options custom-options_disabled">
+                @foreach (var item in Model.squadsList)
+                {
+                    <li class="custom-options__item" data-value="@item.OptionValue">@item.SquadName</li>
+                }
+            </ul>
+        </div>
+    </div>
+    <span>Выберите дату: </span>
+    <div class="search-row">
+        <button class="custom-btn_secondary" style="padding: 10px 15px;" id="previousWeekBtn"><i class="arrow arrow_left"></i></button>
+        <input type="week" id="weekInput" value="@DateTime.Now.ToString($"yyyy-'W'{GetWeekNumber()}")">
+        <button class="custom-btn_secondary" style="padding: 10px 15px;" id="nextWeekBtn"><i class="arrow arrow_right"></i></button>
+        <button id="saveAttendanceBtn" class="custom-btn_secondary" disabled>Сохранить</button>
+        <button id="sendAttendanceBtn" class="custom-btn_secondary" disabled>Отправить студентам</button>
+        <button id="downloadExcelTable" class="custom-btn_secondary" disabled>Скачать в Excel</button>
+        <button id="downloadPdfTable" class="custom-btn_secondary" disabled>Скачать в PDF</button>
+        <button id="refreshScheduleBtn" class="custom-btn_secondary">Обновить список студентов</button>
+        <button id="checkAttendanceInServerBtn" class="custom-btn_secondary">Проверить наличие посещаемости</button>
+    </div>
+    <table class="custom-table-attendance">
+        <thead>
+            <tr>
+                <th>№ студента</th>
+                <th>ФИО</th>
+                <th id="attendance-table-date" colspan="7">Неделя: @DateTime.Now.ToString($"{GetWeekNumber()}")</th>
+            </tr>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Пн</th>
+                <th>Вт</th>
+                <th>Ср</th>
+                <th>Чт</th>
+                <th>Пт</th>
+                <th>Сб</th>
+                <th>Вс</th>
+            </tr>
+        </thead>
+        <tbody class="attendance-body">
+           
+        </tbody>
+    </table>
+
+    <div class="attendance-popup">
+        <div class="attendance-popup__arrow"></div>
+        <div class="attendance-popup__content">
+            <div class="attendance-popup__row">
+                <img class="attendance-popup__icon" src="../icons/attendance-icons/attendance-true.svg" />
+                <span class="attendance-popup__text" id="attendance-true">Присутствует</span>
+            </div>
+            <div class="attendance-popup__row">
+                <img class="attendance-popup__icon" src="../icons/attendance-icons/attendance-false.svg" />
+                <span class="attendance-popup__text" id="attendance-false">Отсутствует</span>
+            </div>
+            <div class="attendance-popup__row">
+                <img class="attendance-popup__icon" src="../icons/attendance-icons/attendance-ill.svg" />
+                <span class="attendance-popup__text" id="attendance-ill">Болеет</span>
+            </div>
+            <div class="attendance-popup__row">
+                <img class="attendance-popup__icon" src="../icons/attendance-icons/attendance-empty.svg" />
+                <span class="attendance-popup__text" id="attendance-empty">Очистить</span>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="~/js/outerJS/xlsx.full.min.js"></script>
+<!-- pdfmake files: -->
+<script src="~/js/outerJS/pdfmake.min.js"></script>
+<script src="~/js/outerJS/vfs_fonts.min.js"></script>
+<!-- html-to-pdfmake file: -->
+<script src="~/js/outerJS/browser.js"></script>
+<script defer src="~/js/attendance.js"></script>

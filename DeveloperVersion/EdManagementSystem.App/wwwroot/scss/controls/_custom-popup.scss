@@ -1,0 +1,55 @@
+.custom-alert {
+  position: fixed;
+  top: 30px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  border-radius: 15px;
+  gap: 10px;
+  background-color: $border-color;
+  opacity: 0.9;
+  padding: 15px 30px;
+  justify-content: space-between;
+  max-width: 550px !important;
+  width: fit-content !important;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  box-shadow: $main-shadow;
+  cursor: pointer;
+
+  &_confirm {
+    align-items: stretch;
+    & div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+
+  &__icon {
+    max-width: 50px;
+  }
+
+  &__message {
+    text-wrap: wrap;
+    line-height: 1.3;
+    max-width: max-content;
+  }
+
+  &__close-btn {
+  }
+
+  &.hide {
+    transition: 0.5s ease-in-out;
+    opacity: 0;
+  }
+}
+
+@media (max-width: 530px) {
+  .custom-alert {
+    justify-content: center;
+  }
+}
